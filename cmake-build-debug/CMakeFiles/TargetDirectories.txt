@@ -1,0 +1,6 @@
+C:/Users/robko/Documents/ROGL/cmake-build-debug/CMakeFiles/ROGL.dir
+C:/Users/robko/Documents/ROGL/cmake-build-debug/CMakeFiles/IMGUI_LIB.dir
+C:/Users/robko/Documents/ROGL/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/robko/Documents/ROGL/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/robko/Documents/ROGL/cmake-build-debug/Source/CMakeFiles/edit_cache.dir
+C:/Users/robko/Documents/ROGL/cmake-build-debug/Source/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,1 @@
+libassimp-5d.dll filter=lfs diff=lfs merge=lfs -text
