@@ -1,5 +1,5 @@
 #include <iostream>
-#include <Log.h>
+
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -8,8 +8,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "imgui.h"
 
+#include <Log.h>
+#include <test.h>
 
-//void Help();
 
 int main() {
 
@@ -29,7 +30,7 @@ int main() {
 
     GLenum err = glewInit();
     std::cout << "Hello, World!" << std::endl;
-    Help();
+    ::Help();
     Assimp::Importer importer;
 
     getchar();

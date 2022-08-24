@@ -41,47 +41,6 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = C$:/Users/robko/Documents/ROGL/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target ROGL
-
-
-#############################################
-# Order-only phony target for ROGL
-
-build cmake_object_order_depends_target_ROGL: phony || CMakeFiles/ROGL.dir
-
-build CMakeFiles/ROGL.dir/main.cpp.obj: CXX_COMPILER__ROGL_Debug C$:/Users/robko/Documents/ROGL/main.cpp || cmake_object_order_depends_target_ROGL
-  DEP_FILE = CMakeFiles\ROGL.dir\main.cpp.obj.d
-  FLAGS = -g -std=gnu++2a
-  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source -isystem "C:/Program Files (x86)/Assimp/include"
-  OBJECT_DIR = CMakeFiles\ROGL.dir
-  OBJECT_FILE_DIR = CMakeFiles\ROGL.dir
-
-build CMakeFiles/ROGL.dir/Source/Log.cpp.obj: CXX_COMPILER__ROGL_Debug C$:/Users/robko/Documents/ROGL/Source/Log.cpp || cmake_object_order_depends_target_ROGL
-  DEP_FILE = CMakeFiles\ROGL.dir\Source\Log.cpp.obj.d
-  FLAGS = -g -std=gnu++2a
-  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source -isystem "C:/Program Files (x86)/Assimp/include"
-  OBJECT_DIR = CMakeFiles\ROGL.dir
-  OBJECT_FILE_DIR = CMakeFiles\ROGL.dir\Source
-
-
-# =============================================================================
-# Link build statements for EXECUTABLE target ROGL
-
-
-#############################################
-# Link the executable ROGL.exe
-
-build ROGL.exe: CXX_EXECUTABLE_LINKER__ROGL_Debug CMakeFiles/ROGL.dir/main.cpp.obj CMakeFiles/ROGL.dir/Source/Log.cpp.obj | C$:/Program$ Files$ (x86)/Assimp/lib/libassimpd.dll.a C$:/Libs/glew-2.2.0/lib/Release/x64/glew32.lib C$:/Libs/GLFW338/lib-mingw-w64/glfw3.dll C$:/msys64/mingw64/lib/libz.dll.a
-  FLAGS = -g
-  LINK_LIBRARIES = "C:/Program Files (x86)/Assimp/lib/libassimpd.dll.a"  C:/Libs/glew-2.2.0/lib/Release/x64/glew32.lib  C:/Libs/GLFW338/lib-mingw-w64/glfw3.dll  C:/msys64/mingw64/lib/libz.dll.a  -lminizip  -lz  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
-  OBJECT_DIR = CMakeFiles\ROGL.dir
-  POST_BUILD = cd .
-  PRE_LINK = cd .
-  TARGET_FILE = ROGL.exe
-  TARGET_IMPLIB = libROGL.dll.a
-  TARGET_PDB = ROGL.exe.dbg
-
-# =============================================================================
 # Object build statements for STATIC_LIBRARY target IMGUI_LIB
 
 
@@ -148,6 +107,41 @@ build libIMGUI_LIB.a: CXX_STATIC_LIBRARY_LINKER__IMGUI_LIB_Debug CMakeFiles/IMGU
   TARGET_FILE = libIMGUI_LIB.a
   TARGET_PDB = IMGUI_LIB.a.dbg
 
+# =============================================================================
+# Object build statements for EXECUTABLE target ROGL
+
+
+#############################################
+# Order-only phony target for ROGL
+
+build cmake_object_order_depends_target_ROGL: phony || cmake_object_order_depends_target_ROGL_Source
+
+build CMakeFiles/ROGL.dir/main.cpp.obj: CXX_COMPILER__ROGL_Debug C$:/Users/robko/Documents/ROGL/main.cpp || cmake_object_order_depends_target_ROGL
+  DEP_FILE = CMakeFiles\ROGL.dir\main.cpp.obj.d
+  FLAGS = -g -std=gnu++2a
+  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source -isystem "C:/Program Files (x86)/Assimp/include"
+  OBJECT_DIR = CMakeFiles\ROGL.dir
+  OBJECT_FILE_DIR = CMakeFiles\ROGL.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target ROGL
+
+
+#############################################
+# Link the executable ROGL.exe
+
+build ROGL.exe: CXX_EXECUTABLE_LINKER__ROGL_Debug Source/CMakeFiles/ROGL_Source.dir/Log.cpp.obj CMakeFiles/ROGL.dir/main.cpp.obj | C$:/Libs/glew-2.2.0/lib/Release/x64/glew32.lib C$:/Program$ Files$ (x86)/Assimp/lib/libassimpd.dll.a C$:/Libs/glew-2.2.0/lib/Release/x64/glew32.lib C$:/Libs/GLFW338/lib-mingw-w64/glfw3.dll C$:/msys64/mingw64/lib/libz.dll.a || Source/ROGL_Source
+  FLAGS = -g
+  LINK_LIBRARIES = C:/Libs/glew-2.2.0/lib/Release/x64/glew32.lib  "C:/Program Files (x86)/Assimp/lib/libassimpd.dll.a"  C:/Libs/glew-2.2.0/lib/Release/x64/glew32.lib  C:/Libs/GLFW338/lib-mingw-w64/glfw3.dll  C:/msys64/mingw64/lib/libz.dll.a  -lminizip  -lz  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_PATH = -LC:/Users/robko/Documents/ROGL/GLEW_LIBRARIES_DIR   -LC:/Libs/GLFW338/lib-mingw-w64
+  OBJECT_DIR = CMakeFiles\ROGL.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = ROGL.exe
+  TARGET_IMPLIB = libROGL.dll.a
+  TARGET_PDB = ROGL.exe.dbg
+
 
 #############################################
 # Utility command for edit_cache
@@ -175,6 +169,29 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # Write statements declared in CMakeLists.txt:
 # C:/Users/robko/Documents/ROGL/CMakeLists.txt
 # =============================================================================
+
+# =============================================================================
+# Object build statements for OBJECT_LIBRARY target ROGL_Source
+
+
+#############################################
+# Order-only phony target for ROGL_Source
+
+build cmake_object_order_depends_target_ROGL_Source: phony || Source/CMakeFiles/ROGL_Source.dir
+
+build Source/CMakeFiles/ROGL_Source.dir/Log.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Log.cpp || cmake_object_order_depends_target_ROGL_Source
+  DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Log.cpp.obj.d
+  FLAGS = -g -std=gnu++2a
+  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
+  OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
+  OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir
+
+
+
+#############################################
+# Object library ROGL_Source
+
+build Source/ROGL_Source: phony Source/CMakeFiles/ROGL_Source.dir/Log.cpp.obj
 
 
 #############################################
@@ -206,6 +223,8 @@ build IMGUI_LIB: phony libIMGUI_LIB.a
 
 build ROGL: phony ROGL.exe
 
+build ROGL_Source: phony Source/ROGL_Source
+
 # =============================================================================
 # Folder targets.
 
@@ -214,14 +233,14 @@ build ROGL: phony ROGL.exe
 #############################################
 # Folder: C:/Users/robko/Documents/ROGL/cmake-build-debug
 
-build all: phony ROGL.exe libIMGUI_LIB.a Source/all
+build all: phony libIMGUI_LIB.a ROGL.exe Source/all
 
 # =============================================================================
 
 #############################################
 # Folder: C:/Users/robko/Documents/ROGL/cmake-build-debug/Source
 
-build Source/all: phony
+build Source/all: phony Source/ROGL_Source
 
 # =============================================================================
 # Built-in targets

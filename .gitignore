@@ -40,3 +40,8 @@ packages/
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
+
+#build
+cmake-build-debug/
+cmake-build-release/

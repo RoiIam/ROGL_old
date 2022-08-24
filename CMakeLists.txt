@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
-project(ROGL)
+project(ROGL )
 #set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules/")
 
 set(CMAKE_CXX_STANDARD 23)
-add_executable(ROGL)
 #set(CMAKE_FIND_DEBUG_MODE TRUE) #to write searched paths in console
 
 
@@ -80,19 +79,22 @@ include_directories(${IMGUI_LIB_NAME})
 # opisat co sa zmenilo
 #set all libs that we want to be linked
 set(LINK_LIBS assimp::assimp ${GLEW_LIBRARIES} ${GLFW3_LIBRARY}  ${IMGUI_INCLUDE_DIR} ${IMGUI_LIB}  )
+#trying to get rid of needing dynamic dlls,didnt work easily sadly
 
 
 #find_package(IMGUI REQUIRED )
 #find_package(GLFW REQUIRED )
 
-target_sources(ROGL PRIVATE main.cpp)
+#target_sources(ROGL PRIVATE main.cpp)
+add_executable(ROGL main.cpp)
+
+
 include_directories(Source)
 add_subdirectory("Source")
-
 
 #target_link_libraries(ROGL assimp::assimp)
 #target_link_libraries(ROGL  ${GLEW_LIBRARIES})
 #or
 #target_link_libraries(ROGL  assimp::assimp ${GLEW_LIBRARIES})
 #or:
-target_link_libraries(ROGL  ${LINK_LIBS})
+target_link_libraries(ROGL PUBLIC ${LINK_LIBS} )
