@@ -1,10 +1,12 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <iostream>
+//#define GLEW_STATIC //couldnt buld static mingqw lib and link it properly so wr use glad
+//#include <GL/glew.h>
 
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
-#include <glew.h>
-#include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "imgui.h"
 
@@ -28,7 +30,9 @@ int main() {
     }
     glfwMakeContextCurrent(window);
 
-    GLenum err = glewInit();
+    //glad needs to be after make context current window
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        return-111;//THROW_ERROR("Failed to load functions!");
     std::cout << "Hello, World!" << std::endl;
     ::Help();
     Assimp::Importer importer;

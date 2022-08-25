@@ -3,7 +3,7 @@ project(ROGL )
 #set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules/")
 
 set(CMAKE_CXX_STANDARD 23)
-#set(CMAKE_FIND_DEBUG_MODE TRUE) #to write searched paths in console
+set(CMAKE_FIND_DEBUG_MODE TRUE) #to write searched paths in console
 
 
 #ASSIMP
@@ -21,22 +21,32 @@ include_directories("C:/Libs/AssimpV/Assimp/")
 #include_directories("C:/Program Files (x86)/Assimp")
 
 #GLEW
-set(GLEW_LIBRARIES_DIR C:/Libs/glew-2.2.0/lib/Release/x64/)
-set(GLEW_LIBRARIES C:/Libs/glew-2.2.0/lib/Release/x64/glew32.lib)
-set(GLEW_INCLUDE_DIRS C:/Libs/glew-2.2.0/include/GL)
+#set(GLEW_LIBRARIES_DIR "C:/Libs/glew-2.2.0/lib/Release/x64/")
+#set(GLEW_LIBRARIES "C:/Libs/glew-2.2.0/lib/Release/x64/libglew32.a")
+#set(GLEW_LIBRARIES "C:/msys64/usr/bin/libglew32.a")
+#set(GLEW_LIBRARIES "C:/msys64/mingw64/lib/libglew32.a")
 
-
+#set(GLEW_INCLUDE_DIRS "C:/msys64/mingw64/include/GL")
+#set(GLEW_INCLUDE_DIRS "C:/msys64/usr/include/GL/")
+#find_package(GLEW REQUIRED )
 #set(glew_DIR "C:/Libs/glew-2.2.0/")
 #add_library(GLEW  STATIC GLEW_LIBRARIES) #works only on source files
-include_directories(${GLEW_INCLUDE_DIRS})
+#include_directories(${GLEW_INCLUDE_DIRS})
 
-link_libraries(${GLEW_LIBRARIES})
-link_directories(GLEW_LIBRARIES_DIR)
+
+#GLAD
+set(GLAD_INCLUDE_DIR C:/Libs/GLAD_c_46/include/)
+add_library(GLAD_S_LIB  C:/Libs/GLAD_c_46/src/glad.c )
+include_directories(${GLAD_INCLUDE_DIR})
+
+
+#link_libraries(${GLEW_LIBRARIES})
+#link_directories(GLEW_LIBRARIES_DIR)
 
 
 #GLFW
-set(GLFW3_INCLUDE_DIR C:/Libs/GLFW338/include/)
-set(GLFW3_LIBRARY C:/Libs/GLFW338/lib-mingw-w64/glfw3.dll)
+set(GLFW3_INCLUDE_DIR  "C:/Libs/GLFW338/include/")
+set(GLFW3_LIBRARY  "C:/Libs/GLFW338/lib-mingw-w64/libglfw3.a")
 set(GLFW3_LIB C:/Libs/GLFW338/lib-mingw-w64)
 
 include_directories(${GLFW3_INCLUDE_DIR})
@@ -78,7 +88,7 @@ include_directories(${IMGUI_LIB_NAME})
 #mozno este FileDialog a stb_image
 # opisat co sa zmenilo
 #set all libs that we want to be linked
-set(LINK_LIBS assimp::assimp ${GLEW_LIBRARIES} ${GLFW3_LIBRARY}  ${IMGUI_INCLUDE_DIR} ${IMGUI_LIB}  )
+set(LINK_LIBS assimp::assimp  ${GLFW3_LIBRARY}  GLAD_S_LIB  ${IMGUI_INCLUDE_DIR} ${IMGUI_LIB}  )
 #trying to get rid of needing dynamic dlls,didnt work easily sadly
 
 
@@ -97,4 +107,5 @@ add_subdirectory("Source")
 #or
 #target_link_libraries(ROGL  assimp::assimp ${GLEW_LIBRARIES})
 #or:
-target_link_libraries(ROGL PUBLIC ${LINK_LIBS} )
+target_link_libraries(ROGL PUBLIC  ${LINK_LIBS} )
+#target_link_libraries(ROGL PUBLIC ${GLEW_LIBRARIES})

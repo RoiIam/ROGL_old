@@ -41,6 +41,38 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = C$:/Users/robko/Documents/ROGL/cmake-build-debug/
 # =============================================================================
+# Object build statements for STATIC_LIBRARY target GLAD_S_LIB
+
+
+#############################################
+# Order-only phony target for GLAD_S_LIB
+
+build cmake_object_order_depends_target_GLAD_S_LIB: phony || CMakeFiles/GLAD_S_LIB.dir
+
+build CMakeFiles/GLAD_S_LIB.dir/C_/Libs/GLAD_c_46/src/glad.c.obj: C_COMPILER__GLAD_S_LIB_Debug C$:/Libs/GLAD_c_46/src/glad.c || cmake_object_order_depends_target_GLAD_S_LIB
+  DEP_FILE = CMakeFiles\GLAD_S_LIB.dir\C_\Libs\GLAD_c_46\src\glad.c.obj.d
+  FLAGS = -g
+  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
+  OBJECT_DIR = CMakeFiles\GLAD_S_LIB.dir
+  OBJECT_FILE_DIR = CMakeFiles\GLAD_S_LIB.dir\C_\Libs\GLAD_c_46\src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target GLAD_S_LIB
+
+
+#############################################
+# Link the static library libGLAD_S_LIB.a
+
+build libGLAD_S_LIB.a: C_STATIC_LIBRARY_LINKER__GLAD_S_LIB_Debug CMakeFiles/GLAD_S_LIB.dir/C_/Libs/GLAD_c_46/src/glad.c.obj
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = CMakeFiles\GLAD_S_LIB.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = libGLAD_S_LIB.a
+  TARGET_PDB = GLAD_S_LIB.a.dbg
+
+# =============================================================================
 # Object build statements for STATIC_LIBRARY target IMGUI_LIB
 
 
@@ -52,42 +84,42 @@ build cmake_object_order_depends_target_IMGUI_LIB: phony || CMakeFiles/IMGUI_LIB
 build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/imgui.cpp.obj: CXX_COMPILER__IMGUI_LIB_Debug C$:/Libs/imgui_187/imgui.cpp || cmake_object_order_depends_target_IMGUI_LIB
   DEP_FILE = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\imgui.cpp.obj.d
   FLAGS = -g -std=gnu++2a
-  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
+  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187
 
 build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/imgui_draw.cpp.obj: CXX_COMPILER__IMGUI_LIB_Debug C$:/Libs/imgui_187/imgui_draw.cpp || cmake_object_order_depends_target_IMGUI_LIB
   DEP_FILE = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\imgui_draw.cpp.obj.d
   FLAGS = -g -std=gnu++2a
-  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
+  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187
 
 build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/imgui_widgets.cpp.obj: CXX_COMPILER__IMGUI_LIB_Debug C$:/Libs/imgui_187/imgui_widgets.cpp || cmake_object_order_depends_target_IMGUI_LIB
   DEP_FILE = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\imgui_widgets.cpp.obj.d
   FLAGS = -g -std=gnu++2a
-  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
+  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187
 
 build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/imgui_tables.cpp.obj: CXX_COMPILER__IMGUI_LIB_Debug C$:/Libs/imgui_187/imgui_tables.cpp || cmake_object_order_depends_target_IMGUI_LIB
   DEP_FILE = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\imgui_tables.cpp.obj.d
   FLAGS = -g -std=gnu++2a
-  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
+  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187
 
 build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/backends/imgui_impl_glfw.cpp.obj: CXX_COMPILER__IMGUI_LIB_Debug C$:/Libs/imgui_187/backends/imgui_impl_glfw.cpp || cmake_object_order_depends_target_IMGUI_LIB
   DEP_FILE = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\backends\imgui_impl_glfw.cpp.obj.d
   FLAGS = -g -std=gnu++2a
-  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
+  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\backends
 
 build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/backends/imgui_impl_opengl3.cpp.obj: CXX_COMPILER__IMGUI_LIB_Debug C$:/Libs/imgui_187/backends/imgui_impl_opengl3.cpp || cmake_object_order_depends_target_IMGUI_LIB
   DEP_FILE = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\backends\imgui_impl_opengl3.cpp.obj.d
   FLAGS = -g -std=gnu++2a
-  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
+  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\backends
 
@@ -114,12 +146,12 @@ build libIMGUI_LIB.a: CXX_STATIC_LIBRARY_LINKER__IMGUI_LIB_Debug CMakeFiles/IMGU
 #############################################
 # Order-only phony target for ROGL
 
-build cmake_object_order_depends_target_ROGL: phony || cmake_object_order_depends_target_ROGL_Source
+build cmake_object_order_depends_target_ROGL: phony || cmake_object_order_depends_target_GLAD_S_LIB cmake_object_order_depends_target_ROGL_Source
 
 build CMakeFiles/ROGL.dir/main.cpp.obj: CXX_COMPILER__ROGL_Debug C$:/Users/robko/Documents/ROGL/main.cpp || cmake_object_order_depends_target_ROGL
   DEP_FILE = CMakeFiles\ROGL.dir\main.cpp.obj.d
   FLAGS = -g -std=gnu++2a
-  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source -isystem "C:/Program Files (x86)/Assimp/include"
+  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source -isystem "C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = CMakeFiles\ROGL.dir
   OBJECT_FILE_DIR = CMakeFiles\ROGL.dir
 
@@ -131,10 +163,10 @@ build CMakeFiles/ROGL.dir/main.cpp.obj: CXX_COMPILER__ROGL_Debug C$:/Users/robko
 #############################################
 # Link the executable ROGL.exe
 
-build ROGL.exe: CXX_EXECUTABLE_LINKER__ROGL_Debug Source/CMakeFiles/ROGL_Source.dir/Log.cpp.obj CMakeFiles/ROGL.dir/main.cpp.obj | C$:/Libs/glew-2.2.0/lib/Release/x64/glew32.lib C$:/Program$ Files$ (x86)/Assimp/lib/libassimpd.dll.a C$:/Libs/glew-2.2.0/lib/Release/x64/glew32.lib C$:/Libs/GLFW338/lib-mingw-w64/glfw3.dll C$:/msys64/mingw64/lib/libz.dll.a || Source/ROGL_Source
+build ROGL.exe: CXX_EXECUTABLE_LINKER__ROGL_Debug Source/CMakeFiles/ROGL_Source.dir/Log.cpp.obj CMakeFiles/ROGL.dir/main.cpp.obj | C$:/Program$ Files$ (x86)/Assimp/lib/libassimpd.dll.a C$:/Libs/GLFW338/lib-mingw-w64/libglfw3.a libGLAD_S_LIB.a C$:/msys64/mingw64/lib/libz.dll.a || Source/ROGL_Source libGLAD_S_LIB.a
   FLAGS = -g
-  LINK_LIBRARIES = C:/Libs/glew-2.2.0/lib/Release/x64/glew32.lib  "C:/Program Files (x86)/Assimp/lib/libassimpd.dll.a"  C:/Libs/glew-2.2.0/lib/Release/x64/glew32.lib  C:/Libs/GLFW338/lib-mingw-w64/glfw3.dll  C:/msys64/mingw64/lib/libz.dll.a  -lminizip  -lz  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
-  LINK_PATH = -LC:/Users/robko/Documents/ROGL/GLEW_LIBRARIES_DIR   -LC:/Libs/GLFW338/lib-mingw-w64
+  LINK_LIBRARIES = "C:/Program Files (x86)/Assimp/lib/libassimpd.dll.a"  C:/Libs/GLFW338/lib-mingw-w64/libglfw3.a  libGLAD_S_LIB.a  C:/msys64/mingw64/lib/libz.dll.a  -lminizip  -lz  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_PATH = -LC:/Libs/GLFW338/lib-mingw-w64
   OBJECT_DIR = CMakeFiles\ROGL.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -182,7 +214,7 @@ build cmake_object_order_depends_target_ROGL_Source: phony || Source/CMakeFiles/
 build Source/CMakeFiles/ROGL_Source.dir/Log.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Log.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Log.cpp.obj.d
   FLAGS = -g -std=gnu++2a
-  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/glew-2.2.0/include/GL -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
+  INCLUDES = -IC:/Libs/AssimpV/Assimp -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir
 
@@ -219,6 +251,8 @@ build Source/rebuild_cache: phony Source/CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
+build GLAD_S_LIB: phony libGLAD_S_LIB.a
+
 build IMGUI_LIB: phony libIMGUI_LIB.a
 
 build ROGL: phony ROGL.exe
@@ -233,7 +267,7 @@ build ROGL_Source: phony Source/ROGL_Source
 #############################################
 # Folder: C:/Users/robko/Documents/ROGL/cmake-build-debug
 
-build all: phony libIMGUI_LIB.a ROGL.exe Source/all
+build all: phony libGLAD_S_LIB.a libIMGUI_LIB.a ROGL.exe Source/all
 
 # =============================================================================
 
