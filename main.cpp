@@ -37,6 +37,7 @@ int main() {
     ::Help();
     Assimp::Importer importer;
 
+
     getchar();
     return 0;
 }
