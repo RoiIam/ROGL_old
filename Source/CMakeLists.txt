@@ -12,7 +12,13 @@
 
 #nah just create library
 # if we dont specify object but ROGL_Source STATIC it wont show us error of redefinitions, weird
+
+#find_package(ASSIMP 5.2 PATHS "C:/Program Files (x86)/Assimp/")
+set(ASSIMP_INCLUDE_DIR  "C:/Program Files (x86)/Assimp/include/")
+include_directories("includes")
+include_directories(${ASSIMP_INCLUDE_DIR})
+
 add_library(ROGL_Source OBJECT
-         Log.cpp )
+         Log.cpp shader.cpp model.cpp mesh.cpp )
 
 target_link_libraries(ROGL PUBLIC ROGL_Source )

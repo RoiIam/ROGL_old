@@ -54,7 +54,7 @@ add_library(IMGUI_LIB ${IMGUI_SOURCES} ${IMGUI_HEADERS})
 include_directories(${IMGUI_LIB_NAME})
 
 #mozno este FileDialog a stb_image
-
+include_directories("includes")
 #set all libs that we want to be linked
 set(LINK_LIBS ${GLFW3_LIBRARY} GLAD_S_LIB   ${IMGUI_INCLUDE_DIR} ${IMGUI_LIB}  )
 
