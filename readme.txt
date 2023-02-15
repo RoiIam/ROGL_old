@@ -1,0 +1,1 @@
+tu sme zacali opengl odznova, refaktoring

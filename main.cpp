@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-//#define GLEW_STATIC //couldnt buld static mingqw lib and link it properly so wr use glad
+//#define GLEW_STATIC //couldnt build static mingw lib and link it properly so we use will glad
 //#include <GL/glew.h>
 
 #include <assimp/postprocess.h>
@@ -11,6 +11,8 @@
 #include "imgui.h"
 #include "Source/shader.h"
 
+#include "Instances/SceneInstance.h"
+//#include "Instances/ObjectInstance.h"
 #include <Log.h>
 #include "test.h"
 
@@ -49,7 +51,11 @@ int main() {
     //Model* lightCube;
     light_shader = new Shader(R"(C:\Users\robko\Documents\CLion\OGLR\Assets\Shaders\MultipleLights\s_light.vert)",
                               R"(C:\Users\robko\Documents\CLion\OGLR\Assets\Shaders\MultipleLights\s_light.frag)");
-
+    /*
+     //test pridania sceneInstance
+    auto* s = new SceneInstance();
+    s->DrawSky();
+    */
     while(!glfwWindowShouldClose(window))
     {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -64,5 +70,5 @@ int main() {
 
     return 0;
 
-    return 0;
+
 }

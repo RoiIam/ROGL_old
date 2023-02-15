@@ -2,6 +2,11 @@
 #include <vector>
 #include <iostream>
 
+
+#include "mesh.h"
+//#include "texture.h" je v meshi
+
+
 class Model {
 public:
 
