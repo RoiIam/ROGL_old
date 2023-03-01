@@ -1,4 +1,6 @@
 #include "SceneInstance.h"
+#include  "Utilities/Managers.h"
+#include  "Utilities/PerfAnalyzer.h"
 
 struct WindowSettings {
     GLFWmonitor *monitor;
@@ -18,16 +20,16 @@ void SceneInstance::Setup(Camera *cam) {
 
 //render selectable objects with supplied shader
 void SceneInstance::RenderObjectsS(Shader *s) {
-    /*for (auto oi: selectableObjInstances) {
+    for (auto oi: selectableObjInstances) {
         if (oi->light != nullptr)
             continue;
         oi->Render(s, false);
-    }*/
+    }
 }
 
 //render whole SceneInstance, can be overriden
 void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
-{/*
+{
     // render
     glClearColor(0, 0, 0, 0);
 
@@ -77,7 +79,7 @@ void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
         glStencilMask(0xFF);
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
     }
-    */
+
     /*disabled might have a mem leak yep it was this allocation
    //draw also BBox
    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -103,7 +105,7 @@ void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
 
 //render lights in lightinstances
 void SceneInstance::RenderLights() {
-    /*for (ObjectInstance *l: lightObjInstances) {
+    for (ObjectInstance *l: lightObjInstances) {
         light_shader->use();
         light_shader->setVec3("light.position", l->GetPos());
         light_shader->setVec3("viewPos", camera->Position);
@@ -116,7 +118,7 @@ void SceneInstance::RenderLights() {
         modelMat = glm::scale(modelMat, glm::vec3(1.02f));
         light_shader->setMat4("model", modelMat);
         dirLight_ObjInstance->Render();
-    }*/
+    }
 };
 
 void SceneInstance::DrawSky() {

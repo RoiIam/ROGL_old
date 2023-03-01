@@ -5,7 +5,7 @@
 #include <random>
 #include "FileDialog/FileDialog.h"
 #include "ObjectInstance.h"
-//#include "Camera.h"
+#include "Camera/Camera.h"
 
 //#include "Light.h"
 
@@ -25,8 +25,7 @@ public:
     virtual ~SceneInstance(){
     };
 
-    // TODO add camera
-    struct Camera{};
+
     Camera * camera;
     glm::mat4 projection;
     glm::mat4 view;

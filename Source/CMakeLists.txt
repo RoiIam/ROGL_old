@@ -22,7 +22,9 @@ include_directories(includes/FileDialog)
 include_directories(${ASSIMP_INCLUDE_DIR})
 
 add_library(ROGL_Source OBJECT
-         Log.cpp shader.cpp model.cpp mesh.cpp Instances/SceneInstance.cpp)
+         Log.cpp shader.cpp model.cpp mesh.cpp
+        Utilities/Managers.cpp Utilities/PerfAnalyzer.cpp
+        Instances/ObjectInstance.cpp Instances/SceneInstance.cpp Lights/Light.cpp Lights/DirectionalLight.cpp Lights/PointLight.cpp Camera/Camera.cpp)
 
 
 

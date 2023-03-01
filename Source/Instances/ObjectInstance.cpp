@@ -1,23 +1,14 @@
 #include "ObjectInstance.h"
 
-namespace OGLR {
 
 using namespace std;
 
 // allow more instances with the same model and or shader
 //
-class ObjectInstance {
- public:
-  // model data
-  // Model**  model2;
-  string Name="defaultName";
-  //OGLR::Managers::Transform transform{};
-  //Light* light = nullptr;
-  bool enableRender = true;
-  // creates model instance
-  explicit ObjectInstance(Model &tmp) { model = &tmp; }
+
+ObjectInstance::ObjectInstance(Model &tmp) { model = &tmp; }
   // creates model instance, pass empty name to assign generated one, pass null light for renderable objects only// yeah bad design for now
-  ObjectInstance(Model &tmp, Shader &shdr, const string& name, void * l) {
+  ObjectInstance::ObjectInstance(Model &tmp, Shader &shdr, const string& name, void * l) {
     //TODO TEMP BEFORE WE ADD LIGHTS
       model = &tmp;
       shader = &shdr;
@@ -29,31 +20,29 @@ class ObjectInstance {
       //  light=l; //else nullptr?
 
   }
-//  ObjectInstance(Model &tmp, Shader &shdr, const string& name, Light* l ) {
-//    model = &tmp;
-//    shader = &shdr;
-//    if(name.empty())
-//      Name = "NewObj";
-//    else
-//      Name = name;
-//    //if(l != nullptr)
-//    //  light=l; //else nullptr?
-//
-//  }
-  ~ObjectInstance()
-  {
+  ObjectInstance::ObjectInstance(Model &tmp, Shader &shdr, const string& name, Light* l ) {
+    model = &tmp;
+    shader = &shdr;
+    if(name.empty())
+      Name = "NewObj";
+    else
+      Name = name;
+    //if(l != nullptr)
+    //  light=l; //else nullptr?
 
   }
+ObjectInstance::~ObjectInstance()=default;
+
 
   // render using this.... no need to set model mat
-  void Render() {
+  void ObjectInstance::Render() {
     if(!enableRender)
       return;
     shader->use();
     UpdateTransformMat(shader);
     model->Draw(*shader,false);
   }
-  void Render(Shader *s, bool simple) {
+  void ObjectInstance::Render(Shader *s, bool simple) {
     if(s == nullptr)
     {
       Render();
@@ -65,26 +54,26 @@ class ObjectInstance {
     UpdateTransformMat(s);
     model->Draw(*s,simple);
   }
-  void SetPos(glm::vec3 p) {
+  void ObjectInstance::SetPos(glm::vec3 p) {
     position = p;
     SetTransformMat();
   }
-  glm::vec3 GetPos() { return position; }
+  glm::vec3 ObjectInstance::GetPos() { return position; }
 
-  void SetRot(glm::vec3 p) { rotation = p;
+  void ObjectInstance::SetRot(glm::vec3 p) { rotation = p;
     SetTransformMat();
   }
-  glm::vec3 GetRot() { return rotation; }
-  void SetScale(glm::vec3 p) {
+  glm::vec3 ObjectInstance::GetRot() { return rotation; }
+  void ObjectInstance::SetScale(glm::vec3 p) {
        scale = p;
     SetTransformMat();
   }
-  glm::vec3 GetScale() { return scale; }
+  glm::vec3 ObjectInstance::GetScale() { return scale; }
 
-  void SetDeg(float d) { deg = d; }
-  float GetDeg() { return deg; }
-  glm::mat4 GetTransformMat() { return modelMatrix; }
-  void ForceSetTransformMat(glm::vec3 posVec, float degrees,
+  void ObjectInstance::SetDeg(float d) { deg = d; }
+  float ObjectInstance::GetDeg() { return deg; }
+  glm::mat4 ObjectInstance::GetTransformMat() { return modelMatrix; }
+  void ObjectInstance::ForceSetTransformMat(glm::vec3 posVec, float degrees,
                             glm::vec3 rotAxisVec, glm::vec3 scaleVec) {
     SetScale(scaleVec);
     SetRot(rotAxisVec);
@@ -92,7 +81,7 @@ class ObjectInstance {
     deg = degrees;
     SetTransformMat();
   }
-  void UpdateTransformMat(Shader *sh)  // update model matrix with own values
+  void ObjectInstance::UpdateTransformMat(Shader *sh)  // update model matrix with own values
   {
     SetTransformMat();
     sh->setMat4("model", modelMatrix);
@@ -100,28 +89,14 @@ class ObjectInstance {
     //sh->setMat4("projection", uniforms.projection);
   }
 
-  Model *GetModel() { return model; }
-  Shader *GetShader() { return shader; }
-  void SetShader(Shader &s) {
+  Model *ObjectInstance::GetModel() { return model; }//preco je toto pointer?
+  Shader *ObjectInstance::GetShader() { return shader; }//preco je toto pointer?
+  void ObjectInstance::SetShader(Shader &s) {
     //if(s != nullptr)
       shader = &s;
   }
 
- private:
-  //
-  Model *model;
-  Shader *shader = new Shader("..\\Assets\\Shaders\\Debug\\emptyPink.vert",
-                              "..\\Assets\\Shaders\\Debug\\emptyPink.frag");
-  //Material * material;
-
-  glm::mat4 modelMatrix = glm::mat4(1.0f);
-  glm::vec3 position = glm::vec3(0.0f);
-  glm::vec3 rotation =
-      glm::vec3(1.0f);  // if we try to ratate by 0 around ... 0 0 0 its bad...
-  glm::vec3 scale = glm::vec3(1.0f);
-  float deg = 0.0f;
-
-  void SetTransformMat() {
+  void ObjectInstance::SetTransformMat() {
     modelMatrix =
         glm::mat4(1.0f);  // do not forget this otherwise we just fly off...
     modelMatrix = glm::translate(modelMatrix, position);
@@ -129,5 +104,3 @@ class ObjectInstance {
     modelMatrix = glm::scale(modelMatrix, scale);
 
   }
-};
-}
