@@ -1,6 +1,8 @@
 #include "SceneInstance.h"
-#include  "Utilities/Managers.h"
-#include  "Utilities/PerfAnalyzer.h"
+//already included in shaderinstance.h, so how to prevent this type of error? pragma once?
+//#include  "Utilities/Managers.h"
+//#include  "Utilities/PerfAnalyzer.h"
+
 
 struct WindowSettings {
     GLFWmonitor *monitor;
@@ -123,7 +125,7 @@ void SceneInstance::RenderLights() {
 
 void SceneInstance::DrawSky() {
     printf(":)");
-    /*
+
     glStencilMask(0x00);
     // cubemaps skybox
 
@@ -134,7 +136,6 @@ void SceneInstance::DrawSky() {
     glDepthFunc(GL_LESS);  // set depth function back to default was GL_LESS.... // now get it back
 
     view = camera->GetViewMatrix(); //should be using OGLR::Managers::Uniform now...
-     */
 }
 
 
