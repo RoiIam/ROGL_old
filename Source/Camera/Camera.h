@@ -42,7 +42,7 @@ public:
     float Zoom;
 
 
-    bool showCursor = false;
+    bool showCursor = true;
     bool lMove = false;
     bool rMove = false;
     bool fMove = false;

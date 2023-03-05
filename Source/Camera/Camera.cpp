@@ -1,6 +1,4 @@
 #include "Camera.h"
-
-
 #include <vector>
 
 

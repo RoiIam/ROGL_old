@@ -14,6 +14,9 @@
 
 class ShaderInstance
 {
+public:
+    explicit ShaderInstance();
+    virtual ~ShaderInstance();
 protected:
     Shader * instancedShader = nullptr;
 

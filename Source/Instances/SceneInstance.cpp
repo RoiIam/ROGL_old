@@ -1,18 +1,20 @@
 #include "SceneInstance.h"
+#include <glm/gtx/string_cast.hpp>
+
 //already included in shaderinstance.h, so how to prevent this type of error? pragma once?
 //#include  "Utilities/Managers.h"
 //#include  "Utilities/PerfAnalyzer.h"
 
 
-struct WindowSettings {
-    GLFWmonitor *monitor;
-    GLFWwindow *window;
-    unsigned int CUR_WIDTH = 800;
-    unsigned int CUR_HEIGHT = 600;
-} wS;
 
-WindowSettings windowSettings = WindowSettings();
+float a=0;
 
+SceneInstance::SceneInstance()
+{
+    windowSettings = new WindowSettings();
+    stencilShader = new StencilShaderInstance();
+};
+SceneInstance::~SceneInstance()= default;
 
 void SceneInstance::Setup(Camera *cam) {
     camera = cam;
@@ -33,16 +35,19 @@ void SceneInstance::RenderObjectsS(Shader *s) {
 void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
 {
     // render
-    glClearColor(0, 0, 0, 0);
+    glClearColor(0.5, 0.5, 0.5, 0);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     PerfAnalyzer::drawcallCount = 0;  // clear counter
 
-    DrawSky();
 
     //set in main, wwe just acces them
     view = uniforms.view;
     projection = uniforms.projection;
+
+
+
+    DrawSky();
 
     //first render selected object into stencil
     glEnable(GL_BLEND);
@@ -124,15 +129,19 @@ void SceneInstance::RenderLights() {
 };
 
 void SceneInstance::DrawSky() {
-    printf(":)");
+    //printf(":)");
 
-    glStencilMask(0x00);
+    //glStencilMask(0x00);
     // cubemaps skybox
 
-    glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when
     // values are equal to depth buffer's content
+    camera->SetPosDir(camera->Position,camera->Up,a+=0.01,0);
     view = glm::mat4(glm::mat3(camera->GetViewMatrix()));  // remove translation from the view matrix
-    cubePrimitive.render(projection, view);
+
+     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when";
+
+     //we need custom view bcs its not dependant on
+    cubePrimitive.render(&uniforms.projection, &view);
     glDepthFunc(GL_LESS);  // set depth function back to default was GL_LESS.... // now get it back
 
     view = camera->GetViewMatrix(); //should be using OGLR::Managers::Uniform now...

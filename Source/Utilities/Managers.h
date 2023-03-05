@@ -1,5 +1,4 @@
-
-#include <glm/glm.hpp>//je to spravne?
+#include <glm/glm.hpp>
 
 class Managers {
     public:
@@ -17,7 +16,7 @@ class Managers {
 
     };
 
-
-//TODO tu bude asi static problem, interal linkage vid https://stackoverflow.com/questions/3698043/static-variables-in-c
-static Managers::Uniforms uniforms; //zeby stale tu?
+//not static, interal linkage vid https://stackoverflow.com/questions/3698043/static-variables-in-c
+//nah, this https://stackoverflow.com/questions/8074174/how-to-share-one-static-variable-with-multiple-translation-unit
+extern Managers::Uniforms uniforms;
 

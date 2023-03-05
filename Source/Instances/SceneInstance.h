@@ -6,6 +6,7 @@
 #include "ObjectInstance.h"
 #include "Camera/Camera.h"
 #include "Instances/ShaderInstance.h"
+#include "Primitives/Cube.h"
 
 
 //#include "Lights/Light.h" //redefinition , already in objectinstance
@@ -17,15 +18,24 @@
 
 //#include "../Assets/Shaders/ShaderInstance/ShaderClass.h"
 
+//trochu pomimo?
+struct WindowSettings {
+    GLFWmonitor *monitor;
+    GLFWwindow *window;
+    unsigned int CUR_WIDTH = 800;
+    unsigned int CUR_HEIGHT = 600;
+}; //predtym } ws;
+
 
 
 class SceneInstance
         {
 public:
-    SceneInstance() = default;
+    SceneInstance();
 
-    virtual ~SceneInstance();
+    ~SceneInstance();
 
+    WindowSettings * windowSettings;//preco ma scena kazdy svoj?
 
     Camera *camera;
     glm::mat4 projection;
@@ -48,16 +58,15 @@ public:
     Model *lightCube;
     ObjectInstance *dirLight_ObjInstance;
     //vector<Light*> lights;
-    Shader basicShader = Shader("..\\Assets\\Shaders\\Basic\\basic.vert", "..\\Assets\\Shaders\\Basic\\basic.frag");
-    Shader *ourShader = new Shader("..\\Assets\\Shaders\\01_SimpleTexture\\1.model_loading.vs",
-                                   "..\\Assets\\Shaders\\01_SimpleTexture\\1.model_loading.fs");
+    Shader basicShader = Shader("..\\Assets\\Shaders\\Forward\\basic.vert", "..\\Assets\\Shaders\\Forward\\basic.frag");
+
     int selectedHierarchyObj = -1;
     bool disableShadows = true;
 
-    ObjectInstance *selectedInstance; // either ray RMB  or ImGui window
-    //Cube cubePrimitive = Cube(nullptr);
+    ObjectInstance *selectedInstance= nullptr; // either ray RMB  or ImGui window //if not set to nullptr, then crash
+    Cube cubePrimitive = Cube(nullptr);
 
-    StencilShaderInstance * stencilShader = new StencilShaderInstance();
+    StencilShaderInstance * stencilShader; // nemoze byt na pointeri new....
 
     virtual void Setup(Camera *cam);
 

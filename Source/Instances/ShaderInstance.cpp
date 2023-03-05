@@ -1,6 +1,10 @@
 //example of one file having definitions for multiple classes in one  .h full of declarations
 #include "ShaderInstance.h"
+//we need to addres how to report which shader got errors, bcs now its mainly cant find the shader, wrong location errors
 
+
+ShaderInstance::ShaderInstance() = default;
+ShaderInstance::~ShaderInstance() = default;
 
 void ShaderInstance::SetShader(Shader *s) {
     instancedShader = s;
@@ -8,10 +12,10 @@ void ShaderInstance::SetShader(Shader *s) {
 //nie void SetShader::ShaderInstance(Shader * s)
 
 
-/*void ShaderInstance::SetupMaterial() //virtual, why wont it say that?
+void ShaderInstance::SetupMaterial() //virtual, why wont it say that?
 {
-// lets try to uncomment it, if we even need it
-};*/
+
+};
 
 void PhongShaderInstance::SetupMaterial() //override
 {
@@ -20,8 +24,8 @@ void PhongShaderInstance::SetupMaterial() //override
 
 
 BasicShaderInstance::BasicShaderInstance() {
-    instancedShader = new Shader("..\\..\\Assets\\Shaders\\Basic\\basic.vert",
-                                 "..\\..\\Assets\\Shaders\\Basic\\basic.frag");
+    instancedShader = new Shader("..\\Assets\\Shaders\\Forward\\basic.vert",
+                                 "..\\Assets\\Shaders\\Forward\\basic.frag");
 };
 
 void BasicShaderInstance::SetupMaterial() //override
@@ -34,8 +38,8 @@ void BasicShaderInstance::SetupMaterial() //override
 
 
 StencilShaderInstance::StencilShaderInstance() {
-    instancedShader = new Shader("..\\Assets\\Shaders\\Basic\\stencil.vert",
-                                 "..\\Assets\\Shaders\\Basic\\stencil.frag");
+    instancedShader = new Shader("..\\Assets\\Shaders\\Forward\\stencil.vert",
+                                 "..\\Assets\\Shaders\\Forward\\stencil.frag");
 };
 
 void StencilShaderInstance::SetupMaterial() //override
