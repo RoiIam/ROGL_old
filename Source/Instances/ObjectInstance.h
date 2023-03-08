@@ -48,7 +48,6 @@ public:
     // creates model instance
 
     explicit ObjectInstance(Model &tmp);
-    ObjectInstance(Model &tmp, Shader &shdr, const std::string& name, void * l);
     ObjectInstance(Model &tmp, Shader &shdr, const std::string& name, Light* l );
     ~ObjectInstance();
 

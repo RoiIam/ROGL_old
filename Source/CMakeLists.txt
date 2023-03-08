@@ -26,7 +26,7 @@ add_library(ROGL_Source OBJECT
         Log.cpp shader.cpp mesh.cpp model.cpp
         Utilities/Managers.cpp Utilities/PerfAnalyzer.cpp
         Instances/ObjectInstance.cpp Instances/SceneInstance.cpp Lights/Light.cpp Lights/DirectionalLight.cpp Lights/PointLight.cpp
-        Camera/Camera.cpp Instances/ShaderInstance.cpp Primitives/Cube.cpp Primitives/DefaultCube.cpp Primitives/Grass.cpp Utilities/Controls.cpp)
+        Camera/Camera.cpp Instances/ShaderInstance.cpp Primitives/Cube.cpp Primitives/DefaultCube.cpp Primitives/Grass.cpp Utilities/Controls.cpp Scenes/ForwardScene1.cpp Scenes/DeferredScene1.cpp )
 
 
 target_link_libraries(ROGL PUBLIC ROGL_Source)

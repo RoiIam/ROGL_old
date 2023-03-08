@@ -8,19 +8,9 @@ using namespace std; //TODO remove
 
 ObjectInstance::ObjectInstance(Model &tmp) { model = &tmp; }
   // creates model instance, pass empty name to assign generated one, pass null light for renderable objects only// yeah bad design for now
-  ObjectInstance::ObjectInstance(Model &tmp, Shader &shdr, const string& name, void * l) {
-    //TODO TEMP BEFORE WE ADD LIGHTS
-      model = &tmp;
-      shader = &shdr;
-      if(name.empty())
-          Name = "NewObj";
-      else
-          Name = name;
-      //if(l != nullptr)
-      //  light=l; //else nullptr?
 
-  }
   ObjectInstance::ObjectInstance(Model &tmp, Shader &shdr, const string& name, Light* l ) {
+    //TODO decouple lights from objects...
     model = &tmp;
     shader = &shdr;
     if(name.empty())

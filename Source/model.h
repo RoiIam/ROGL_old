@@ -1,3 +1,8 @@
+#ifndef ROGL_MODEL_H
+#define ROGL_MODEL_H
+
+
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -55,3 +60,4 @@ private:
 protected: //was private
     unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
 };
+#endif
