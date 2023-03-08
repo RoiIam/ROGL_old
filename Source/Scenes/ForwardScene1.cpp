@@ -12,15 +12,15 @@ void ForwardScene1::Setup(Camera *cam) // override
     sceneDescription = "This is a test scene for forward rendering with support for shadows";
 //shaders load, setup
 // uhh "//" both  // \\ and // /work, but in textures it fs up while using
-    ourShader = new Shader("..\\Assets\\Shaders\\01_SimpleTexture\\1.model_loading.vs",
-                           "..\\Assets\\Shaders\\01_SimpleTexture\\1.model_loading.fs");
+    ourShader = new Shader("..\\Assets\\Shaders\\Forward\\01_SimpleTexture\\1.model_loading.vs",
+                           "..\\Assets\\Shaders\\Forward\\01_SimpleTexture\\1.model_loading.fs");
     pinkDebug = new Shader("..\\Assets\\Shaders\\Debug\\emptyPink.vert",
                            "..\\Assets\\Shaders\\Debug\\emptyPink.frag");
-    grassShader = new Shader("..\\Assets\\Shaders\\Transparent\\transparentGrass.vert",
-                             "..\\Assets\\Shaders\\Transparent\\transparentGrass.frag");
+    grassShader = new Shader("..\\Assets\\Shaders\\Forward\\Transparent\\transparentGrass.vert",
+                             "..\\Assets\\Shaders\\Forward\\Transparent\\transparentGrass.frag");
 
-    mesh_shader = new Shader("..\\Assets\\Shaders\\MultipleLights\\mesh.vert",
-                             "..\\Assets\\Shaders\\MultipleLights\\mesh.frag");  // light compatible
+    mesh_shader = new Shader("..\\Assets\\Shaders\\Forward\\MultipleLights\\mesh.vert",
+                             "..\\Assets\\Shaders\\Forward\\MultipleLights\\mesh.frag");  // light compatible
 
     basicShader = Shader("..\\Assets\\Shaders\\Basic\\basic.vert",
                          "..\\Assets\\Shaders\\Basic\\basic.frag");
