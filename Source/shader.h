@@ -19,7 +19,7 @@ class Shader{
 
 
 private:
-    void checkCompileErrors(GLuint shader, std::string type);
+    void checkCompileErrors(GLuint shader, std::string type); //TODO add shader location/name so debug is easier
 
 public:
     Shader();

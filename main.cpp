@@ -9,13 +9,22 @@
 #include <assimp/Importer.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include "imgui.h"
 #include "Source/shader.h"
-
 #include "Instances/SceneInstance.h"
+
 //#include "Instances/ObjectInstance.h"
 #include <Log.h>
 #include "test.h"
+
+
+#include "imgui.h"
+//#include <imgui_impl_glfw.h> //179
+//#include <imgui_impl_opengl3.h> //179
+#include <backends/imgui_impl_glfw.h> //187
+#include <backends/imgui_impl_opengl3.h> //187
+//#define IMGUI_ENABLE_WIN32_DEFAULT_IME_FUNCTIONS
+#include <imgui_internal.h> //for more functions
+
 
 
 float backgroundClearCol[4] = {0.7f, 0.7f, 0.7f, 0.7f};
@@ -29,6 +38,14 @@ float cf[3];
 
 
 int main() {
+
+    /* check c++ version
+    if (__cplusplus == 201703L) std::cout << "C++17\n";
+    else if (__cplusplus == 201402L) std::cout << "C++14\n";
+    else if (__cplusplus == 201103L) std::cout << "C++11\n";
+    else if (__cplusplus == 199711L) std::cout << "C++98\n";
+    else std::cout << "pre-standard C++\n";
+    */
 
     //GLFWwindow* window;
 
@@ -77,6 +94,22 @@ int main() {
     auto camera = new Camera(glm::vec3(0.0f, .0f, 3.0f));
 
     sc->Setup(camera);
+
+    // init IMGUI
+    //  Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    // Setup Platform/Renderer bindings
+    ImGui_ImplGlfw_InitForOpenGL(
+            windowSettings.window,true);  // remove callbacks with false, to manually control them, but let it be true to allow for input (of chars prolly)
+    ImGui_ImplOpenGL3_Init(NULL);
+    ImGuiIO& io = ImGui::GetIO();
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    ImGui::SetWindowFocus(nullptr);  // start unfocussed
+
+
     while (!glfwWindowShouldClose(windowSettings.window)) {
         /*glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -115,7 +148,18 @@ int main() {
         }
 
         sc->RenderSceneInstance(nullptr);
+
+        // draw GUI last
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
         glfwPollEvents();
+        ImGui::NewFrame();
+
+        //DrawImGui();
+        ImGui::Begin("test1");
+        ImGui::End();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(windowSettings.window);
         //TODO continue with adding functionality below
 

@@ -1,6 +1,8 @@
 #include <imgui.h>
 #include <iostream>
 #include <vector>
+#include <sstream>
+#include <string> //to use  std::to_string
 #include <random>
 #include "FileDialog/FileDialog.h"
 #include "ObjectInstance.h"
@@ -8,6 +10,8 @@
 #include "Instances/ShaderInstance.h"
 #include "Primitives/Cube.h"
 #include <glm/gtx/string_cast.hpp>
+
+#include "Lights/DirectionalLight.h"
 
 //#include "Lights/Light.h" //redefinition , already in objectinstance
 
@@ -52,7 +56,7 @@ public:
     //DefaultCube * cube = new DefaultCube(); //for
 
     //every scene has dir light for default with default pos of...
-    //Light* dirLight;
+    Light* dirLight;
     glm::vec3 dirLightDirection = glm::vec3(0.5f, -1.0f, 0.5f);
     Shader *light_shader;
     Model *lightCube;

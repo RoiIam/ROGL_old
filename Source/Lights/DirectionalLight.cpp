@@ -1,13 +1,8 @@
 //zatial len cpp?
+#include "DirectionalLight.h"
 
-#include "Light.h"
 
-class DirectionalLight: public Light{
-public:
-    glm::vec3 direction;
-    using Light::Light;
-
-private:
-
-};
+DirectionalLight::DirectionalLight()=default;
+DirectionalLight::~DirectionalLight()=default;
+;
 

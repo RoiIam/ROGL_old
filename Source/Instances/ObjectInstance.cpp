@@ -27,8 +27,8 @@ ObjectInstance::ObjectInstance(Model &tmp) { model = &tmp; }
       Name = "NewObj";
     else
       Name = name;
-    //if(l != nullptr)
-    //  light=l; //else nullptr?
+    if(l != nullptr)
+      light=l; //else nullptr?
 
   }
 ObjectInstance::~ObjectInstance()=default;

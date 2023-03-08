@@ -56,7 +56,7 @@ include_directories(${IMGUI_LIB_NAME})
 #mozno este FileDialog a stb_image
 include_directories("includes")
 #set all libs that we want to be linked
-set(LINK_LIBS ${GLFW3_LIBRARY} GLAD_S_LIB   ${IMGUI_INCLUDE_DIR} ${IMGUI_LIB}  )
+set(LINK_LIBS ${GLFW3_LIBRARY} GLAD_S_LIB    IMGUI_LIB  )#tu bola chyba IMGUI_LIB ma byt bez ${} a ${IMGUI_INCLUDE_DIR} not needed
 
 
 add_executable(ROGL main.cpp)

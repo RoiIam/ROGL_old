@@ -7,14 +7,14 @@
 
 
 
-float a=0;
+float a = 0;
 
-SceneInstance::SceneInstance()
-{
+SceneInstance::SceneInstance() {
     windowSettings = new WindowSettings();
     stencilShader = new StencilShaderInstance();
 };
-SceneInstance::~SceneInstance()= default;
+
+SceneInstance::~SceneInstance() = default;
 
 void SceneInstance::Setup(Camera *cam) {
     camera = cam;
@@ -41,10 +41,9 @@ void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
     PerfAnalyzer::drawcallCount = 0;  // clear counter
 
 
-    //set in main, wwe just acces them
+    //set in main, we just access them
     view = uniforms.view;
     projection = uniforms.projection;
-
 
 
     DrawSky();
@@ -135,12 +134,12 @@ void SceneInstance::DrawSky() {
     // cubemaps skybox
 
     // values are equal to depth buffer's content
-    camera->SetPosDir(camera->Position,camera->Up,a+=0.01,0);
+    camera->SetPosDir(camera->Position, camera->Up, a += 0.01, 0);
     view = glm::mat4(glm::mat3(camera->GetViewMatrix()));  // remove translation from the view matrix
 
-     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when";
+    glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when";
 
-     //we need custom view bcs its not dependant on
+    //we need custom view bcs its not dependant on
     cubePrimitive.render(&uniforms.projection, &view);
     glDepthFunc(GL_LESS);  // set depth function back to default was GL_LESS.... // now get it back
 
@@ -150,31 +149,39 @@ void SceneInstance::DrawSky() {
 
 //create and assign sun directional light
 void SceneInstance::SetupGlobalLight() {
-    /*dirLight = new DirectionalLight(OGLR::LightType::Directional);
+
+    dirLight = new DirectionalLight(LightType::Directional);
     lightCube = new Model("../Assets/Models/LightCube/LightCube.obj");
-    light_shader = new Shader("..\\Assets\\Shaders\\MultipleLights\\s_light.vert",
-                              "..\\Assets\\Shaders\\MultipleLights\\s_light.frag");
+    light_shader = new Shader("..\\Assets\\Shaders\\Forward\\MultipleLights\\s_light.vert",
+                              "..\\Assets\\Shaders\\Forward\\MultipleLights\\s_light.frag");
 
     dirLight_ObjInstance = new ObjectInstance(*lightCube, *light_shader, "globalDirlight", dirLight);
     dirLight_ObjInstance->SetPos(glm::vec3(2.0f, 5.0f, 0.0f)); // dir Light pos does matter
-    dynamic_cast<DirectionalLight *>(dirLight_ObjInstance->light)->direction = glm::vec3(
-            dirLightDirection); //dynamic is better than static but works only with virtual destructor? wut
+    auto a = dynamic_cast<DirectionalLight *>(dirLight_ObjInstance->light);
+    if (a == nullptr) {
+        std::cout << "ERROR cant cast light to dirlight, is it nullptr?";
+        return;
+    }
+    //pozor ak light je null toto segfaultne lebo tiez bude null
+    dynamic_cast<DirectionalLight *>(dirLight_ObjInstance->light)->direction
+            = glm::vec3(dirLightDirection); //dynamic is better than static but works only with virtual destructor? wut
     lightObjInstances.push_back(dirLight_ObjInstance);
     //its safer to not do it here
     //selectableObjInstances.push_back(dirLight_ObjInstance);add as instance do it later , now its first in  queue //maybe make this as generic fucntion, we need to always do this for lights, opaque and selectable
-    */
-     }
+
+}
 
 //render gui for selecting, changing parameters
 void SceneInstance::ImGuiHierarchy() {
-    /*
+
     //create hierarchy and add selection functionality
     ImGui::Begin("Hierarchy");
     int n = 0;
 
     for (n = 0; n < selectableObjInstances.size(); n++) {
         // bacause of ids being created from the hash of the string, it will only select first occurences, need to assign own ids added ##
-        if (ImGui::Selectable((selectableObjInstances[n]->Name + "##" + to_string(n)).c_str(),
+        //use std::to_string()
+        if (ImGui::Selectable((selectableObjInstances[n]->Name + "##" + std::to_string(n)).c_str(),
                               selectedHierarchyObj == n)) {
             //if already selected, deselect
             if (selectedHierarchyObj == n) {
@@ -189,12 +196,11 @@ void SceneInstance::ImGuiHierarchy() {
     }
     if (selectedHierarchyObj != -1 && selectableObjInstances[selectedHierarchyObj] != nullptr) {
         ImGui::Checkbox("disable render ", &selectableObjInstances[selectedHierarchyObj]->enableRender);
-
     }
     //debug ImGui::Text("%s%d count %d", "selected \n", selected, n);
     //later draw some selected variables/uniforms
     ImGui::End();
-*/
+
 }
 
 //didnt implement

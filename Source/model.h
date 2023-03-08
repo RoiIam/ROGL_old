@@ -36,7 +36,7 @@ public:
 
 
     Model();
-     explicit Model(std::string const &path, bool gamma);
+    Model(std::string const &path, bool gamma=false);
     virtual ~Model();
     virtual void Draw(Shader &shader, bool simple);
 
