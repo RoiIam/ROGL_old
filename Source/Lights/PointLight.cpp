@@ -1,5 +1,4 @@
 //zatial len cpp?
-
 #include "Light.h"
 
 class PointLight: public Light{

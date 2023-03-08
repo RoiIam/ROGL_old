@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include <vector>
+
 
 
     // constructor with vectors

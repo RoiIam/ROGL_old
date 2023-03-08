@@ -14,7 +14,7 @@
 # if we dont specify object but ROGL_Source STATIC it wont show us error of redefinitions, weird
 
 #find_package(ASSIMP 5.2 PATHS "C:/Program Files (x86)/Assimp/")
-set(ASSIMP_INCLUDE_DIR  "C:/Program Files (x86)/Assimp/include/")
+set(ASSIMP_INCLUDE_DIR "C:/Program Files (x86)/Assimp/include/")
 
 link_directories(includes/FileDialog/)
 
@@ -22,12 +22,10 @@ include_directories(includes/FileDialog)
 include_directories(${ASSIMP_INCLUDE_DIR})
 
 add_library(ROGL_Source OBJECT
-         Log.cpp shader.cpp model.cpp mesh.cpp
+        Log.cpp shader.cpp mesh.cpp model.cpp
         Utilities/Managers.cpp Utilities/PerfAnalyzer.cpp
         Instances/ObjectInstance.cpp Instances/SceneInstance.cpp Lights/Light.cpp Lights/DirectionalLight.cpp Lights/PointLight.cpp
-        Camera/Camera.cpp Instances/ShaderInstance.cpp Primitives/Cube.cpp)
+        Camera/Camera.cpp Instances/ShaderInstance.cpp Primitives/Cube.cpp Primitives/DefaultCube.cpp Primitives/Grass.cpp)
 
 
-
-
-target_link_libraries(ROGL PUBLIC ROGL_Source )
+target_link_libraries(ROGL PUBLIC ROGL_Source)

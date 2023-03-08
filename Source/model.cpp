@@ -1,15 +1,3 @@
-
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
-//#include <glad.h>
-
-#include <stb_image.h>
-
-#include <assimp/Importer.hpp>
-#include <fstream>
-
-
-#include "shader.h"
 #include "model.h"
 
 

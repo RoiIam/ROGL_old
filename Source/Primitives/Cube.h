@@ -4,12 +4,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include <string>
+#include <iostream>
 #include "stb_image.h" //inc here or  in its .h?
+#include "Utilities/PerfAnalyzer.h" //already in main?
 
-class Cube{
+class Cube {
 private:
     //Declaring buffer parameters
-    GLuint	vao, vbo, ebo; //treba glad
+    GLuint vao, vbo, ebo; //treba glad
 
     unsigned int cubemapTexture; //= loadCubemap(faces);
 
@@ -30,8 +32,8 @@ public:
 
     //Shader ourShader = Shader("..\\Assets\\Shaders\\Basic\\skybox.vert", "..\\Assets\\Shaders\\Basic\\skybox.frag"); ahaaaa
     Shader ourShader;
-    static inline glm::vec3 min= glm::vec3(-1,-1,-1);
-    static inline  glm::vec3 max = glm::vec3(1,1,1);
+    static inline glm::vec3 min = glm::vec3(-1, -1, -1);
+    static inline glm::vec3 max = glm::vec3(1, 1, 1);
     // Declares the Vertex Array, where the coordinates of all the 8 cube vertices are stored
     static inline float vertices[] = {
             // positions
@@ -79,17 +81,17 @@ public:
     };
 
     inline static GLfloat vertices2[] = {
-            1.0,	1.0,	1.0,
-            0.0f,	1.0,	1.0,
-            1.0,	1.0,	0.0f,
-            0.0f,	1.0,	0.0f,
-            1.0,	0.0f,	1.0,
-            0.0f,	0.0f,	1.0,
-            0.0f,	0.0f,	0.0f,
-            1.0,	0.0f,	0.0f
+            1.0, 1.0, 1.0,
+            0.0f, 1.0, 1.0,
+            1.0, 1.0, 0.0f,
+            0.0f, 1.0, 0.0f,
+            1.0, 0.0f, 1.0,
+            0.0f, 0.0f, 1.0,
+            0.0f, 0.0f, 0.0f,
+            1.0, 0.0f, 0.0f
     };
     // Declares the Elements Array, where the indexs to be drawn are stored
-    inline static GLuint elements [] = {
+    inline static GLuint elements[] = {
             3, 2, 6, 7, 4, 2, 0,
             3, 1, 6, 5, 4, 1, 0
     };
@@ -98,5 +100,5 @@ public:
     Cube(Shader *shader);
 
 
-    void render (glm::mat4 *projection,glm::mat4 *view);
+    void render(glm::mat4 *projection, glm::mat4 *view);
 };

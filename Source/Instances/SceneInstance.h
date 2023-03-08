@@ -7,7 +7,7 @@
 #include "Camera/Camera.h"
 #include "Instances/ShaderInstance.h"
 #include "Primitives/Cube.h"
-
+#include <glm/gtx/string_cast.hpp>
 
 //#include "Lights/Light.h" //redefinition , already in objectinstance
 

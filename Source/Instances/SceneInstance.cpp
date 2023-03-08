@@ -1,5 +1,5 @@
 #include "SceneInstance.h"
-#include <glm/gtx/string_cast.hpp>
+
 
 //already included in shaderinstance.h, so how to prevent this type of error? pragma once?
 //#include  "Utilities/Managers.h"

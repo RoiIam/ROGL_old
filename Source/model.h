@@ -2,7 +2,17 @@
 #include <vector>
 #include <iostream>
 
+//we had to move all includes into headers, to prevent grass not having those two assimp imports
+//it was fine when it was needed only for model.cpp but when we tried to inherit in grass, it wouldnt find scene.h,because we only imported them in .cpp
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
+#include <stb_image.h>
 
+#include <assimp/Importer.hpp>
+#include <fstream>
+
+
+#include "shader.h"
 #include "mesh.h"
 //#include "texture.h" je v meshi
 
@@ -42,5 +52,6 @@ private:
     // the required info is returned as a Texture struct.
     std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
 
+protected: //was private
     unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
 };

@@ -1,4 +1,3 @@
-
 #include <glm/vec3.hpp>//ci ine?
 
 enum LightType { Directional, Point, Spot, Other };

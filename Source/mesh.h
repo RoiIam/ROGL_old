@@ -2,6 +2,9 @@
 #include <string>
 #include <vector>
 
+#include "shader.h"
+
+
 
 #define MAX_BONE_INFLUENCE 4
 //# define vector std::vector
@@ -41,8 +44,8 @@ public:
     unsigned int VAO;
 
 
-    void Draw(Shader &shader);
-    void DrawSimple(Shader &shader);
+    virtual void Draw(Shader &shader);
+    virtual void DrawSimple(Shader &shader);
 
 
 private:

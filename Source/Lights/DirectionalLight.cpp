@@ -1,7 +1,5 @@
 //zatial len cpp?
 
-
-
 #include "Light.h"
 
 class DirectionalLight: public Light{

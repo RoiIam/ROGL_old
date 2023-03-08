@@ -1,7 +1,7 @@
 #include "ObjectInstance.h"
 
 
-using namespace std;
+using namespace std; //TODO remove
 
 // allow more instances with the same model and or shader
 //

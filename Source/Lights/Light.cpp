@@ -1,7 +1,3 @@
-//
-// Created by RoiIam on 1. 3. 2023.
-//
-
 #include "Light.h"
 
     //make enum

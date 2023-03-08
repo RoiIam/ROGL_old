@@ -1,3 +1,5 @@
+#pragma once //for now guard it like this-scene instance includes cube and this, cube also includes this...
+// note: unguarded header; consider using #ifdef guards or #pragma once
 
 /*
  * Simple Utility ,to count drawcalls
