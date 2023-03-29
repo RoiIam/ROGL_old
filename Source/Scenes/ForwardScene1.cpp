@@ -22,8 +22,8 @@ void ForwardScene1::Setup(Camera *cam) // override
     mesh_shader = new Shader("..\\Assets\\Shaders\\Forward\\MultipleLights\\mesh.vert",
                              "..\\Assets\\Shaders\\Forward\\MultipleLights\\mesh.frag");  // light compatible
 
-    basicShader = Shader("..\\Assets\\Shaders\\Basic\\basic.vert",
-                         "..\\Assets\\Shaders\\Basic\\basic.frag");
+    basicShader = Shader("..\\Assets\\Shaders\\Forward\\basic.vert",
+                         "..\\Assets\\Shaders\\Forward\\basic.frag");
 
 //models load, setup
     ourModel = new Model("../Assets/Models/OwnCube/Cube.obj");
@@ -164,7 +164,7 @@ void ForwardScene1::RenderObjects(Shader *shader, bool simple) //override
     mesh_shader->setMat4("projection", projection);
     mesh_shader->setMat4("view", view);
 
-    // amybe you cant do this after you calculated all previous light calcs....
+    // maybe you cant do this after you calculated all previous light calcs....
     xModel_ObjInstance->SetPos(glm::vec3(-5.0f, 0.0f, 0.5)); //mesh_shader.setMat4("model", model);
     xModel->Draw(*mesh_shader, false);
 

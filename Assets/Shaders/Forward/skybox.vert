@@ -8,7 +8,7 @@ uniform mat4 projection;
 
 void main()
 {
-    TexCoords = vec3(-aPos.x, aPos.y, aPos.z); // Flip X so that words make sense again //thnks comments
+    TexCoords = vec3(-aPos.x, -aPos.y, -aPos.z); // Flip X so that words make sense again //thnks comments
     vec4 pos = projection * view * vec4(aPos, 1.0);
     gl_Position = pos.xyww;
 }

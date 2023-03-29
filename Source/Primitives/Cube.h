@@ -1,3 +1,4 @@
+#pragma once
 #include "glad/glad.h"
 #include "shader.h"
 #include <glm/glm.hpp>
@@ -20,8 +21,8 @@ private:
                     //enjoy https://www.google.com/maps/place/43%C2%B050'23.8%22N+79%C2%B023'12.2%22W/@43.8398201,-79.3890158,78a,35y,87.33h,69.1t/data=!3m1!1e3!4m5!3m4!1s0x0:0x0!8m2!3d43.8399294!4d-79.3867094
                     "../Assets/models/skybox/right.jpg",
                     "../Assets/models/skybox/left.jpg",
-                    "../Assets/models/skybox/top.jpg",//2
-                    "../Assets/models/skybox/bottom.jpg", //1 had to rotate these two
+                    "../Assets/models/skybox/bottom.jpg",
+                    "../Assets/models/skybox/top.jpg",
                     "../Assets/models/skybox/front.jpg",
                     "../Assets/models/skybox/back.jpg"
             };

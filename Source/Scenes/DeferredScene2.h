@@ -8,7 +8,7 @@
 #include "../Lights//Light.h"
 #include "glm/gtc/type_ptr.hpp" //for make_vec3
 
-#include "FileDialog.h"
+#include "FileDialog/FileDialog.h"
 
 
 class DeferredScene2 : public SceneInstance {//should we use public?

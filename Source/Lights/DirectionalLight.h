@@ -1,3 +1,4 @@
+#pragma once
 #include "Light.h" //redefinition lebo uz skor sme dakde inkludli
 
 class DirectionalLight : public Light {

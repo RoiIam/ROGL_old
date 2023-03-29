@@ -1,3 +1,4 @@
+#pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -71,7 +72,7 @@ public:
     void toggleCursor();
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch);
+    void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch=true);
     //constrainPitch was GLboolean from glad.h, idk why
 
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis

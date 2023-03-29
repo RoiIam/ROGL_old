@@ -22,7 +22,7 @@ include_directories("../includes/FileDialog")#needed to add ../
 include_directories(${ASSIMP_INCLUDE_DIR})
 
 add_library(ROGL_Source OBJECT
-        Log.cpp ../includes/FileDialog/FileDialog.cpp shader.cpp mesh.cpp model.cpp
+        Log.cpp ../includes/FileDialog/FileDialog.cpp ${IMGUI_LIB_NAME}/imgui_demo.cpp shader.cpp mesh.cpp model.cpp
         Utilities/Managers.cpp Utilities/PerfAnalyzer.cpp
         Instances/ObjectInstance.cpp Instances/SceneInstance.cpp Lights/Light.cpp Lights/DirectionalLight.cpp Lights/PointLight.cpp
         Camera/Camera.cpp Instances/ShaderInstance.cpp Primitives/Cube.cpp Primitives/DefaultCube.cpp Primitives/Grass.cpp Utilities/Controls.cpp Scenes/ForwardScene1.cpp Scenes/DeferredScene1.cpp Scenes/DeferredScene2.cpp)

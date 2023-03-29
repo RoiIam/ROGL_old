@@ -134,7 +134,6 @@ void SceneInstance::DrawSky() {
     // cubemaps skybox
 
     // values are equal to depth buffer's content
-    camera->SetPosDir(camera->Position, camera->Up, a += 0.01, 0);
     view = glm::mat4(glm::mat3(camera->GetViewMatrix()));  // remove translation from the view matrix
 
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when";
