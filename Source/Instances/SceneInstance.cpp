@@ -24,14 +24,19 @@ void SceneInstance::Setup(Camera *cam) {
 
 //render selectable objects with supplied shader
 void SceneInstance::RenderObjectsS(Shader *s) {
+    int a = 0;
     for (auto oi: selectableObjInstances) {
         if (oi->light != nullptr)
             continue;
         oi->Render(s, false);
+        //std::cout << oi->Name << "\n";
+        //std::cout <<"sceneinstance renderObjectsS "<< a << "\n";
+        a++;
+
     }
 }
 
-//render whole SceneInstance, can be overriden
+// TODO override render whole SceneInstance, can be overriden
 void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
 {
     // render
@@ -41,12 +46,14 @@ void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
     PerfAnalyzer::drawcallCount = 0;  // clear counter
 
 
-    //set in main, we just access them
+    DrawSky();
+    //set in main, wwe just acces them
     view = uniforms.view;
     projection = uniforms.projection;
 
+    //std::cout<< "uniV Scenei\n" << glm::to_string(uniforms.view);
 
-    DrawSky();
+
 
     //first render selected object into stencil
     glEnable(GL_BLEND);
@@ -68,7 +75,7 @@ void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
 
     // draw stencil tested ovelay
     if (selectedInstance != nullptr) {
-
+        //std::cout << "Draw Stencil\n";
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
         glStencilMask(0x00);  // disable writing to the stencil buffer
         glDisable(GL_DEPTH_TEST);
@@ -85,6 +92,8 @@ void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
         glStencilMask(0xFF);
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
     }
+    glDisable(GL_STENCIL_TEST); //we need to disable it so next time it
+    //doesnt draw sky over the stencil
 
     /*disabled might have a mem leak yep it was this allocation
    //draw also BBox

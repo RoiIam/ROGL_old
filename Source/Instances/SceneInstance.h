@@ -1,6 +1,7 @@
 #pragma once
 #include <imgui.h>
 #include <iostream>
+#include <memory>
 #include <vector>
 #include <sstream>
 #include <string> //to use  std::to_string
@@ -71,7 +72,7 @@ public:
     ObjectInstance *selectedInstance= nullptr; // either ray RMB  or ImGui window //if not set to nullptr, then crash
     Cube cubePrimitive = Cube(nullptr);
 
-    StencilShaderInstance * stencilShader; // nemoze byt na pointeri new....
+    StencilShaderInstance * stencilShader;
 
     virtual void Setup(Camera *cam);
 

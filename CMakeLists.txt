@@ -3,6 +3,7 @@ project(ROGL)
 #set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules/")
 
 set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_FLAGS -fuse-ld=lld) #loong times for standard gxx projectdidnt work
 set(CMAKE_FIND_DEBUG_MODE TRUE) #to write searched paths in console
 #seems like using find_package helps us include it as static
 find_package(ASSIMP 5.2 PATHS "C:/Program Files (x86)/Assimp/")

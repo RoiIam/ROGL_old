@@ -1,3 +1,4 @@
+#include <glm/gtc/type_ptr.hpp> //to use make_vec3
 #include "../Instances/SceneInstance.h"
 #include "../Instances/ObjectInstance.h"
 #include "Primitives/DefaultCube.h"
@@ -27,10 +28,12 @@ private:
     Model *xModel;
     DefaultCube cube; //has no default constructor, either cahnge to pointer or add default empty constr
     Model *shrekModel;
+    Model *sphereModel;
     //instances , probably cant do this too?
     ObjectInstance *cube_ObjInstance;// = new ObjectInstance(*ourModel); ehh no please not working, says null model
     ObjectInstance *xModel_ObjInstance;
     ObjectInstance *shrekModel_ObjInstance;
+    ObjectInstance *sphereModel_ObjInstance;
     Grass grassplane;
 
     std::vector<ObjectInstance *> grassInstances;
@@ -42,26 +45,43 @@ private:
     Shader basicShader;
     Shader *pinkDebug;
     Shader *grassShader;
+    Shader *glintChShader;
 
+    //Glints
+    GLuint dicoTex;
+    GLuint texID;
+    //Glints vars
+    float logMicrofacetDensity= 27.0;
+    float microfacetRelativeArea=0.1;//1 for best
+    float alpha_x=0.5;
+    float alpha_y=0.5;
+    float lightInten=8.0;
     // Add lights
 public:
 
     Shader *mesh_shader;
 
 private:
-    glm::vec3 lightPos = glm::vec3(0.0f, 2.0f, 3.0f);
+    glm::vec3 lightPos = glm::vec3(3.0f, 3.5f, 1.5f);
     glm::vec3 dirLightPos = glm::vec3(0.7f, -0.4f, -0.1f);
     int enableSpotlight = 1;
 
     float m = 0.5f;
 
 public:
+
+
+    //TODO glints
+    GLuint loadTex(const std::string& baseName, const unsigned int nlevels, const GLsizei ndists);
     void Setup(Camera *cam) override; // only once before the render loop
 
 
     //jsut our testscene needs this
     void SetupShaderMaterial();
 
-    void RenderObjects(Shader *shader, bool simple);//maybe override?
+    void RenderObjects(Shader *shader, bool simple);
     void RenderLights() override;
+    void drawShrek();
+    //void RenderSceneInstance(Shader *s)override;//netreba
+
 };

@@ -34,6 +34,11 @@
 #include "Scenes/DeferredScene1.h"
 #include "Scenes/DeferredScene2.h"
 
+//for glints_ch
+#define TINYEXR_USE_MINIZ 0
+#include "zlib.h"
+#include "tinyexr.h"
+
 //compiler flags, idk what those do
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wint-to-void-pointer-cast"
@@ -48,11 +53,11 @@ void PrintShader();
 
 float backgroundClearCol[4] = {0.7f, 0.7f, 0.7f, 0.7f};
 
-float zNear = 0.5f;
+float zNear = 0.01f;
 float zFar = 2000.0f;
 bool fullscreen = false;
 bool enableShading = false;
-bool enableCulling = true;
+bool enableCulling = false;
 float cf[3];
 unsigned int SCR_WIDTH = 800;
 unsigned int SCR_HEIGHT = 600;
@@ -579,7 +584,7 @@ void ReloadScene(int num)
     //if(num != scene->num)
     if(true)
     {
-        std::cout<< "reeeseeeting";
+        std::cout<< "Reloading Scene\n";
         if(sceneInstance != nullptr)
             sceneInstance->selectedInstance = nullptr;
         sceneInstance.reset();
@@ -614,6 +619,7 @@ void ReloadScene(int num)
         //scene = static_cast<const std::shared_ptrshared_ptr<Scene> >(new TestScene2());
         sceneInstance->Setup(camera);
         sceneDescription = sceneInstance->sceneDescription;
+        sceneInstance->windowSettings =&windowSettings;
     }
 }
 
@@ -678,6 +684,8 @@ static void keyboard_callback(GLFWwindow* window, int key, int scancode,
         if (key == GLFW_KEY_F12) SwitchFullscreen();
         if (key == GLFW_KEY_F2) // print shader info
             PrintShader();
+        if (key == GLFW_KEY_LEFT_CONTROL)
+            camera->slowCamControl = !camera->slowCamControl;
     }
 
     if (camera->showCursor)  // later implement input class so we dont have to
@@ -904,7 +912,7 @@ int main() {
     //dont forget scene, window and monitor
 
     windowSettings.monitor = glfwGetPrimaryMonitor();
-    windowSettings.window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    windowSettings.window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello World", NULL, NULL);
     if (!windowSettings.window) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -916,7 +924,7 @@ int main() {
     glfwMakeContextCurrent(windowSettings.window);
     glfwSetFramebufferSizeCallback(windowSettings.window, framebuffer_size_callback);
     glfwSetKeyCallback(windowSettings.window, keyboard_callback);
-    //glfwSetCharCallback(windowSettings.window, character_callback);etca
+    glfwSetCharCallback(windowSettings.window, character_callback);
     glfwSetCursorPosCallback(windowSettings.window, mouse_callback);
     glfwSetScrollCallback(windowSettings.window, scroll_callback);
     glfwSetMouseButtonCallback(windowSettings.window, mouse_button_callback);
@@ -935,24 +943,14 @@ int main() {
 
     std::cout << "Hello, World!" << std::endl;
     ::Help();
-    Assimp::Importer importer;
+    stencilShader =  Shader("..\\Assets\\Shaders\\Forward\\stencil.vert",
+                            "..\\Assets\\Shaders\\Forward\\stencil.frag"); //maybe add as a ponter and then new too
 
-    glViewport(0, 0, 800, 600);
-    Shader *light_shader;
-    //Model* lightCube;
-    //TODO absolute path and to the old project, rework
-    light_shader = new Shader(R"(C:\Users\robko\Documents\CLion\OGLR\Assets\Shaders\MultipleLights\s_light.vert)",
-                              R"(C:\Users\robko\Documents\CLion\OGLR\Assets\Shaders\MultipleLights\s_light.frag)");
-    /*
-     //test pridania sceneInstance
-    auto* s = new SceneInstance();
-    s->DrawSky();
-    */
-    SceneInstance *sc = new SceneInstance();
-    sc->windowSettings = &windowSettings; //toto nebude upne dobre
+
+
+    //sc->windowSettings = &windowSettings; //toto nebude upne dobre treba to?
     camera = new Camera(glm::vec3(0.0f, .0f, 3.0f));
 
-    sc->Setup(camera);
 
     // init IMGUI
     //  Setup Dear ImGui context
@@ -976,9 +974,9 @@ int main() {
     //TODO raycasting z misi nejde, ked zapnem lights tak je stale z obrazovky
     //TODO depth map FBO shaders are wrong
     // configure depth map FBO
-    simpleDepthShader= Shader("..\\Assets\\Shaders\\Basic\\ShadowMap\\ShadowMapDepth.vert", "..\\Assets\\Shaders\\Basic\\ShadowMap\\ShadowMapDepth.frag");
+    simpleDepthShader= Shader("..\\Assets\\Shaders\\Forward\\ShadowMap\\ShadowMapDepth.vert", "..\\Assets\\Shaders\\Forward\\ShadowMap\\ShadowMapDepth.frag");
     debugDepthQuad = Shader("..\\Assets\\Shaders\\Debug\\DebugQuad.vert", "..\\Assets\\Shaders\\Debug\\DebugQuad.frag");
-    simpleShadowShader = Shader("..\\Assets\\Shaders\\Basic\\ShadowMap\\meshShadow.vert", "..\\Assets\\Shaders\\Basic\\ShadowMap\\meshShadow.frag");
+    simpleShadowShader = Shader("..\\Assets\\Shaders\\Forward\\ShadowMap\\meshShadow.vert", "..\\Assets\\Shaders\\Forward\\ShadowMap\\meshShadow.frag");
     glGenFramebuffers(1, &depthMapFBO);
     glGenTextures(1, &depthMap);
     glBindTexture(GL_TEXTURE_2D, depthMap);
@@ -1012,22 +1010,18 @@ int main() {
 
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-//scene list scene naah
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //scene list scene naah
     //vector<Scene*> scenesList;
     ReloadScene(1);//was 3, that has shader comp. errors for now
 
     camera->toggleCursor(); //set to enabled by default
 
-//*************------------***************
+    //*************------------***************
     // ----------- render loop ---------------
     // ------------************---------------
     while (!glfwWindowShouldClose(windowSettings.window)) {
-        /*glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-
-        glfwSwapBuffers(window);
-        glfwPollEvents();*/
 
         PerfAnalyzer::drawcallCount = 0; //reset for new frame
         float currentFrame = glfwGetTime(); // delta time used for camera now
@@ -1038,8 +1032,12 @@ int main() {
         uniforms.projection = glm::perspective(glm::radians(camera->Zoom),
                                                (float) windowSettings.CUR_WIDTH / (float) windowSettings.CUR_HEIGHT,
                                                zNear, zFar + 100);
+        glfwPollEvents();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        //std::cout<< "uniV main\n" << glm::to_string(uniforms.view);
         glm::mat4 modelMat = glm::mat4(1.0f);
-        //std::cout<< glm::to_string(uniforms.view)<< "\n";
 
         glClearColor(backgroundClearCol[0], backgroundClearCol[1],
                      backgroundClearCol[2], backgroundClearCol[3]);
@@ -1059,19 +1057,7 @@ int main() {
                              GLFW_CURSOR_NORMAL);
         }
 
-        sc->RenderSceneInstance(nullptr);
 
-
-
-        /* older
-        // draw GUI last
-        DrawImGui();
-        ImGui::Begin("test1");
-        ImGui::End();
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glfwSwapBuffers(windowSettings.window);*/
-        //TODO continue with adding functionality below
 
         //yeah testscene is special case
         if(forwardScene1 == nullptr)
@@ -1080,6 +1066,7 @@ int main() {
 
         if(sceneInstance != nullptr && sceneInstance->dirLight_ObjInstance != nullptr) {
          if (enableShading) {
+             //std::cout << "test\n";
              glm::mat4 LSM = RenderDepth();
 
              RenderTest(LSM);
@@ -1087,11 +1074,16 @@ int main() {
          } else {
              if(forwardScene1 != nullptr)
                  forwardScene1->SetupShaderMaterial();
-             sceneInstance->RenderSceneInstance(nullptr);
+             //sceneInstance->RenderSceneInstance(nullptr);
+             //TODO glints work only here
+             forwardScene1->RenderObjects(nullptr,false);
+
          }
          //also
          sceneInstance->RenderLights();
          // draw debug line pointing from light pos to dir
+         /*
+          * memory leak...
          if(enableDebugLightRay) {
              colShader.use();
              modelMat = glm::mat4(1.0f);
@@ -1111,7 +1103,7 @@ int main() {
              PerfAnalyzer::drawcallCount++;
              glBindVertexArray(0);
          }
-
+        */
         // drawline pointing from screen click
         /*
          *
@@ -1142,24 +1134,20 @@ int main() {
             // glDrawElements(GL_LINE_STRIP,2, GL_FLOAT, nullptr);
         */
 
-
-
         }
 
         //TODO add more working parameters for objects
         //TODO test loading of object
         //TODO maybe allow changing shader params
         //TODO make sun color functional again
-
-
         //TODO separate,cleanup,refactor the code for shadowmaps...
 
         // draw GUI last
-        io = ImGui::GetIO();
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        glfwPollEvents();
-        ImGui::NewFrame();
+        //io = ImGui::GetIO();
+        //ImGui_ImplOpenGL3_NewFrame();
+        //ImGui_ImplGlfw_NewFrame();
+        //glfwPollEvents();
+        //ImGui::NewFrame();
         DrawImGui();
 
         if(sceneInstance != nullptr)
@@ -1167,15 +1155,10 @@ int main() {
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
         camera->ProcessKeyboard(Camera_Movement::NONE, deltaTime);
         glfwSwapBuffers(windowSettings.window);
-
+        std::cout.flush();
     }
     glfwTerminate();
-    delete light_shader;
-
     return 0;
-
-
 }

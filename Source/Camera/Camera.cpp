@@ -43,7 +43,10 @@
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
     {
-        float velocity = MovementSpeed * deltaTime;
+        float movSpeed = MovementSpeed;
+        if(slowCamControl)
+            movSpeed = (1.0f/8) * MovementSpeed;
+        float velocity = movSpeed * deltaTime;
 
         if(direction == NONE)
         {

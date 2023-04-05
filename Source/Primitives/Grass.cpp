@@ -4,8 +4,8 @@
 Grass::Grass() {
 
     //TODO this doesnt exist
-    ourShader = Shader("..\\Assets\\Shaders\\Transparent\\transparentGrass.vert",
-                       "..\\Assets\\Shaders\\Transparent\\transparentGrass.frag");
+    ourShader = Shader("..\\Assets\\Shaders\\Forward\\Transparent\\transparentGrass.vert",
+                       "..\\Assets\\Shaders\\Forward\\Transparent\\transparentGrass.frag");
 
 
     this->boundMin = min;
@@ -30,9 +30,8 @@ Grass::~Grass() = default;
 
 
 void Grass::Draw(glm::mat4 projection, glm::mat4 view, glm::mat4 model) {
-
+    //TODO do we even use this
     ourShader.use();
-
     ourShader.setInt("texture1", 0);
     ourShader.setMat4("projection", projection);
     ourShader.setMat4("view", view);
@@ -44,9 +43,13 @@ void Grass::Draw(glm::mat4 projection, glm::mat4 view, glm::mat4 model) {
 
 void Grass::Draw(Shader &shader, bool simple) {
 
+    //blending must be enabled prior
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH);
     glBindVertexArray(transparentVAO);
     glBindTexture(GL_TEXTURE_2D, transparentTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     PerfAnalyzer::drawcallCount++;
     glActiveTexture(GL_TEXTURE0);
+    glEnable(GL_DEPTH);
 }

@@ -41,6 +41,11 @@ ObjectInstance::~ObjectInstance()=default;
     if(!enableRender)
       return;
     s->use();
+
+    //TODO we need a way to assign relevant uniforms for the specific shaders
+
+
+
     UpdateTransformMat(s);
     model->Draw(*s,simple);
   }
