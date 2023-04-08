@@ -17,7 +17,7 @@ struct Light {
 };
 uniform Light light;
 
-void main() //use blinn phong,why not
+void main()//use blinn phong,why not
 {
     // retrieve data from gbuffer
     vec3 FragPos = texture(gPosition, TexCoords).rgb;
@@ -27,10 +27,10 @@ void main() //use blinn phong,why not
 
     //then calculate lighting SSAO off
     //float a =AmbientOcclusion * enableSSAO;
-    vec3 ambient = vec3(0.3 * Diffuse);    // default ambient, no ao
+    vec3 ambient = vec3(0.3 * Diffuse);// default ambient, no ao
 
     vec3 lighting  = ambient;
-    vec3 viewDir  = normalize(-FragPos); // viewpos is (0.0.0)
+    vec3 viewDir  = normalize(-FragPos);// viewpos is (0.0.0)
     // diffuse
     vec3 lightDir = normalize(light.Position - FragPos);
     vec3 diffuse = max(dot(Normal, lightDir), 0.0) * Diffuse * (light.Color*1);

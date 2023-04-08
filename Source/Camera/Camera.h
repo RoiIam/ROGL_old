@@ -1,4 +1,5 @@
 #pragma once
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -17,16 +18,15 @@ enum Camera_Movement {
 
 
 // Default camera values
-const float YAW         = -90.0f;
-const float PITCH       =  0.0f;
-const float SPEED       =  2.5f;
-const float SENSITIVITY =  0.1f;
-const float ZOOM        =  45.0f;
+const float YAW = -90.0f;
+const float PITCH = 0.0f;
+const float SPEED = 2.5f;
+const float SENSITIVITY = 0.1f;
+const float ZOOM = 45.0f;
 
 
 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
-class Camera
-{
+class Camera {
 public:
     // camera Attributes
     glm::vec3 Position;
@@ -55,7 +55,8 @@ public:
 
     // constructor with vectors
     //tu nema byt takato deklaracia?
-     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+           float yaw = YAW, float pitch = PITCH);
     //prepis
     //Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch);
 
@@ -74,7 +75,7 @@ public:
     void toggleCursor();
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch=true);
+    void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
     //constrainPitch was GLboolean from glad.h, idk why
 
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis

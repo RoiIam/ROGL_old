@@ -31,17 +31,17 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // check whether current frag pos is in shadow
     //float shadow = currentDepth > closestDepth  ? 1.0 : 0.0; //original
     //float bias = 0.005; orig
-    vec3 normal = normalize(fs_in.Normal); //new
+    vec3 normal = normalize(fs_in.Normal);//new
     //vec3 lightDir = normalize(lightPos - fs_in.FragPos);//new
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);//new
-   //float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; //new// with bias
+    //float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0; //new// with bias
 
     // PCF
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-    for(int x = -1; x <= 1; ++x)
+    for (int x = -1; x <= 1; ++x)
     {
-        for(int y = -1; y <= 1; ++y)
+        for (int y = -1; y <= 1; ++y)
         {
             float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
             shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
@@ -51,7 +51,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 
     // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
-    if(projCoords.z > 1.0)
+    if (projCoords.z > 1.0)
     shadow = 0.0;
 
     return shadow;
@@ -64,7 +64,7 @@ void main()
     vec3 color = texture(diffuseTexture, fs_in.TexCoords).rgb;
     vec4 colA =  texture(diffuseTexture, fs_in.TexCoords).rgba;
 
-    if(colA.a < 0.2)
+    if (colA.a < 0.2)
     discard;
     vec3 normal = normalize(fs_in.Normal);
     //vec3 lightColor = vec3(0.7); //was 0.3

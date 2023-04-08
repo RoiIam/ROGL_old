@@ -1,4 +1,5 @@
 #pragma once
+
 #include <imgui.h>
 #include <iostream>
 #include <memory>
@@ -34,14 +35,13 @@ struct WindowSettings {
 
 
 
-class SceneInstance
-        {
+class SceneInstance {
 public:
     SceneInstance();
 
     ~SceneInstance();
 
-    WindowSettings * windowSettings;//preco ma scena kazdy svoj?
+    WindowSettings *windowSettings;//preco ma scena kazdy svoj?
 
     Camera *camera;
     glm::mat4 projection;
@@ -58,7 +58,7 @@ public:
     //DefaultCube * cube = new DefaultCube(); //for
 
     //every scene has dir light for default with default pos of...
-    Light* dirLight;
+    Light *dirLight;
     glm::vec3 dirLightDirection = glm::vec3(0.5f, -1.0f, 0.5f);
     Shader *light_shader;
     Model *lightCube;
@@ -69,10 +69,10 @@ public:
     int selectedHierarchyObj = -1;
     bool disableShadows = true;
 
-    ObjectInstance *selectedInstance= nullptr; // either ray RMB  or ImGui window //if not set to nullptr, then crash
+    ObjectInstance *selectedInstance = nullptr; // either ray RMB  or ImGui window //if not set to nullptr, then crash
     Cube cubePrimitive = Cube(nullptr);
 
-    StencilShaderInstance * stencilShader;
+    StencilShaderInstance *stencilShader;
 
     virtual void Setup(Camera *cam);
 

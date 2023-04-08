@@ -26,23 +26,13 @@ Grass::Grass() {
     transparentTexture = Model::TextureFromFile("grass.png", "..\\Assets\\Textures\\", false);
 
 }
+
 Grass::~Grass() = default;
 
 
-void Grass::Draw(glm::mat4 projection, glm::mat4 view, glm::mat4 model) {
-    //TODO do we even use this
-    ourShader.use();
-    ourShader.setInt("texture1", 0);
-    ourShader.setMat4("projection", projection);
-    ourShader.setMat4("view", view);
-    ourShader.setMat4("model", model);
-    Grass::Draw(ourShader, false);
-
-
-}
-
 void Grass::Draw(Shader &shader, bool simple) {
-
+    //shader.use();
+    //shader.setInt("texture1", 0);
     //blending must be enabled prior
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH);

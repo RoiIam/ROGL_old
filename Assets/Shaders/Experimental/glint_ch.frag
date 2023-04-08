@@ -16,31 +16,31 @@ in vec3 VertexTang;
 
 uniform struct LightInfo
 {
-    vec4 Position; // Light position in world coords
-    vec3 L;        // Intensity
+    vec4 Position;// Light position in world coords
+    vec3 L;// Intensity
 } Light;
 
 uniform struct MaterialInfo
 {
-    float Alpha_x;              // Material roughness along x
-    float Alpha_y;              // Material roughness along y
-    float LogMicrofacetDensity; // Logarithmic microfacet density
+    float Alpha_x;// Material roughness along x
+    float Alpha_y;// Material roughness along y
+    float LogMicrofacetDensity;// Logarithmic microfacet density
 } Material;
 
 uniform struct DictionaryInfo
 {
-    float Alpha;      // Roughness of the dictionary (\alpha_{dist} in the paper)
-    int N;            // Number of marginal distributions in the dictionary
-    int NLevels;      // Number of LOD in the dictionary
-    int Pyramid0Size; // Number of cells along one axis at LOD 0, for NLevels LODs, in a MIP hierarchy
+    float Alpha;// Roughness of the dictionary (\alpha_{dist} in the paper)
+    int N;// Number of marginal distributions in the dictionary
+    int NLevels;// Number of LOD in the dictionary
+    int Pyramid0Size;// Number of cells along one axis at LOD 0, for NLevels LODs, in a MIP hierarchy
 } Dictionary;
 
 uniform vec3 CameraPosition;
 uniform float MicrofacetRelativeArea;
 uniform float MaxAnisotropy;
 
-uniform sampler1DArray DictionaryTex; // Array of 1D textures, containing the marginal distributions (the dictionary)
-uniform sampler2D texture_diffuse1; // base texture
+uniform sampler1DArray DictionaryTex;// Array of 1D textures, containing the marginal distributions (the dictionary)
+uniform sampler2D texture_diffuse1;// base texture
 
 layout(location = 0) out vec4 FragColor;
 
@@ -171,7 +171,7 @@ float P22_theta_alpha(vec2 slope_h, int l, int s0, int t0)
 {
     // Coherent index
     // Eq. 8, Alg. 3, line 1
-    int twoToTheL = int(pow(2.,float(l)));
+    int twoToTheL = int(pow(2., float(l)));
     s0 *= twoToTheL;
     t0 *= twoToTheL;
 
@@ -193,7 +193,7 @@ float P22_theta_alpha(vec2 slope_h, int l, int s0, int t0)
 
     // Corresponding continuous distribution LOD
     // Alg. 3, line 6
-    float l_dist = log(n) / 1.38629; // 2. * log(2) = 1.38629
+    float l_dist = log(n) / 1.38629;// 2. * log(2) = 1.38629
 
     // Alg. 3, line 7
     float uDensityRandomisation = hashIQ(rngSeed * 2171U);
@@ -343,7 +343,6 @@ double FresnelSchlick(float angle, float reflectance)
 }
 
 
-
 //=========================================================================================================================
 //=============================== Evaluation of our procedural physically based glinty BRDF ===============================
 //==================================================== Alg. 1, Eq. 14 =====================================================
@@ -456,7 +455,6 @@ vec3 f_P(vec3 wo, vec3 wi)
     // the cosine weight in the rendering equation
     return (F * G * D_P) / (4. * wo.z);
 }
-
 
 
 //=========================================================================================================================

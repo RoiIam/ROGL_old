@@ -83,7 +83,7 @@ void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
 
         // glm::mat4 modelMat = selectedInstance->GetTransformMat();
         glm::vec3 oldScale = selectedInstance->GetScale();
-        selectedInstance->SetScale(oldScale * 1.015f);
+        selectedInstance->SetScale(oldScale * 1.005f);
         stencilShader->SetupMaterial();
         selectedInstance->Render(stencilShader->GetShader(), true);
         selectedInstance->SetScale(oldScale);

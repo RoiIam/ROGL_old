@@ -11,11 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-
-
-
-class Shader{
-
+class Shader {
 
 
 private:
@@ -23,14 +19,16 @@ private:
 
 public:
     Shader();
+
     ~Shader();
-    Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
+
+    Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr);
 
     unsigned int ID;
 
 
-
     void use();
+
     void setBool(const std::string &name, bool value) const;
 
     void setInt(const std::string &name, int value) const;

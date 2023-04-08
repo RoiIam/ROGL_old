@@ -12,15 +12,16 @@
 #include  "Utilities/Managers.h" //tu mozme skusit ci to funguje spravne
 #include  "Utilities/PerfAnalyzer.h"
 
-class ShaderInstance
-{
+class ShaderInstance {
 public:
     explicit ShaderInstance();
-    virtual ~ShaderInstance();
-protected:
-    Shader * instancedShader = nullptr;
 
-    void SetShader(Shader * s);
+    virtual ~ShaderInstance();
+
+protected:
+    Shader *instancedShader = nullptr;
+
+    void SetShader(Shader *s);
 
     virtual void SetupMaterial();
     // maybe add virtual Shader * GetShader();
@@ -28,16 +29,14 @@ protected:
 };
 
 
-class PhongShaderInstance : public ShaderInstance
-{
+class PhongShaderInstance : public ShaderInstance {
 public:
 
     void SetupMaterial() override;
 
 };
 
-class BasicShaderInstance : public ShaderInstance
-{
+class BasicShaderInstance : public ShaderInstance {
 public:
     BasicShaderInstance();
 
@@ -47,14 +46,13 @@ private:
     glm::vec4 defaultCol = glm::vec4(1, 0.08, 0.575, 1.0);
 };
 
-class StencilShaderInstance : public ShaderInstance
-{
+class StencilShaderInstance : public ShaderInstance {
 public:
     StencilShaderInstance();
 
     void SetupMaterial() override;
 
-    Shader * GetShader();
+    Shader *GetShader();
 
 
 };

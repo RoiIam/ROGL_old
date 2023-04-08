@@ -1,5 +1,5 @@
 #include "Log.h"
-void Help()
-{
+
+void Help() {
     std::cout << "oo";
 }

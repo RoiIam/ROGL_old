@@ -11,7 +11,7 @@ uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
 
 void main()
-{    
+{
     // store the fragment position vector in the first gbuffer texture
     gPosition = FragPos;
     // also store the per-fragment normals into the gbuffer

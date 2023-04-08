@@ -90,7 +90,7 @@ extern "C" {
 #endif
 
 #if defined(_M_IX86) || defined(_M_X64) || defined(__i386__) || \
-    defined(__i386) || defined(__i486__) || defined(__i486) ||  \
+    defined(__i386) || defined(__i486__) || defined(__i486) || \
     defined(i386) || defined(__ia64__) || defined(__x86_64__)
 #define TINYEXR_X86_OR_X64_CPU 1
 #else
@@ -182,140 +182,140 @@ extern "C" {
 #define TINYEXR_TILE_ROUND_UP (1)
 
 typedef struct TEXRVersion {
-  int version;    // this must be 2
-  // tile format image;
-  // not zero for only a single-part "normal" tiled file (according to spec.)
-  int tiled;
-  int long_name;  // long name attribute
-  // deep image(EXR 2.0);
-  // for a multi-part file, indicates that at least one part is of type deep* (according to spec.)
-  int non_image;
-  int multipart;  // multi-part(EXR 2.0)
+    int version;    // this must be 2
+    // tile format image;
+    // not zero for only a single-part "normal" tiled file (according to spec.)
+    int tiled;
+    int long_name;  // long name attribute
+    // deep image(EXR 2.0);
+    // for a multi-part file, indicates that at least one part is of type deep* (according to spec.)
+    int non_image;
+    int multipart;  // multi-part(EXR 2.0)
 } EXRVersion;
 
 typedef struct TEXRAttribute {
-  char name[256];  // name and type are up to 255 chars long.
-  char type[256];
-  unsigned char *value;  // uint8_t*
-  int size;
-  int pad0;
+    char name[256];  // name and type are up to 255 chars long.
+    char type[256];
+    unsigned char *value;  // uint8_t*
+    int size;
+    int pad0;
 } EXRAttribute;
 
 typedef struct TEXRChannelInfo {
-  char name[256];  // less than 255 bytes long
-  int pixel_type;
-  int x_sampling;
-  int y_sampling;
-  unsigned char p_linear;
-  unsigned char pad[3];
+    char name[256];  // less than 255 bytes long
+    int pixel_type;
+    int x_sampling;
+    int y_sampling;
+    unsigned char p_linear;
+    unsigned char pad[3];
 } EXRChannelInfo;
 
 typedef struct TEXRTile {
-  int offset_x;
-  int offset_y;
-  int level_x;
-  int level_y;
+    int offset_x;
+    int offset_y;
+    int level_x;
+    int level_y;
 
-  int width;   // actual width in a tile.
-  int height;  // actual height int a tile.
+    int width;   // actual width in a tile.
+    int height;  // actual height int a tile.
 
-  unsigned char **images;  // image[channels][pixels]
+    unsigned char **images;  // image[channels][pixels]
 } EXRTile;
 
 typedef struct TEXRBox2i {
-  int min_x;
-  int min_y;
-  int max_x;
-  int max_y;
+    int min_x;
+    int min_y;
+    int max_x;
+    int max_y;
 } EXRBox2i;
 
 typedef struct TEXRHeader {
-  float pixel_aspect_ratio;
-  int line_order;
-  EXRBox2i data_window;
-  EXRBox2i display_window;
-  float screen_window_center[2];
-  float screen_window_width;
+    float pixel_aspect_ratio;
+    int line_order;
+    EXRBox2i data_window;
+    EXRBox2i display_window;
+    float screen_window_center[2];
+    float screen_window_width;
 
-  int chunk_count;
+    int chunk_count;
 
-  // Properties for tiled format(`tiledesc`).
-  int tiled;
-  int tile_size_x;
-  int tile_size_y;
-  int tile_level_mode;
-  int tile_rounding_mode;
+    // Properties for tiled format(`tiledesc`).
+    int tiled;
+    int tile_size_x;
+    int tile_size_y;
+    int tile_level_mode;
+    int tile_rounding_mode;
 
-  int long_name;
-  // for a single-part file, agree with the version field bit 11
-  // for a multi-part file, it is consistent with the type of part
-  int non_image;
-  int multipart;
-  unsigned int header_len;
+    int long_name;
+    // for a single-part file, agree with the version field bit 11
+    // for a multi-part file, it is consistent with the type of part
+    int non_image;
+    int multipart;
+    unsigned int header_len;
 
-  // Custom attributes(exludes required attributes(e.g. `channels`,
-  // `compression`, etc)
-  int num_custom_attributes;
-  EXRAttribute *custom_attributes;  // array of EXRAttribute. size =
-                                    // `num_custom_attributes`.
+    // Custom attributes(exludes required attributes(e.g. `channels`,
+    // `compression`, etc)
+    int num_custom_attributes;
+    EXRAttribute *custom_attributes;  // array of EXRAttribute. size =
+    // `num_custom_attributes`.
 
-  EXRChannelInfo *channels;  // [num_channels]
+    EXRChannelInfo *channels;  // [num_channels]
 
-  int *pixel_types;  // Loaded pixel type(TINYEXR_PIXELTYPE_*) of `images` for
-  // each channel. This is overwritten with `requested_pixel_types` when
-  // loading.
-  int num_channels;
+    int *pixel_types;  // Loaded pixel type(TINYEXR_PIXELTYPE_*) of `images` for
+    // each channel. This is overwritten with `requested_pixel_types` when
+    // loading.
+    int num_channels;
 
-  int compression_type;        // compression type(TINYEXR_COMPRESSIONTYPE_*)
-  int *requested_pixel_types;  // Filled initially by
-                               // ParseEXRHeaderFrom(Meomory|File), then users
-                               // can edit it(only valid for HALF pixel type
-                               // channel)
-  // name attribute required for multipart files;
-  // must be unique and non empty (according to spec.);
-  // use EXRSetNameAttr for setting value;
-  // max 255 character allowed - excluding terminating zero
-  char name[256];
+    int compression_type;        // compression type(TINYEXR_COMPRESSIONTYPE_*)
+    int *requested_pixel_types;  // Filled initially by
+    // ParseEXRHeaderFrom(Meomory|File), then users
+    // can edit it(only valid for HALF pixel type
+    // channel)
+    // name attribute required for multipart files;
+    // must be unique and non empty (according to spec.);
+    // use EXRSetNameAttr for setting value;
+    // max 255 character allowed - excluding terminating zero
+    char name[256];
 } EXRHeader;
 
 typedef struct TEXRMultiPartHeader {
-  int num_headers;
-  EXRHeader *headers;
+    int num_headers;
+    EXRHeader *headers;
 
 } EXRMultiPartHeader;
 
 typedef struct TEXRImage {
-  EXRTile *tiles;  // Tiled pixel data. The application must reconstruct image
-                   // from tiles manually. NULL if scanline format.
-  struct TEXRImage* next_level; // NULL if scanline format or image is the last level.
-  int level_x; // x level index
-  int level_y; // y level index
+    EXRTile *tiles;  // Tiled pixel data. The application must reconstruct image
+    // from tiles manually. NULL if scanline format.
+    struct TEXRImage *next_level; // NULL if scanline format or image is the last level.
+    int level_x; // x level index
+    int level_y; // y level index
 
-  unsigned char **images;  // image[channels][pixels]. NULL if tiled format.
+    unsigned char **images;  // image[channels][pixels]. NULL if tiled format.
 
-  int width;
-  int height;
-  int num_channels;
+    int width;
+    int height;
+    int num_channels;
 
-  // Properties for tile format.
-  int num_tiles;
+    // Properties for tile format.
+    int num_tiles;
 
 } EXRImage;
 
 typedef struct TEXRMultiPartImage {
-  int num_images;
-  EXRImage *images;
+    int num_images;
+    EXRImage *images;
 
 } EXRMultiPartImage;
 
 typedef struct TDeepImage {
-  const char **channel_names;
-  float ***image;      // image[channels][scanlines][samples]
-  int **offset_table;  // offset_table[scanline][offsets]
-  int num_channels;
-  int width;
-  int height;
-  int pad0;
+    const char **channel_names;
+    float ***image;      // image[channels][scanlines][samples]
+    int **offset_table;  // offset_table[scanline][offsets]
+    int num_channels;
+    int width;
+    int height;
+    int pad0;
 } DeepImage;
 
 // @deprecated { For backward compatibility. Not recommended to use. }
@@ -380,8 +380,8 @@ extern int IsEXRFromMemory(const unsigned char *memory, size_t size);
 // Returns negative value and may set error string in `err` when there's an
 // error
 extern int SaveEXRToMemory(const float *data, const int width, const int height,
-                   const int components, const int save_as_fp16,
-                   const unsigned char **buffer, const char **err);
+                           const int components, const int save_as_fp16,
+                           const unsigned char **buffer, const char **err);
 
 // @deprecated { Not recommended, but handy to use. }
 // Saves single-frame OpenEXR image to a buffer. Assume EXR image contains RGB(A) channels.
@@ -400,13 +400,13 @@ extern int SaveEXR(const float *data, const int width, const int height,
                    const char *filename, const char **err);
 
 // Returns the number of resolution levels of the image (including the base)
-extern int EXRNumLevels(const EXRImage* exr_image);
+extern int EXRNumLevels(const EXRImage *exr_image);
 
 // Initialize EXRHeader struct
 extern void InitEXRHeader(EXRHeader *exr_header);
 
 // Set name attribute of EXRHeader struct (it makes a copy)
-extern void EXRSetNameAttr(EXRHeader *exr_header, const char* name);
+extern void EXRSetNameAttr(EXRHeader *exr_header, const char *name);
 
 // Initialize EXRImage struct
 extern void InitEXRImage(EXRImage *exr_image);

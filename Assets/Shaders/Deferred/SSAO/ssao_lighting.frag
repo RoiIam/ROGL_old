@@ -17,7 +17,7 @@ struct Light {
 };
 uniform Light light;
 
-void main() //use blinn phong,why not
+void main()//use blinn phong,why not
 {
     // retrieve data from gbuffer
     vec3 FragPos = texture(gPosition, TexCoords).rgb;
@@ -26,9 +26,9 @@ void main() //use blinn phong,why not
     float AmbientOcclusion = texture(ssao, TexCoords).r;
 
     //then calculate lighting
-    vec3 ambient = vec3(0.3 * Diffuse * AmbientOcclusion); // ao ambient
+    vec3 ambient = vec3(0.3 * Diffuse * AmbientOcclusion);// ao ambient
     vec3 lighting  = ambient;
-    vec3 viewDir  = normalize(-FragPos); // viewpos is (0.0.0)
+    vec3 viewDir  = normalize(-FragPos);// viewpos is (0.0.0)
     // diffuse
     vec3 lightDir = normalize(light.Position - FragPos);
     vec3 diffuse = max(dot(Normal, lightDir), 0.0) * Diffuse * (light.Color*1);

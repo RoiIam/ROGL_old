@@ -14,7 +14,7 @@ void main()
 {
 
     vec4 colA =  texture(texture_diffuse1, TexCoords).rgba;
-    if(colA.a < 0.1)
+    if (colA.a < 0.1)
     discard;
     // store the fragment position vector in the first gbuffer texture
     gPosition = FragPos;

@@ -1,21 +1,22 @@
 #include "DeferredScene2.h"
 
 void DeferredScene2::Setup(Camera *cam) {
-camera = cam;
-sceneDescription = "This is a final scene showcasing forward and deferred rendering step by step, check the 'Interactive' UI window";
-disableShadows = false;
-sponzaModel = new Model(      "..\\Assets\\Models\\Sponza\\sponza.obj");
-meshLightShader = new Shader("..\\Assets\\Shaders\\MultipleLights\\mesh.vert","..\\Assets\\Shaders\\MultipleLights\\mesh.frag");
-basicShader = new Shader("..\\Assets\\Shaders\\01_SimpleTexture\\1.model_loading.vs", "..\\Assets\\Shaders\\01_SimpleTexture\\1.model_loading.fs");
-sponzaObjInstance =  new ObjectInstance(*sponzaModel,*basicShader, "sponza", nullptr);
-sponzaObjInstance->SetScale(glm::vec3(0.020f));
-selectableObjInstances.push_back(sponzaObjInstance);
-SetupGlobalLight();
-selectableObjInstances.push_back(dirLight_ObjInstance);
+    camera = cam;
+    sceneDescription = "This is a final scene showcasing forward and deferred rendering step by step, check the 'Interactive' UI window";
+    disableShadows = false;
+    sponzaModel = new Model("..\\Assets\\Models\\Sponza\\sponza.obj");
+    meshLightShader = new Shader("..\\Assets\\Shaders\\MultipleLights\\mesh.vert",
+                                 "..\\Assets\\Shaders\\MultipleLights\\mesh.frag");
+    basicShader = new Shader("..\\Assets\\Shaders\\01_SimpleTexture\\1.model_loading.vs",
+                             "..\\Assets\\Shaders\\01_SimpleTexture\\1.model_loading.fs");
+    sponzaObjInstance = new ObjectInstance(*sponzaModel, *basicShader, "sponza", nullptr);
+    sponzaObjInstance->SetScale(glm::vec3(0.020f));
+    selectableObjInstances.push_back(sponzaObjInstance);
+    SetupGlobalLight();
+    selectableObjInstances.push_back(dirLight_ObjInstance);
 }
 
-void DeferredScene2::SetupForwardLights()
-{
+void DeferredScene2::SetupForwardLights() {
     simpleLights->use();
     model = glm::mat4(1.0f);  // same , below
     // m += 0.008f; dont move
@@ -42,16 +43,14 @@ void DeferredScene2::SetupForwardLights()
     /*glm::vec3 a =static_cast<DirectionalLight>(dirLight_ObjInstance->light).direction;*/
 }
 
-float DeferredScene2::lerp(float a, float b, float f)
-{
+float DeferredScene2::lerp(float a, float b, float f) {
     return a + f * (b - a);
 }
 
-void DeferredScene2::SetupSSAO()
-{
+void DeferredScene2::SetupSSAO() {
     disableShadows = true;
     //make sure to run it onlly once
-    if(notFirstTime)
+    if (notFirstTime)
         return;
     notFirstTime = true;
     // configure g-buffer framebuffer
@@ -63,7 +62,8 @@ void DeferredScene2::SetupSSAO()
     // position color buffer
     glGenTextures(1, &gPosition);
     glBindTexture(GL_TEXTURE_2D, gPosition);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGBA,
+                 GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -72,14 +72,16 @@ void DeferredScene2::SetupSSAO()
     // normal color buffer
     glGenTextures(1, &gNormal);
     glBindTexture(GL_TEXTURE_2D, gNormal);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGBA,
+                 GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
     // color + specular color buffer
     glGenTextures(1, &gAlbedo);
     glBindTexture(GL_TEXTURE_2D, gAlbedo);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedo, 0);
@@ -97,12 +99,14 @@ void DeferredScene2::SetupSSAO()
 
     // also create framebuffer to hold SSAO processing stage
     // -----------------------------------------------------
-    glGenFramebuffers(1, &ssaoFBO);  glGenFramebuffers(1, &ssaoBlurFBO);
+    glGenFramebuffers(1, &ssaoFBO);
+    glGenFramebuffers(1, &ssaoBlurFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
     // SSAO color buffer
     glGenTextures(1, &ssaoColorBuffer);
     glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGBA, GL_FLOAT,
+                 NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBuffer, 0);
@@ -112,7 +116,8 @@ void DeferredScene2::SetupSSAO()
     glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
     glGenTextures(1, &ssaoColorBufferBlur);
     glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RED, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RED, GL_FLOAT,
+                 NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBufferBlur, 0);
@@ -124,9 +129,9 @@ void DeferredScene2::SetupSSAO()
     // ----------------------
     std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
     std::default_random_engine generator(22);
-    for (unsigned int i = 0; i < 64; ++i)
-    {
-        glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloats(generator));
+    for (unsigned int i = 0; i < 64; ++i) {
+        glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0,
+                         randomFloats(generator));
         sample = glm::normalize(sample);
         sample *= randomFloats(generator);
         float scale = float(i) / 64.0f;
@@ -139,8 +144,7 @@ void DeferredScene2::SetupSSAO()
 
     // generate noise texture
     // ----------------------
-    for (unsigned int i = 0; i < 16; i++)
-    {
+    for (unsigned int i = 0; i < 16; i++) {
         glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0,
                         randomFloats(generator) * 2.0 - 1.0,
                         0.0f); // rotate around z-axis (in tangent space)
@@ -183,26 +187,22 @@ void DeferredScene2::SetupSSAO()
 
 }
 
-void DeferredScene2::RenderSceneInstance(Shader* shader)
-{
-if(demoStage != 3)
-{
-SceneInstance::RenderSceneInstance(shader);
-}
-else
-{
+void DeferredScene2::RenderSceneInstance(Shader *shader) {
+    if (demoStage != 3) {
+        SceneInstance::RenderSceneInstance(shader);
+    } else {
 
 //NOTE its pointless to raypick, use menu instead
-glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-glEnable(GL_DEPTH_TEST);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
 
 
 
 // 1. geometry pass: render scene's geometry/color data into gbuffer
 // -----------------------------------------------------------------
-glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
-glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 //projection = uniforms.projection;  //glm::perspective(glm::radians(camera->Zoom), (float)windowSettings->CUR_WIDTH / (float)indowSettings.CUR_HEIGHT, 0.1f, 50.0f);
 //glm::mat4 view = uniforms.view;
 //glm::mat4 model = glm::mat4(1.0f);
@@ -212,104 +212,105 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 //glActiveTexture(GL_TEXTURE0);
 
 //selectableObjInstances[0]->Render(shaderGeometryPass,false);
-RenderObjectsS(shaderGeometryPass);
+        RenderObjectsS(shaderGeometryPass);
 //renderQuad();
-glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 // 2. generate SSAO texture
 // ------------------------
-glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
-glClear(GL_COLOR_BUFFER_BIT);
-shaderSSAO->use();
+        glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+        glClear(GL_COLOR_BUFFER_BIT);
+        shaderSSAO->use();
 // Send kernel + rotation
-for (unsigned int i = 0; i < 64; ++i)
-shaderSSAO->setVec3("samples[" + std::to_string(i) + "]", ssaoKernel[i]); // if this breaks, well we ddont run setupssao eh
-shaderSSAO->setMat4("projection", projection);
-glActiveTexture(GL_TEXTURE0);
-glBindTexture(GL_TEXTURE_2D, gPosition);
-glActiveTexture(GL_TEXTURE1);
-glBindTexture(GL_TEXTURE_2D, gNormal);
-glActiveTexture(GL_TEXTURE2);
-glBindTexture(GL_TEXTURE_2D, noiseTexture);
-renderQuad();
-glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        for (unsigned int i = 0; i < 64; ++i)
+            shaderSSAO->setVec3("samples[" + std::to_string(i) + "]",
+                                ssaoKernel[i]); // if this breaks, well we ddont run setupssao eh
+        shaderSSAO->setMat4("projection", projection);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, gPosition);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, gNormal);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, noiseTexture);
+        renderQuad();
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
 // 3. blur SSAO texture to remove noise
 // ------------------------------------
-glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
-glClear(GL_COLOR_BUFFER_BIT);
-shaderSSAOBlur->use();
-glActiveTexture(GL_TEXTURE0);
-glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
-renderQuad();
-glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
+        glClear(GL_COLOR_BUFFER_BIT);
+        shaderSSAOBlur->use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
+        renderQuad();
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
 // 4. lighting pass: traditional deferred Blinn-Phong lighting with added screen-space ambient occlusion
 // -----------------------------------------------------------------------------------------------------
-glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-Shader * shaderToUse;
-if(enableSSAO)
-shaderToUse = shaderLightingPass;
-else
-shaderToUse = shaderLightingPassOFF;
-shaderToUse->use();
+        Shader *shaderToUse;
+        if (enableSSAO)
+            shaderToUse = shaderLightingPass;
+        else
+            shaderToUse = shaderLightingPassOFF;
+        shaderToUse->use();
 // send light relevant uniforms
 
 //from glm::vec3 lightPosView = glm::vec3(camera->GetViewMatrix() * glm::vec4(lightPos, 1.0));
-glm::vec3 lightPosView = glm::vec3(uniforms.view * glm::vec4(dirLight_ObjInstance->GetPos(), 0.0));
+        glm::vec3 lightPosView = glm::vec3(uniforms.view * glm::vec4(dirLight_ObjInstance->GetPos(), 0.0));
 //shaderLightingPass->setVec3("dirLight.direction", glm::make_vec3(dirLightDirImGui));
 
-shaderToUse->setVec3("light.Position", lightPosView);
+        shaderToUse->setVec3("light.Position", lightPosView);
 
-glm::vec3 lightColor = glm::vec3(0.2, 0.2, 0.7);
-shaderToUse->setVec3("light.Color",dirLight_ObjInstance->light->color);
+        glm::vec3 lightColor = glm::vec3(0.2, 0.2, 0.7);
+        shaderToUse->setVec3("light.Color", dirLight_ObjInstance->light->color);
 //shaderToUse->setVec3("light.Color",lightColor);
 
 ///eee
 // Update attenuation parameters
-const float linear    = 0.09f;
-const float quadratic = 0.032f;
-shaderToUse->setFloat("light.Linear", linear);
-shaderToUse->setFloat("light.Quadratic", quadratic);
-glActiveTexture(GL_TEXTURE0);
-glBindTexture(GL_TEXTURE_2D, gPosition);
-glActiveTexture(GL_TEXTURE1);
-glBindTexture(GL_TEXTURE_2D, gNormal);
-glActiveTexture(GL_TEXTURE2);
-glBindTexture(GL_TEXTURE_2D, gAlbedo);
-glActiveTexture(GL_TEXTURE3); // add extra SSAO texture to lighting pass
-glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
-renderQuad();
+        const float linear = 0.09f;
+        const float quadratic = 0.032f;
+        shaderToUse->setFloat("light.Linear", linear);
+        shaderToUse->setFloat("light.Quadratic", quadratic);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, gPosition);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, gNormal);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, gAlbedo);
+        glActiveTexture(GL_TEXTURE3); // add extra SSAO texture to lighting pass
+        glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
+        renderQuad();
 
 
-glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
-glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
-glBlitFramebuffer(0, 0, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, 0, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-glBindFramebuffer(GL_FRAMEBUFFER, 0);
-DrawSky();
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
+        glBlitFramebuffer(0, 0, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, 0, windowSettings->CUR_WIDTH,
+                          windowSettings->CUR_HEIGHT, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        DrawSky();
 
 
-if(isDebugSSAO) {
-shaderFBODebug.use();
-glActiveTexture(GL_TEXTURE0);
-glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
-renderQuad();
+        if (isDebugSSAO) {
+            shaderFBODebug.use();
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
+            renderQuad();
+        }
+
+    }
 }
 
-}
-}
-
-void  DeferredScene2::LoadModel(std::string path)
-{
-    if(path.empty())
+void DeferredScene2::LoadModel(std::string path) {
+    if (path.empty())
         return;
-    Model* m = new Model(path,false);
+    Model *m = new Model(path, false);
 
-    Shader* s;
+    Shader *s;
     switch (demoStage) {
         case 1:
             s = simpleLights;
@@ -325,115 +326,114 @@ void  DeferredScene2::LoadModel(std::string path)
             break;
 
     }
-    ObjectInstance* a = new ObjectInstance(*m,*s,"openModel", nullptr);
+    ObjectInstance *a = new ObjectInstance(*m, *s, "openModel", nullptr);
     selectableObjInstances.push_back(a);
     selectedInstance = a;
 }
 
-void DeferredScene2::ImGuiHierarchy()  {
-SceneInstance::ImGuiHierarchy();
+void DeferredScene2::ImGuiHierarchy() {
+    SceneInstance::ImGuiHierarchy();
 
 
-ImGui::Begin("Interactive");
-ImGui::TextWrapped("Welcome to this demo. You see famous Sponza demo in with Phong lighting. By pressing buttons bellow, you will add more graphical features that will make it look even better! "
-"Please work through them one by one from the top, otherwise the next button wont be active");
+    ImGui::Begin("Interactive");
+    ImGui::TextWrapped(
+            "Welcome to this demo. You see famous Sponza demo in with Phong lighting. By pressing buttons bellow, you will add more graphical features that will make it look even better! "
+            "Please work through them one by one from the top, otherwise the next button wont be active");
 
 //imgui buttons that handle switching of demo stages and their setup
 #pragma region buttonsAndSetup
-if(ImGui::Button("Add simple lights") &&demoStage==0)
-{
+    if (ImGui::Button("Add simple lights") && demoStage == 0) {
 //sponzaObjInstance->SetShader(*simpleLights);
 //TODO should be for every object
-for(ObjectInstance* oi : selectableObjInstances) {
-if (oi->light != nullptr) continue;
+        for (ObjectInstance *oi: selectableObjInstances) {
+            if (oi->light != nullptr) continue;
 
-oi->SetShader(*simpleLights);
-}
+            oi->SetShader(*simpleLights);
+        }
 //set light properties
 //setup Cam
-glm::vec3 startPos =glm::vec3(1.333f,1.111f,3.777f);
+        glm::vec3 startPos = glm::vec3(1.333f, 1.111f, 3.777f);
 //camera->SetPosDir(startPos,glm::vec3(0.0, 1.0, 0.0),-157.0f,6.9f);
-demoStage=1;
-}
-if(ImGui::Button("Add directional light with shadows")&&demoStage==1)
-{
+        demoStage = 1;
+    }
+    if (ImGui::Button("Add directional light with shadows") && demoStage == 1) {
 
 
-demoStage=2;
-}
-ImGui::TextWrapped("NOTE: for shadows to work you need to have checked the box 'Switch shadows on' in the 'Tool Window' UI Window!");
-ImGui::TextWrapped("Use 'Sun offset' in the 'Tool Window' UI Window to change sun direction");
-if(ImGui::Button("Change to deferred" )&&demoStage==2)
-{
-SetupSSAO();
+        demoStage = 2;
+    }
+    ImGui::TextWrapped(
+            "NOTE: for shadows to work you need to have checked the box 'Switch shadows on' in the 'Tool Window' UI Window!");
+    ImGui::TextWrapped("Use 'Sun offset' in the 'Tool Window' UI Window to change sun direction");
+    if (ImGui::Button("Change to deferred") && demoStage == 2) {
+        SetupSSAO();
 
-demoStage=3;
-}
-if(ImGui::Button("return back to forward, directional light with shadows ")&&demoStage==3)
-{
-demoStage=2;
-}
-ImGui::TextWrapped("Loads model from hard drive and selects it: ");
+        demoStage = 3;
+    }
+    if (ImGui::Button("return back to forward, directional light with shadows ") && demoStage == 3) {
+        demoStage = 2;
+    }
+    ImGui::TextWrapped("Loads model from hard drive and selects it: ");
 
-if (ImGui::Button("Load Model into scene")) {
+    if (ImGui::Button("Load Model into scene")) {
 //OpenSecond = true;
-static char* path = FileDialog::Open();
-LoadModel(path);
-}
+        static char *path = FileDialog::Open();
+        LoadModel(path);
+    }
 
 #pragma endregion buttons
 //not working for now DirectionalLight*  a = dynamic_cast<DirectionalLight*>(dirLight);
-switch (demoStage) {
-case 0:
-break;
-case 1:// simple forward lights
-ImGui::TextWrapped("Feel free to manipulate  selected lights either by right clicking on them or from the list.");
-SetupForwardLights();
+    switch (demoStage) {
+        case 0:
+            break;
+        case 1:// simple forward lights
+            ImGui::TextWrapped(
+                    "Feel free to manipulate  selected lights either by right clicking on them or from the list.");
+            SetupForwardLights();
 
-ImGui::SliderFloat3("Sun direction", dirLightDirImGui , -1, 1, "%.3f");
+            ImGui::SliderFloat3("Sun direction", dirLightDirImGui, -1, 1, "%.3f");
 //DirectionalLight*  a = dynamic_cast<DirectionalLight*>(dirLight);
 //=   static_cast<DirectionalLight>(dirLight_ObjInstance->light);
 
 //a->direction = glm::make_vec3(dirLightDirImGui);
 //simpleLights->setVec3("dirLight.direction", a->direction);  //uhh static casts
-simpleLights->setVec3("dirLight.direction", glm::make_vec3(dirLightDirImGui));
+            simpleLights->setVec3("dirLight.direction", glm::make_vec3(dirLightDirImGui));
 
-static ImVec4 color = ImVec4(dirlightCol.x, dirlightCol.y, dirlightCol.z, 1);
-ImGui::ColorEdit3("Sun Color", (float*)&color);
-if (ImGui::IsItemActive())  // continous edit or IsItemDeactivatedAfterEdit-
+            static ImVec4 color = ImVec4(dirlightCol.x, dirlightCol.y, dirlightCol.z, 1);
+            ImGui::ColorEdit3("Sun Color", (float *) &color);
+            if (ImGui::IsItemActive())  // continous edit or IsItemDeactivatedAfterEdit-
 // only after i lift mouse
-{
-dirlightCol.x = color.x;
-dirlightCol.y = color.y;
-dirlightCol.z = color.z;
+            {
+                dirlightCol.x = color.x;
+                dirlightCol.y = color.y;
+                dirlightCol.z = color.z;
 
 // std::cout << color.x << " " << color.y << " " << color.z << std::endl;
-}
+            }
 //daj prvotne nastavenie svetla dir a col + mozno aj kameru na nove miesto,
 //    kresli debug pre deferred priamo cez...
-simpleLights->setVec3("dirLight.diffuse", dirlightCol);
+            simpleLights->setVec3("dirLight.diffuse", dirlightCol);
 
-break;
-case 2://dir light with shadows
+            break;
+        case 2://dir light with shadows
 //simpleLights->setVec3("dirLight.diffuse", dirlightCol);
-break;
-case 3://deferred pipeline
+            break;
+        case 3://deferred pipeline
 
-ImGui::Checkbox("enable SSAO", &enableSSAO);
-ImGui::InputInt("AO power",&powerSSAO,1);
+            ImGui::Checkbox("enable SSAO", &enableSSAO);
+            ImGui::InputInt("AO power", &powerSSAO, 1);
 
 
 //shaderLightingPass->setVec3("Light.direction", );
 //dynamic_cast<DirectionalLight*>(dirLight_ObjInstance->light)->direction = glm::vec3(dirLightDirection);
-ImGui::Checkbox("showDebug SSAO",&isDebugSSAO);
-break;
-case 4://deffered+ shadows? or ssao
+            ImGui::Checkbox("showDebug SSAO", &isDebugSSAO);
+            break;
+        case 4://deffered+ shadows? or ssao
 
-break;
-default:
-break;
+            break;
+        default:
+            break;
 
-}
+    }
 
-ImGui::End();
+    ImGui::End();
 }

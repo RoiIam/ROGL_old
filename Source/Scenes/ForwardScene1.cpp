@@ -1,7 +1,9 @@
 #define TINYEXR_IMPLEMENTATION
+
 #include "ForwardScene1.h"
 //for glints_ch
 #define TINYEXR_USE_MINIZ 0
+
 #include "zlib.h"
 #include "tinyexr.h"
 
@@ -57,7 +59,9 @@ void ForwardScene1::Setup(Camera *cam) // override
 
     selectableObjInstances.push_back(cube_ObjInstance);
     selectableObjInstances.push_back(shrekModel_ObjInstance);
-    shrekModel_ObjInstance->SetPos(glm::vec3(2, 0, 2));
+    shrekModel_ObjInstance->SetPos(glm::vec3(2, 0, 2));;
+    shrekModel_ObjInstance->SetScale(glm::vec3(0.1));
+
     selectableObjInstances.push_back(xModel_ObjInstance);
 
     cube_ObjInstance->SetPos(glm::vec3(5.0f, 0.0f, 0.0f));
@@ -82,29 +86,15 @@ void ForwardScene1::Setup(Camera *cam) // override
 
 
     //TODO glints
-    /*
-    loadMultiscaleMarginalDistributions("glint_dict.raw").then(t => {
-            dicoTex = Texture2dArray();
-            dicoTex.bind();
-            gl.texImage3D(gl.TEXTURE_2D_ARRAY, 0, gl.RGB16F, t.w, 1, t.nbl * t.nbd, 0, gl.RGB, gl.FLOAT, t.data)
-            gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MIN_FILTER,gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MAG_FILTER,gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_WRAP_T,gl.REPEAT);
-            unbind_texture2dArray();
-    */
-
-    //example how they did it on the github real_time_glint/sceneglint.cpp L40
     //GLuint dicoTex = Texture::loadMultiscaleMarginalDistributions(MEDIA_PATH+std::string("dictionary/dict_16_192_64_0p5_0p02"), numberOfLevels, numberOfDistributionsPerChannel);
-    dicoTex=loadTex("..//Assets//dict//dict_16_192_64_0p5_0p02", 16, 64);
-    glActiveTexture(GL_TEXTURE0);
+    dicoTex = loadTex("..//Assets//dict//dict_16_192_64_0p5_0p02", 16, 64);
+    glActiveTexture(GL_TEXTURE8);
     glBindTexture(GL_TEXTURE_1D_ARRAY, dicoTex);
 }
 
 
-GLuint ForwardScene1::loadTex(const std::string& baseName, const unsigned int nlevels, const GLsizei ndists)
-{
-    const char* err = nullptr;
+GLuint ForwardScene1::loadTex(const std::string &baseName, const unsigned int nlevels, const GLsizei ndists) {
+    const char *err = nullptr;
     glGenTextures(1, &texID);
     glBindTexture(GL_TEXTURE_1D_ARRAY, texID);
 
@@ -115,7 +105,7 @@ GLuint ForwardScene1::loadTex(const std::string& baseName, const unsigned int nl
 
     // Load the first one to get width/height
     std::string texName = baseName + "_0000" + "_" + "0000" + ".exr";
-    float* data;
+    float *data;
     bool ret = LoadEXR(&data, &width, &height, texName.c_str(), &err);//new tinyexr
     //use this for older tinyexr, used in paper
     //bool ret = exrio::LoadEXRRGBA(&data, &width, &height, texName.c_str(), err);
@@ -210,42 +200,12 @@ void ForwardScene1::SetupShaderMaterial() {
     ourShader->setMat4("model", model);
     cube_ObjInstance->SetRot(glm::vec3(0.0f, 0.0f, 1.0f));
     cube_ObjInstance->SetDeg(00.0f);
+    //printf("SetupShaderMaterial\n");
 
-}
-
-void ForwardScene1::drawShrek()
-{
-    //TODO part for glints
-    //TODO only if shader is glint_ch
-
-    ImGui::Begin("Parameters");
-
-    ImGui::SliderFloat("Roughness X", &alpha_x, 0.01f, 1.0f);
-    ImGui::SliderFloat("Roughness Y", &alpha_y, 0.01f, 1.0f);
-    ImGui::SliderFloat("Log microfacet density", &logMicrofacetDensity, 15.f, 40.f);
-    ImGui::SliderFloat("Microfacet relative area", &microfacetRelativeArea, 0.01f, 1.f);
-    float v[]={lightPos.x,lightPos.y,lightPos.z};
-    ImGui::DragFloat3("Light Pos", v,0.15f, -15.0f, 15.f);
-    lightPos = glm::make_vec3(v);
-    ImGui::DragFloat("Light Inten", &lightInten,0.25f,0.0,100);
-
-
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    ImGui::End();
-
-
+    //glints part
     glintChShader->use();
-    model = glm::translate(model,glm::vec3(0));
-    model = glm::scale(model,glm::vec3(0.1));
 
-    glintChShader->setMat4("model", model);
-    glintChShader->setMat4("view", uniforms.view);
-    glintChShader->setMat4("projection", uniforms.projection);
-
-    //glActiveTexture(GL_TEXTURE0);
-    //glBindTexture(GL_TEXTURE_1D_ARRAY, dicoTex);
-
-    glintChShader->setVec4("Light.Position", glm::vec4(lightPos,1.0));
+    glintChShader->setVec4("Light.Position", glm::vec4(lightPos, 1.0));
     glintChShader->setVec3("Light.L", glm::vec3(lightInten));
 
     glintChShader->setFloat("Material.Alpha_x", alpha_x);
@@ -255,207 +215,42 @@ void ForwardScene1::drawShrek()
     glintChShader->setFloat("Dictionary.Alpha", 0.5);
     glintChShader->setInt("Dictionary.N", 192); //64*3
     glintChShader->setInt("Dictionary.NLevels", 16);
-    glintChShader->setInt("Dictionary.Pyramid0Size",  1 << (15));//16 - 1
+    glintChShader->setInt("Dictionary.Pyramid0Size", 1 << (15));//16 - 1
 
     glintChShader->setVec3("CameraPosition", camera->Position);
     glintChShader->setFloat("MicrofacetRelativeArea", microfacetRelativeArea);
     glintChShader->setFloat("MaxAnisotropy", 8);
 
-    //uniform mediump sampler2DArray DictionaryTex;
-    //glintChShader->setFloat("DictionaryTex", XXX);
-    glintChShader->setInt("DictionaryTex", 0);//has to be zero? ok
+    glintChShader->setInt("DictionaryTex", 8);//has to be set to GL_TEXTURE XXX when glBindTexture for array dicoTex
     dirLight_ObjInstance->SetPos(lightPos);
     dirLight_ObjInstance->SetScale(glm::vec3(0.3f));
 
-    /*
-     from webgl implementation,default values
-     var mesh_rend = null;
-    var prg = null;
-    var dicoTex = null;
-    var lightPos = Vec4(5, 5, 5, 1);
-    var maxAnisotropy = 8;
-    var microfacetRelativeArea = 1;
-    var alpha_x = 0.5
-    var alpha_y = 0.5;
-    var logMicrofacetDensity = 27;
-    var lastTime=0;
-    var beta;
-    var objRot;
-
-     Uniforms.Dictionary.Alpha = 0.5;
-    const numberOfLevels = 16;
-    const numberOfDistributionsPerChannel = 64;
-    Uniforms.Dictionary.N = numberOfDistributionsPerChannel * 3;
-    Uniforms.Dictionary.NLevels = numberOfLevels;
-     Uniforms.Dictionary.Pyramid0Size = 1 << (numberOfLevels - 1);
-     * */
-    shrekModel->Draw(*glintChShader, false);
-    //sphereModel->Draw(*glintChShader, false);
-
 }
 
-void ForwardScene1::RenderObjects(Shader *shader, bool simple)
-{
-    view = uniforms.view;
-    projection = uniforms.projection;
-    // render
-    glClearColor(backgroundClearCol[0], backgroundClearCol[1],
-                 backgroundClearCol[2], backgroundClearCol[3]);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    PerfAnalyzer::drawcallCount = 0;  // clear counter
-
-    /*
-    // draw stencil not correct, draws grass as stencil
-    std::cout << "Draw Stencil\n";
-    glDisable(GL_DEPTH_TEST); // disable for stencil
-    glEnable(GL_STENCIL_TEST);
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glStencilMask(0xFF);  // enable writing to the stencil buffer
-
-    if (selectedInstance != nullptr) {
-        selectedInstance->GetShader()->use();
-        selectedInstance->Render();
-    }
-    glStencilMask(0x00);  // disable writing to the stencil buffer
-    glEnable(GL_DEPTH_TEST); //reenable depth
-    */
-    SetupShaderMaterial(); // repalce code above
-    cube_ObjInstance->Render(ourShader, false);
-
-
-    // draw light thingy
-    mesh_shader->use();
-    model = glm::mat4(1.0f);  // same , below
-    // m += 0.008f; dont move
-    model = glm::translate(model, glm::vec3(-5.0f, 0.0f, 0.5f));
-    model = glm::scale(
-            model, glm::vec3(1.0f, 1.0f, 1.0f));  // lets try setting it here
-    unsigned int transformLoc = glGetUniformLocation(mesh_shader->ID, "model");
-    mesh_shader->setMat4("model", model);
-    mesh_shader->setVec3("light.position", lightPos);
-    mesh_shader->setVec3("viewPos", camera->Position);
-    // light properties
-    mesh_shader->setVec3("light.ambient", 0.05f, 0.05f, 0.1f);
-    mesh_shader->setVec3("light.diffuse", 0.5f, 0.5f, 0.7f);
-    mesh_shader->setVec3("light.specular", 0.7f, 0.7f, 0.7f);
-    // material properties
-    mesh_shader->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-    mesh_shader->setFloat("material.shininess", 32.0f);
-
-    mesh_shader->setVec3("dirLight.direction",
-                         static_cast<DirectionalLight>(dirLight_ObjInstance->light).direction);  //uhh static casts
-
-
-    //  dirlightCol use instead of hardcoded vars
-    mesh_shader->setVec3("dirLight.ambient",
-                         dirlightCol * 0.5f);  // 0.6f, 0.2f, 0.3f //tone it down
-    mesh_shader->setVec3("dirLight.diffuse", dirlightCol);   // 0.6f, 0.2f, 0.3f
-    mesh_shader->setVec3("dirLight.specular", dirlightCol);  // 0.7f, 0.7f, 0.7f
-
-    // spotLight
-    // enable
-    mesh_shader->setInt("spotLight.Enabled", false);  // camera.enableSpotlight
-    mesh_shader->setVec3("spotLight.position", camera->Position);
-    mesh_shader->setVec3("spotLight.direction", camera->Front);
-    mesh_shader->setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-    mesh_shader->setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-    mesh_shader->setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
-    mesh_shader->setFloat("spotLight.constant", 1.0f);
-    mesh_shader->setFloat("spotLight.linear", 0.09);
-    mesh_shader->setFloat("spotLight.quadratic", 0.032);
-    mesh_shader->setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-    mesh_shader->setFloat("spotLight.outerCutOff",
-                          glm::cos(glm::radians(15.0f)));
-    mesh_shader->setVec3("testPointLight.position", lightPos);
-    mesh_shader->setFloat("testPointLight.constant", 1.0f);
-    mesh_shader->setFloat("testPointLight.linear", 0.09f);
-    mesh_shader->setFloat("testPointLight.quadratic", 0.032f);
-    mesh_shader->setVec3("testPointLight.ambient", 0.2f, 0.2f, 0.3f);
-    mesh_shader->setVec3("testPointLight.diffuse", 0.2f, 0.2f, 0.7f);
-    mesh_shader->setVec3("testPointLight.specular", 0.7f, 0.7f, 0.7f);
-
-    mesh_shader->setMat4("projection", projection);
-    mesh_shader->setMat4("view", view);
-
-    // maybe you cant do this after you calculated all previous light calcs....
-    xModel_ObjInstance->SetPos(glm::vec3(-5.0f, 0.0f, 0.5)); //mesh_shader.setMat4("model", model);
-    xModel->Draw(*mesh_shader, false);
-
-    ourShader->use();
-    ourShader->setMat4("projection", uniforms.projection);
-    ourShader->setMat4("view", uniforms.view);
-    //std::cout<< "uniV FS\n" << glm::to_string(uniforms.view);
-    // render the loaded obj model , we also write to stencil
-    model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));  // it's a bit too big for our scene, so scale it down
-    //model = glm::translate(model,glm::vec3(0.0f,0.0f,0.0f));  dont use this as we set position inside obj instance // translate it down so it's at the center of the scene
-    model = glm::translate(model, shrekModel_ObjInstance->GetPos());//just test of setpos
-    //ourShader->setMat4("model", model);
-
-    drawShrek();
-
-    //shrekModel_ObjInstance->Render();
-
-    // be sure to activate shader when setting uniforms/drawing objects
-    light_shader->use();
-    light_shader->setVec3("light.position", lightPos);
-    light_shader->setVec3("viewPos", camera->Position);
-    // also draw the lamp object
-    light_shader->setMat4("projection", projection);
-    light_shader->setMat4("view", view);
-    glm::mat4 modelMat = glm::mat4(1.0f);
-    modelMat = glm::translate(modelMat, lightPos);
-    // modelMat = glm::scale(modelMat, glm::vec3(1.2f));
-    light_shader->setMat4("model", modelMat);
-
-
-    // Draw cubePrimitive // cubemaps skybox
-    //  don't forget to enable shader before setting uniforms
-    ourShader->use();
-    view = camera->GetViewMatrix();
-    ourShader->setMat4("projection", projection);
-    ourShader->setMat4("view", view);
-
-
-    glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when
-    // values are equal to depth buffer's content
-    view = glm::mat4(glm::mat3(camera->GetViewMatrix()));  // remove translation from the view matrix
-    cubePrimitive.render(&projection, &view);
-    glDepthFunc(GL_LESS);  // set depth function back to default was GL_LESS.... // now get it back
-
-    view = camera->GetViewMatrix(); //should be using OGLR::Managers::Uniform now...
-
-
-    // draw transparent grass
-    //aways disable backface culling, ignore global setting
-    glDisable(GL_CULL_FACE);
-    grassShader->use();
-    grassShader->setInt("texture1", 0);
-    grassShader->setMat4("projection", projection);
-    grassShader->setMat4("view", view);
-    //std::cout << "grass Test\n";//its ddoesnt even use this
-
-    for (unsigned int i = 0; i < grassInstances.size(); i++) {
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, vegetation[i]);
-        // update.. and draw does it in instance >render()
-        grassInstances[i]->SetPos(vegetation[i]);
-        grassInstances[i]->Render();
-    }
-    glEnable(GL_CULL_FACE);
-
-    glm::mat4 model2 = glm::mat4(1.0f);
-    model2 =
-            glm::rotate(model2, glm::radians(00.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    model2 = glm::scale(
-            model2,
-            glm::vec3(1.0f, 1.0f,
-                      1.0f));  // it's a bit too big for our scene, so scale it down
-    model2 = glm::translate(model2, vegetation[0]);
-
-
-}
-
-void ForwardScene1::RenderLights() {//override
+void ForwardScene1::RenderLights() {
     SceneInstance::RenderLights();
+}
+
+void ForwardScene1::ImGuiHierarchy() {
+    SceneInstance::ImGuiHierarchy();
+
+    UIGlintParams();
+}
+
+void ForwardScene1::UIGlintParams() {
+    ImGui::Begin("Parameters");
+
+    ImGui::SliderFloat("Roughness X", &alpha_x, 0.01f, 1.0f);
+    ImGui::SliderFloat("Roughness Y", &alpha_y, 0.01f, 1.0f);
+    ImGui::SliderFloat("Log microfacet density", &logMicrofacetDensity, 15.f, 40.f);
+    ImGui::SliderFloat("Microfacet relative area", &microfacetRelativeArea, 0.01f, 1.f);
+    float v[] = {lightPos.x, lightPos.y, lightPos.z};
+    ImGui::DragFloat3("Light Pos", v, 0.15f, -15.0f, 15.f);
+    lightPos = glm::make_vec3(v);
+    ImGui::DragFloat("Light Inten", &lightInten, 0.25f, 0.0, 100);
+
+
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
+                ImGui::GetIO().Framerate);
+    ImGui::End();
 }

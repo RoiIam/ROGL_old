@@ -4,8 +4,8 @@ out vec4 FragColor;
 
 struct Material {
     sampler2D diffuse;
-    //sampler2D specular; lets remove this
-        vec3 specular;
+//sampler2D specular; lets remove this
+    vec3 specular;
     float shininess;
 };
 
@@ -84,7 +84,7 @@ void main()
     //vec3 result = CalcPointLight(testPointLight,norm, FragPos, viewDir);
     //FragColor = vec4(result, 1.0);*/
 
-     res += CalcPointLight(testPointLight,norm, FragPos, viewDir); //test
+    res += CalcPointLight(testPointLight, norm, FragPos, viewDir);//test
 
 
     FragColor = vec4(res, 1.0);

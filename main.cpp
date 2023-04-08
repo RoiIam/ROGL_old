@@ -1,5 +1,6 @@
 //it is in cmake compile definitions already and this doesnt even work, wait for update
 #define IMGUI_IMPL_OPENGL_LOADER_GLAD
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -7,6 +8,7 @@
 //#include <GL/glew.h>
 
 #define GLM_ENABLE_EXPERIMENTAL //to enable vec3* int,must be before the includes
+
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -36,6 +38,7 @@
 
 //for glints_ch
 #define TINYEXR_USE_MINIZ 0
+
 #include "zlib.h"
 #include "tinyexr.h"
 
@@ -45,9 +48,10 @@
 #pragma clang diagnostic pop
 
 
-
 void ReloadScene(int num);
+
 void PrintShader();
+
 #pragma region settings_params
 //TODO reorganize
 
@@ -71,7 +75,7 @@ float lastFrame = 0.0f;
 
 glm::vec3 centroidPos;
 
-Camera  *camera;
+Camera *camera;
 WindowSettings windowSettings = WindowSettings();
 float sunFarPlane = 100.0f;
 glm::vec3 sunDir = {0.0f, 0.800f, -1};  // glm::vec3(1.0f);
@@ -101,23 +105,23 @@ std::shared_ptr<SceneInstance> sceneInstance;
 
 bool show_demo_window = false;  // use F9
 
-static char* path;
+static char *path;
 
 glm::vec3 dirlightCol = {0.6f, 0.2f, 0.3f};  // glm::vec3(1.0f);
 float dirlightColChange[3];
 
 
+typedef void (*ImGuiDemoMarkerCallback2)(const char *file, int line, const char *section, void *user_data);
 
-typedef void (*ImGuiDemoMarkerCallback2)(const char* file, int line, const char* section, void* user_data);
-extern ImGuiDemoMarkerCallback2  GImGuiDemoMarkerCallback2;
-extern void*                    GImGuiDemoMarkerCallbackUserData2;
-ImGuiDemoMarkerCallback2         GImGuiDemoMarkerCallback2 = NULL;
-void*                           GImGuiDemoMarkerCallbackUserData2 = NULL;
+extern ImGuiDemoMarkerCallback2 GImGuiDemoMarkerCallback2;
+extern void *GImGuiDemoMarkerCallbackUserData2;
+ImGuiDemoMarkerCallback2 GImGuiDemoMarkerCallback2 = NULL;
+void *GImGuiDemoMarkerCallbackUserData2 = NULL;
 #define IMGUI_DEMO_MARKER(section)  do { if (GImGuiDemoMarkerCallback2 != NULL) GImGuiDemoMarkerCallback2(__FILE__, __LINE__, section, GImGuiDemoMarkerCallbackUserData2); } while (0)
 GLfloat lineSeg[] = {0, 0, 0,  // first vertex
-                     0, 1.0f, 0 };//last point
-GLfloat centroidLineSeg[] = {0, 0,0,  // first vertex
-                             0, 1.0f,0};
+                     0, 1.0f, 0};//last point
+GLfloat centroidLineSeg[] = {0, 0, 0,  // first vertex
+                             0, 1.0f, 0};
 
 //TODO why si this here?
 float mousePos[2] = {0, 0};
@@ -130,31 +134,30 @@ bool changeCol = false;
 
 float pos[3];
 
-void ImGuiObjProperties(ObjectInstance *obj)
-{
-    ImGuiIO& io = ImGui::GetIO();
+void ImGuiObjProperties(ObjectInstance *obj) {
+    ImGuiIO &io = ImGui::GetIO();
 
     ImGui::Text("Edit Selected Object:");
     //ImGui::GetIO().WantCaptureKeyboard = true;
     //ImGui::GetIO().WantTextInput =true;
     // position
     pos[0] = obj->GetPos().x;
-    pos[1]= obj->GetPos().y;
-    pos[2]  = obj->GetPos().z;
+    pos[1] = obj->GetPos().y;
+    pos[2] = obj->GetPos().z;
     //old ImGui::InputFloat3("Obj Position", pos, "%.3f");
-    ImGui::DragFloat3("Obj Position", pos,0.05f,-10000,10000, "%.3f");
+    ImGui::DragFloat3("Obj Position", pos, 0.05f, -10000, 10000, "%.3f");
     ImGui::SetItemUsingMouseWheel();
 
     // scale
-    float scale[] ={obj->GetScale().x,obj->GetScale().y,obj->GetScale().z};
-    ImGui::DragFloat3("Obj Scale", scale,0.05f,-10000,10000, "%.3f");
+    float scale[] = {obj->GetScale().x, obj->GetScale().y, obj->GetScale().z};
+    ImGui::DragFloat3("Obj Scale", scale, 0.05f, -10000, 10000, "%.3f");
     //ImVec4
 
     //rotation
     //scale
     //cout << "Pos " << pos[0]<< " "<< pos[1] << " " <<pos[2]   << "Saved "<< glm::to_string(obj->position) << "\n";
     //show changes
-    obj->SetPos(glm::vec3(pos[0],pos[1],pos[2]));
+    obj->SetPos(glm::vec3(pos[0], pos[1], pos[2]));
     obj->SetScale(glm::make_vec3(scale));
 
     //show assigned shader
@@ -164,8 +167,7 @@ void ImGuiObjProperties(ObjectInstance *obj)
     //obj->position =  glm::vec3(pos[0],pos[1],pos[2]);
 }
 
-void ImGuiLightProperties(ObjectInstance *objL)
-{
+void ImGuiLightProperties(ObjectInstance *objL) {
     /*
     glm::vec3 direction;
     // position this is copied...
@@ -188,27 +190,27 @@ void ImGuiLightProperties(ObjectInstance *objL)
     try {
         // maybe its going to be better using enums
         auto light = dynamic_cast<DirectionalLight *>(objL->light);
-        float dir[] = {light->direction.x,light->direction.y,light->direction.z };
-        ImGui::DragFloat3("Light Dir", dir,0.015f,-1,1, "%.3f");
-        dynamic_cast<DirectionalLight *>(objL->light)->direction = glm::vec3(dir[0],dir[1],dir[2]);
+        float dir[] = {light->direction.x, light->direction.y, light->direction.z};
+        ImGui::DragFloat3("Light Dir", dir, 0.015f, -1, 1, "%.3f");
+        dynamic_cast<DirectionalLight *>(objL->light)->direction = glm::vec3(dir[0], dir[1], dir[2]);
 
         static ImVec4 color = ImVec4(dirlightCol.x, dirlightCol.y, dirlightCol.z, 1);
-        ImGui::ColorEdit3("Light Color", (float*)&color);
+        ImGui::ColorEdit3("Light Color", (float *) &color);
         if (ImGui::IsItemActive())  // continous edit or IsItemDeactivatedAfterEdit-// only after i lift mouse
         {
-            dynamic_cast<Light *>(objL->light)->color = glm::vec3(color.x,color.y,color.z);
+            dynamic_cast<Light *>(objL->light)->color = glm::vec3(color.x, color.y, color.z);
         }
 
 
     } catch (std::bad_cast &bc) {
-        std::cerr<<bc.what()<<std::endl;
+        std::cerr << bc.what() << std::endl;
     }
 
 
 }
 
 void DrawImGui() {
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO &io = ImGui::GetIO();
 
     // feed inputs to dear imgui, start new frame, now moved to scene...
 
@@ -225,17 +227,17 @@ void DrawImGui() {
         //create menu bar
         //IMGUI_DEMO_MARKER("Menu/Examples");
         if (ImGui::BeginMenu("Scenes")) {
-            if(ImGui::MenuItem("Load scene 1", NULL))
+            if (ImGui::MenuItem("Load scene 1", NULL))
                 ReloadScene(1);
-            if(ImGui::MenuItem("Load scene 2", NULL))
+            if (ImGui::MenuItem("Load scene 2", NULL))
                 ReloadScene(2);
-            if(ImGui::MenuItem("Load scene 3", NULL))
+            if (ImGui::MenuItem("Load scene 3", NULL))
                 ReloadScene(3);
             //ImGui::MenuItem("Main menu bar", ReloadScene(2));
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Others")) {
-            if(ImGui::MenuItem("Unselect", NULL))
+            if (ImGui::MenuItem("Unselect", NULL))
                 sceneInstance->selectedInstance = nullptr;
             ImGui::EndMenu();
         }
@@ -272,22 +274,22 @@ void DrawImGui() {
         float pitch = camera->Pitch;
         float eulerRot[3] = {yaw, pitch, 0};
 
-        ImGui::InputFloat2("Cam Rotation",eulerRot , "%.3f");
+        ImGui::InputFloat2("Cam Rotation", eulerRot, "%.3f");
     }
 
     ImGui::Checkbox("Enable face culling", &enable_culling);
 
     ImGui::Checkbox("Switch shadows on (default off)", &enableShading);
 
-    if(enableShading)
+    if (enableShading)
         ImGui::Checkbox("Show Quad debug", &enableDebugDepthQuad);
 
 
     ImGui::Checkbox("Show Light Ray Debug", &enableDebugLightRay);
     // for debug DepthDebug on ImGUi ignore red tint, we wpuld eeed to alter textureformat
     // see https://github.com/inkyblackness/imgui-go/issues/42 to
-    if(enableDebugDepthQuad) {
-        ImGui::Image((void *) depthMap,ImVec2( 200,200),  ImVec2(0, 1),ImVec2(1, 0), ImVec4(1,1,1,1));
+    if (enableDebugDepthQuad) {
+        ImGui::Image((void *) depthMap, ImVec2(200, 200), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1, 1, 1, 1));
     }
 
     // ImGui::SliderFloat4("Background Color",backgroundClearCol, 0 ,1 ,"%.3f");
@@ -305,12 +307,12 @@ void DrawImGui() {
     ImGui::InputFloat("Far Sun Plane", &sunFarPlane, 0.1f, 0.5f, "%.3f");
     float sun[] = {sunDir.x, sunDir.y, sunDir.z};
     //ImGui::InputFloat3("sun offset", sun, "%.3f");
-    ImGui::DragFloat3("Sun offset", sun,0.001f,-1,1, "%.3f");
+    ImGui::DragFloat3("Sun offset", sun, 0.001f, -1, 1, "%.3f");
 
     sunDir = glm::make_vec3(sun);
 
-    if(sceneInstance != nullptr && sceneInstance->selectedInstance != nullptr) {
-        if(sceneInstance->selectedInstance->light != nullptr)
+    if (sceneInstance != nullptr && sceneInstance->selectedInstance != nullptr) {
+        if (sceneInstance->selectedInstance->light != nullptr)
             ImGuiLightProperties(sceneInstance->selectedInstance);
         else
             ImGuiObjProperties(sceneInstance->selectedInstance);
@@ -341,7 +343,7 @@ bool TestRayOBBIntersection(
         // is centered, but it's not always the case.
         glm::mat4 ModelMatrix,  // Transformation applied to the mesh (which will
         // thus be also applied to its bounding box)
-        float& intersection_distance  // Output : distance between ray_origin and
+        float &intersection_distance  // Output : distance between ray_origin and
         // the intersection with the OBB
 ) {
     // Intersection method from Real-Time Rendering and Essential Mathematics for Games
@@ -481,14 +483,14 @@ void TestMouse2(glm::vec3 dir) {
         // models[i]->position ) <<" " << " rot "<<
         // glm::to_string(models[i]->rotation)<<"sc "
         //  <<glm::to_string(models[i]->scale) <<  std::endl;
-        if (sceneInstance->selectableObjInstances[i]->Name == "shrek" )
-        {
+        if (sceneInstance->selectableObjInstances[i]->Name == "shrek") {
 
         }
 
         if (TestRayOBBIntersection(camera->Position, dir, aabb_min, aabb_max, model,
                                    intersection_distance)) {
-            std::cout << "picked object " << sceneInstance->selectableObjInstances[i]->GetModel()->directory << sceneInstance->selectableObjInstances[i]->Name
+            std::cout << "picked object " << sceneInstance->selectableObjInstances[i]->GetModel()->directory
+                      << sceneInstance->selectableObjInstances[i]->Name
                       << " id " << intersection_distance << "\n"
                       //<< " mat" << std::endl
                       //<< "min "
@@ -516,8 +518,7 @@ void TestMouse2(glm::vec3 dir) {
         //scene->objectInstances.push_back(scene->selectedInstance);
 
         sceneInstance->selectedInstance = nullptr;
-    }
-    else {
+    } else {
         //if(scene->selectedInstance != nullptr && scene->selectedInstance != scene->selectedObjInstance)// push back previously picked object
         //scene->objectInstances.push_back(scene->selectedInstance);
 
@@ -534,8 +535,9 @@ void TestMouse2(glm::vec3 dir) {
     // std::cout << "pick col " << int(bArray[0] + bArray[1] * 256 +  bArray[2] *
     // 256*256)<<" "<< std::endl;
 }
+
 void Drawline() {
-    if(sceneInstance == nullptr)
+    if (sceneInstance == nullptr)
         return;
     float x = (2.0f * mousePos[0]) / windowSettings.CUR_WIDTH - 1.0f;
     float y = 1 - (2.0f * mousePos[1]) / windowSettings.CUR_HEIGHT;
@@ -579,13 +581,11 @@ void Drawline() {
 
 
 //load scene based on number
-void ReloadScene(int num)
-{
+void ReloadScene(int num) {
     //if(num != scene->num)
-    if(true)
-    {
-        std::cout<< "Reloading Scene\n";
-        if(sceneInstance != nullptr)
+    if (true) {
+        std::cout << "Reloading Scene\n";
+        if (sceneInstance != nullptr)
             sceneInstance->selectedInstance = nullptr;
         sceneInstance.reset();
         //testScene.reset();
@@ -597,7 +597,8 @@ void ReloadScene(int num)
         switch (num) {
             case 1:
                 forwardScene1 = static_cast <const std::shared_ptr<ForwardScene1> >(new ForwardScene1());
-                sceneInstance = forwardScene1; static_cast<const std::shared_ptr<SceneInstance> >(new ForwardScene1());
+                sceneInstance = forwardScene1;
+                static_cast<const std::shared_ptr<SceneInstance> >(new ForwardScene1());
 
                 break;
             case 2:
@@ -619,7 +620,7 @@ void ReloadScene(int num)
         //scene = static_cast<const std::shared_ptrshared_ptr<Scene> >(new TestScene2());
         sceneInstance->Setup(camera);
         sceneDescription = sceneInstance->sceneDescription;
-        sceneInstance->windowSettings =&windowSettings;
+        sceneInstance->windowSettings = &windowSettings;
     }
 }
 
@@ -632,7 +633,7 @@ void SwitchFullscreen() {
     fullscreen = !fullscreen;
     if (fullscreen) {
         // save previous values
-        SCR_WIDTH =  windowSettings.CUR_WIDTH;
+        SCR_WIDTH = windowSettings.CUR_WIDTH;
         SCR_HEIGHT = windowSettings.CUR_HEIGHT;
         // set monitor sizes
         windowSettings.CUR_WIDTH = glfwGetVideoMode(windowSettings.monitor)->width;
@@ -649,16 +650,16 @@ void SwitchFullscreen() {
     }
 }
 
-static void mouse_button_callback(GLFWwindow* window, int button, int action,
+static void mouse_button_callback(GLFWwindow *window, int button, int action,
                                   int mods) {
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
         Drawline();  // uhh we neeed to keep drawing it...
         // Draw line of sight latest
-        std::cout<<"pressing RMB \n";
+        std::cout << "pressing RMB \n";
     }
 }
 
-static void keyboard_callback(GLFWwindow* window, int key, int scancode,
+static void keyboard_callback(GLFWwindow *window, int key, int scancode,
                               int action, int mods) {
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_ESCAPE || key == GLFW_KEY_F9) {
@@ -705,7 +706,7 @@ static void keyboard_callback(GLFWwindow* window, int key, int scancode,
        camera->switchSpotlight();*/
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     // make sure the viewport matches the new window dimensions; note that width
     // and height will be significantly larger than specified on retina displays.
     if (height == 0 ||
@@ -717,7 +718,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     windowSettings.CUR_HEIGHT = height;
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
     if (firstMouse) {
         lastX = xpos;
         lastY = ypos;
@@ -736,34 +737,35 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     camera->ProcessMouseMovement(xoffset, yoffset);
 }
 
-static void character_callback(GLFWwindow* window, unsigned int codepoint)
-{
-    if(ImGui::GetIO().WantCaptureKeyboard)
+static void character_callback(GLFWwindow *window, unsigned int codepoint) {
+    if (ImGui::GetIO().WantCaptureKeyboard)
         ImGui::GetIO().AddInputCharacter(codepoint);
 
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     camera->ProcessMouseScroll(yoffset);
 }
 
-void window_size_callback(GLFWwindow* window, int width, int height) {
+void window_size_callback(GLFWwindow *window, int width, int height) {
     // do nothing, unused
 }
+
 #pragma endregion
 
 #pragma region Depth
+
 //renders depthmap for directional light
-glm::mat4 RenderDepth(){
+glm::mat4 RenderDepth() {
     //first pass, render scene from lights point of view in ortho perspective
     glm::mat4 modelMat = glm::mat4(1.0f);
-    float near_plane = 1.0f, far_plane = sunFarPlane*1.5f;//27.5f;
+    float near_plane = 1.0f, far_plane = sunFarPlane * 1.5f;//27.5f;
 
 //glm::vec3 lightPos =  dynamic_cast<DirectionalLight *>(scene->dirLight)->direction;
     glm::vec3 lightPos = sceneInstance->dirLight_ObjInstance->GetPos();
 
 
-    float ratio = (float)windowSettings.CUR_WIDTH / (float)windowSettings.CUR_HEIGHT;
+    float ratio = (float) windowSettings.CUR_WIDTH / (float) windowSettings.CUR_HEIGHT;
 //get frustrum sizes
     float Hfar = 2 * tan(glm::radians(camera->Zoom) / 2) * zFar;
     float Wfar = Hfar * ratio;
@@ -772,21 +774,21 @@ glm::mat4 RenderDepth(){
 
 //create planes
     glm::vec3 fc = camera->Position + camera->Front * zFar;
-    glm::vec3 ftl = fc + (camera->Up * Hfar/2) - (camera->Right * Wfar/2);
-    glm::vec3 ftr = fc + (camera->Up * Hfar/2) + (camera->Right * Wfar/2);
-    glm::vec3 fbl = fc - (camera->Up * Hfar/2) - (camera->Right * Wfar/2);
-    glm::vec3 fbr = fc - (camera->Up * Hfar/2) + (camera->Right * Wfar/2);
+    glm::vec3 ftl = fc + (camera->Up * Hfar / 2) - (camera->Right * Wfar / 2);
+    glm::vec3 ftr = fc + (camera->Up * Hfar / 2) + (camera->Right * Wfar / 2);
+    glm::vec3 fbl = fc - (camera->Up * Hfar / 2) - (camera->Right * Wfar / 2);
+    glm::vec3 fbr = fc - (camera->Up * Hfar / 2) + (camera->Right * Wfar / 2);
 
-    glm::vec3  nc = camera->Position + camera->Front * zNear;
+    glm::vec3 nc = camera->Position + camera->Front * zNear;
 
-    glm::vec3 ntl = nc + (camera->Up * Hnear/2) - (camera->Right * Wnear/2);
-    glm::vec3 ntr = nc + (camera->Up * Hnear/2) + (camera->Right * Wnear/2);
-    glm::vec3 nbl = nc - (camera->Up * Hnear/2) - (camera->Right * Wnear/2);
-    glm::vec3 nbr = nc - (camera->Up * Hnear/2) + (camera->Right * Wnear/2);
+    glm::vec3 ntl = nc + (camera->Up * Hnear / 2) - (camera->Right * Wnear / 2);
+    glm::vec3 ntr = nc + (camera->Up * Hnear / 2) + (camera->Right * Wnear / 2);
+    glm::vec3 nbl = nc - (camera->Up * Hnear / 2) - (camera->Right * Wnear / 2);
+    glm::vec3 nbr = nc - (camera->Up * Hnear / 2) + (camera->Right * Wnear / 2);
 
-    glm::vec3 centroid = (ftl+ftr+fbl+fbr+ntl+ntr+nbl+nbr)/8;
+    glm::vec3 centroid = (ftl + ftr + fbl + fbr + ntl + ntr + nbl + nbr) / 8;
     centroidPos = centroid;
-    lightPos = centroid+ (sunDir)*(sunFarPlane/2);// from centriod move back
+    lightPos = centroid + (sunDir) * (sunFarPlane / 2);// from centriod move back
     glm::vec3 g = glm::normalize(sunDir) * 10;
 //assign debug line points
     centroidLineSeg[3] = g.x;
@@ -810,7 +812,7 @@ glm::mat4 RenderDepth(){
     simpleDepthShader.setMat4("model", modelMat);
 
 
-    if(forwardScene1 != nullptr)
+    if (forwardScene1 != nullptr)
         forwardScene1->SetupShaderMaterial();
 
 //now render all receiving objects into the shadowmap
@@ -820,14 +822,13 @@ glm::mat4 RenderDepth(){
 }
 
 //TODO what is this doing?
-void RenderTest(glm::mat4 lightSpaceMatrix)
-{
+void RenderTest(glm::mat4 lightSpaceMatrix) {
 //if(scene->disableShadows)
     //return;
     //second pass, render scene as normal with shadow mapping (using depth map)
     glViewport(0, 0, windowSettings.CUR_WIDTH, windowSettings.CUR_HEIGHT);
     // now try shading it
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |  GL_STENCIL_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
     glm::vec3 lightPos = sceneInstance->dirLight_ObjInstance->GetPos();
@@ -842,9 +843,8 @@ void RenderTest(glm::mat4 lightSpaceMatrix)
     simpleShadowShader.setInt("shadowMap", 11);
 
 
-    if(forwardScene1 != nullptr) //special cases for first scene
+    if (forwardScene1 != nullptr) //special cases for first scene
         forwardScene1->SetupShaderMaterial();
-
 
 
     sceneInstance->RenderSceneInstance(&simpleShadowShader);
@@ -853,25 +853,23 @@ void RenderTest(glm::mat4 lightSpaceMatrix)
 }
 
 
-
 #pragma endregion
 
 #pragma region Other_debug
+
 //only testing this function, geting uniforms from shader
-void PrintShader()
-{
+void PrintShader() {
     auto prog = colShader.ID;
     GLint numUniforms = 0;
     glGetProgramInterfaceiv(prog, GL_UNIFORM, GL_ACTIVE_RESOURCES, &numUniforms);
     GLenum properties[4] = {GL_BLOCK_INDEX, GL_TYPE, GL_NAME_LENGTH, GL_LOCATION};
 
-    for(int unif = 0; unif < numUniforms; ++unif)
-    {
+    for (int unif = 0; unif < numUniforms; ++unif) {
         GLint values[4];
         glGetProgramResourceiv(prog, GL_UNIFORM, unif, 4, properties, 4, NULL, values);
 
         // Skip any uniforms that are in a block.
-        if(values[0] != -1)
+        if (values[0] != -1)
             continue;
 
         // Get the name.  use a std::vector rather for C++03 compatibility
@@ -924,7 +922,7 @@ int main() {
     glfwMakeContextCurrent(windowSettings.window);
     glfwSetFramebufferSizeCallback(windowSettings.window, framebuffer_size_callback);
     glfwSetKeyCallback(windowSettings.window, keyboard_callback);
-    glfwSetCharCallback(windowSettings.window, character_callback);
+    //glfwSetCharCallback(windowSettings.window, character_callback);//use either char or key not both-doubled inputs
     glfwSetCursorPosCallback(windowSettings.window, mouse_callback);
     glfwSetScrollCallback(windowSettings.window, scroll_callback);
     glfwSetMouseButtonCallback(windowSettings.window, mouse_button_callback);
@@ -943,8 +941,8 @@ int main() {
 
     std::cout << "Hello, World!" << std::endl;
     ::Help();
-    stencilShader =  Shader("..\\Assets\\Shaders\\Forward\\stencil.vert",
-                            "..\\Assets\\Shaders\\Forward\\stencil.frag"); //maybe add as a ponter and then new too
+    stencilShader = Shader("..\\Assets\\Shaders\\Forward\\stencil.vert",
+                           "..\\Assets\\Shaders\\Forward\\stencil.frag"); //maybe add as a ponter and then new too
 
 
 
@@ -958,9 +956,10 @@ int main() {
     ImGui::CreateContext();
     // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(
-            windowSettings.window,true);  // remove callbacks with false, to manually control them, but let it be true to allow for input (of chars prolly)
+            windowSettings.window,
+            true);  // remove callbacks with false, to manually control them, but let it be true to allow for input (of chars prolly)
     ImGui_ImplOpenGL3_Init(NULL);
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO &io = ImGui::GetIO();
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -969,25 +968,28 @@ int main() {
     // build and compile shaders
     // -------------------------
     int enableSpotlight = 1;
-    colShader  = Shader("..\\Assets\\Shaders\\Forward\\basic.vert",
-                        "..\\Assets\\Shaders\\Forward\\basic.frag");
+    colShader = Shader("..\\Assets\\Shaders\\Forward\\basic.vert",
+                       "..\\Assets\\Shaders\\Forward\\basic.frag");
     //TODO raycasting z misi nejde, ked zapnem lights tak je stale z obrazovky
     //TODO depth map FBO shaders are wrong
     // configure depth map FBO
-    simpleDepthShader= Shader("..\\Assets\\Shaders\\Forward\\ShadowMap\\ShadowMapDepth.vert", "..\\Assets\\Shaders\\Forward\\ShadowMap\\ShadowMapDepth.frag");
+    simpleDepthShader = Shader("..\\Assets\\Shaders\\Forward\\ShadowMap\\ShadowMapDepth.vert",
+                               "..\\Assets\\Shaders\\Forward\\ShadowMap\\ShadowMapDepth.frag");
     debugDepthQuad = Shader("..\\Assets\\Shaders\\Debug\\DebugQuad.vert", "..\\Assets\\Shaders\\Debug\\DebugQuad.frag");
-    simpleShadowShader = Shader("..\\Assets\\Shaders\\Forward\\ShadowMap\\meshShadow.vert", "..\\Assets\\Shaders\\Forward\\ShadowMap\\meshShadow.frag");
+    simpleShadowShader = Shader("..\\Assets\\Shaders\\Forward\\ShadowMap\\meshShadow.vert",
+                                "..\\Assets\\Shaders\\Forward\\ShadowMap\\meshShadow.frag");
     glGenFramebuffers(1, &depthMapFBO);
     glGenTextures(1, &depthMap);
     glBindTexture(GL_TEXTURE_2D, depthMap);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
+                 NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     //modify this so it isnt dark outside of depth map
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float borderColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
     // attach depth texture as FBO's depth buffer
@@ -1010,8 +1012,8 @@ int main() {
 
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //scene list scene naah
     //vector<Scene*> scenesList;
     ReloadScene(1);//was 3, that has shader comp. errors for now
@@ -1060,79 +1062,77 @@ int main() {
 
 
         //yeah testscene is special case
-        if(forwardScene1 == nullptr)
+        if (forwardScene1 == nullptr)
             sceneInstance->RenderSceneInstance(nullptr);
 
 
-        if(sceneInstance != nullptr && sceneInstance->dirLight_ObjInstance != nullptr) {
-         if (enableShading) {
-             //std::cout << "test\n";
-             glm::mat4 LSM = RenderDepth();
+        if (sceneInstance != nullptr && sceneInstance->dirLight_ObjInstance != nullptr) {
+            if (enableShading) {
+                //std::cout << "test\n";
+                glm::mat4 LSM = RenderDepth();
 
-             RenderTest(LSM);
+                RenderTest(LSM);
 
-         } else {
-             if(forwardScene1 != nullptr)
-                 forwardScene1->SetupShaderMaterial();
-             //sceneInstance->RenderSceneInstance(nullptr);
-             //TODO glints work only here
-             forwardScene1->RenderObjects(nullptr,false);
+            } else {
+                if (forwardScene1 != nullptr)
+                    forwardScene1->SetupShaderMaterial();
+                sceneInstance->RenderSceneInstance(nullptr);
 
-         }
-         //also
-         sceneInstance->RenderLights();
-         // draw debug line pointing from light pos to dir
-         /*
-          * memory leak...
-         if(enableDebugLightRay) {
-             colShader.use();
-             modelMat = glm::mat4(1.0f);
-             modelMat = glm::translate(modelMat, centroidPos);
-             colShader.setMat4("model", modelMat);
-             colShader.setMat4("view", uniforms.view);
-             colShader.setMat4("projection", uniforms.projection);
-             glGenVertexArrays(1, &lineVAO);
-             glGenBuffers(1, &lineVBO);
-             glBindVertexArray(lineVAO);
-             glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
-             glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6, &centroidLineSeg, GL_STATIC_DRAW);
-             glEnableVertexAttribArray(0);
-             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
-             glLineWidth(6.3f);
-             glDrawArrays(GL_LINE_STRIP, 0, 3);
-             PerfAnalyzer::drawcallCount++;
-             glBindVertexArray(0);
-         }
-        */
-        // drawline pointing from screen click
-        /*
-         *
-         * this block of code is leaking memory constantly need to fix
-            t->mesh_shader->use();
-            //or
-            colShader.use();
-            modelMat = glm::mat4(1.0f);
-            modelMat = glm::translate(modelMat, cameraDrawPos);
-            colShader.setMat4("model", modelMat);
-            colShader.setMat4("view", camera->GetViewMatrix());
-            colShader.setMat4("projection", t->projection);
-            // glEnable(GL_LINE_SMOOTH);
-            // glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-            glGenVertexArrays(1, &lineVAO);
-            glGenBuffers(1, &lineVBO);
-            glBindVertexArray(lineVAO);
-            glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6, &lineSeg,
-                         GL_STATIC_DRAW);
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
-                                  (void*)0);
-            /// glBindVertexArray(lineVAO);
-            glLineWidth(6.3f);
-            glDrawArrays(GL_LINE_STRIP, 0, 3);
-            PerfAnalyzer::drawcallCount++;  // after every draw call
-            // glDrawElements(GL_LINE_STRIP,2, GL_FLOAT, nullptr);
-        */
+            }
+            //also
+            sceneInstance->RenderLights();
+            // draw debug line pointing from light pos to dir
+            /*
+             * memory leak...
+            if(enableDebugLightRay) {
+                colShader.use();
+                modelMat = glm::mat4(1.0f);
+                modelMat = glm::translate(modelMat, centroidPos);
+                colShader.setMat4("model", modelMat);
+                colShader.setMat4("view", uniforms.view);
+                colShader.setMat4("projection", uniforms.projection);
+                glGenVertexArrays(1, &lineVAO);
+                glGenBuffers(1, &lineVBO);
+                glBindVertexArray(lineVAO);
+                glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6, &centroidLineSeg, GL_STATIC_DRAW);
+                glEnableVertexAttribArray(0);
+                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
+                glLineWidth(6.3f);
+                glDrawArrays(GL_LINE_STRIP, 0, 3);
+                PerfAnalyzer::drawcallCount++;
+                glBindVertexArray(0);
+            }
+           */
+            // drawline pointing from screen click
+            /*
+             *
+             * this block of code is leaking memory constantly need to fix
+                t->mesh_shader->use();
+                //or
+                colShader.use();
+                modelMat = glm::mat4(1.0f);
+                modelMat = glm::translate(modelMat, cameraDrawPos);
+                colShader.setMat4("model", modelMat);
+                colShader.setMat4("view", camera->GetViewMatrix());
+                colShader.setMat4("projection", t->projection);
+                // glEnable(GL_LINE_SMOOTH);
+                // glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+                glGenVertexArrays(1, &lineVAO);
+                glGenBuffers(1, &lineVBO);
+                glBindVertexArray(lineVAO);
+                glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6, &lineSeg,
+                             GL_STATIC_DRAW);
+                glEnableVertexAttribArray(0);
+                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
+                                      (void*)0);
+                /// glBindVertexArray(lineVAO);
+                glLineWidth(6.3f);
+                glDrawArrays(GL_LINE_STRIP, 0, 3);
+                PerfAnalyzer::drawcallCount++;  // after every draw call
+                // glDrawElements(GL_LINE_STRIP,2, GL_FLOAT, nullptr);
+            */
 
         }
 
@@ -1142,15 +1142,10 @@ int main() {
         //TODO make sun color functional again
         //TODO separate,cleanup,refactor the code for shadowmaps...
 
-        // draw GUI last
-        //io = ImGui::GetIO();
-        //ImGui_ImplOpenGL3_NewFrame();
-        //ImGui_ImplGlfw_NewFrame();
-        //glfwPollEvents();
-        //ImGui::NewFrame();
+
         DrawImGui();
 
-        if(sceneInstance != nullptr)
+        if (sceneInstance != nullptr)
             sceneInstance->ImGuiHierarchy();
 
         ImGui::Render();

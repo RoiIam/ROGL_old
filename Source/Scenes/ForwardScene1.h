@@ -51,11 +51,11 @@ private:
     GLuint dicoTex;
     GLuint texID;
     //Glints vars
-    float logMicrofacetDensity= 27.0;
-    float microfacetRelativeArea=0.1;//1 for best
-    float alpha_x=0.5;
-    float alpha_y=0.5;
-    float lightInten=8.0;
+    float logMicrofacetDensity = 27.0;
+    float microfacetRelativeArea = 0.1;//1 for best
+    float alpha_x = 0.5;
+    float alpha_y = 0.5;
+    float lightInten = 8.0;
     // Add lights
 public:
 
@@ -72,16 +72,17 @@ public:
 
 
     //TODO glints
-    GLuint loadTex(const std::string& baseName, const unsigned int nlevels, const GLsizei ndists);
+    GLuint loadTex(const std::string &baseName, const unsigned int nlevels, const GLsizei ndists);
+
     void Setup(Camera *cam) override; // only once before the render loop
 
 
     //jsut our testscene needs this
     void SetupShaderMaterial();
 
-    void RenderObjects(Shader *shader, bool simple);
     void RenderLights() override;
-    void drawShrek();
-    //void RenderSceneInstance(Shader *s)override;//netreba
 
+    void ImGuiHierarchy() override;
+
+    void UIGlintParams();
 };

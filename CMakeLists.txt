@@ -10,12 +10,12 @@ find_package(ASSIMP 5.2 PATHS "C:/Program Files (x86)/Assimp/")
 
 #GLAD
 set(GLAD_INCLUDE_DIR C:/Libs/GLAD_c_46/include/)
-add_library(GLAD_S_LIB  C:/Libs/GLAD_c_46/src/glad.c )
+add_library(GLAD_S_LIB C:/Libs/GLAD_c_46/src/glad.c)
 include_directories(${GLAD_INCLUDE_DIR})
 
 #GLFW
-set(GLFW3_INCLUDE_DIR  "C:/Libs/GLFW338/include/")
-set(GLFW3_LIBRARY  "C:/Libs/GLFW338/lib-mingw-w64/libglfw3.a")
+set(GLFW3_INCLUDE_DIR "C:/Libs/GLFW338/include/")
+set(GLFW3_LIBRARY "C:/Libs/GLFW338/lib-mingw-w64/libglfw3.a")
 set(GLFW3_LIB C:/Libs/GLFW338/lib-mingw-w64)
 
 include_directories(${GLFW3_INCLUDE_DIR})
@@ -57,7 +57,7 @@ include_directories(${IMGUI_LIB_NAME})
 #mozno este FileDialog a stb_image
 include_directories("includes")
 #set all libs that we want to be linked
-set(LINK_LIBS ${GLFW3_LIBRARY} GLAD_S_LIB    IMGUI_LIB  )#tu bola chyba IMGUI_LIB ma byt bez ${} a ${IMGUI_INCLUDE_DIR} not needed
+set(LINK_LIBS ${GLFW3_LIBRARY} GLAD_S_LIB IMGUI_LIB)#tu bola chyba IMGUI_LIB ma byt bez ${} a ${IMGUI_INCLUDE_DIR} not needed
 
 
 add_executable(ROGL main.cpp)
@@ -65,6 +65,6 @@ add_executable(ROGL main.cpp)
 include_directories(Source)
 add_subdirectory("Source")
 
-target_link_libraries(ROGL PUBLIC assimp::assimp ${LINK_LIBS} )
+target_link_libraries(ROGL PUBLIC assimp::assimp ${LINK_LIBS})
 
-target_link_options(ROGL PRIVATE  -static-libgcc -static-libstdc++ -Wl,-Bdynamic -lwinpthread)
+target_link_options(ROGL PRIVATE -static-libgcc -static-libstdc++ -Wl,-Bdynamic -lwinpthread)

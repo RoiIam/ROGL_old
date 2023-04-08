@@ -1,4 +1,5 @@
 #pragma once
+
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 //#include <glad.h>
@@ -23,7 +24,7 @@
 
 //#include  "Utilities/Managers.h"
 
-class ObjectInstance{
+class ObjectInstance {
 
 private:
     //
@@ -41,16 +42,17 @@ private:
 public:
     // model data
     // Model**  model2;
-    std::string Name="defaultName";
+    std::string Name = "defaultName";
     //OGLR::Managers::Transform transform{};
-    Light* light = nullptr;
+    Light *light = nullptr;
     bool enableRender = true;
     // creates model instance
 
     explicit ObjectInstance(Model &tmp);
-    ObjectInstance(Model &tmp, Shader &shdr, const std::string& name, Light* l );
-    ~ObjectInstance();
 
+    ObjectInstance(Model &tmp, Shader &shdr, const std::string &name, Light *l);
+
+    ~ObjectInstance();
 
 
 private:
@@ -59,25 +61,38 @@ private:
 public:
     // render using this.... no need to set model mat
     void Render();
-    void Render(Shader *s, bool simple) ;
+
+    void Render(Shader *s, bool simple);
+
     void SetPos(glm::vec3 p);
+
     glm::vec3 GetPos();
 
     void SetRot(glm::vec3 p);
+
     glm::vec3 GetRot();
+
     void SetScale(glm::vec3 p);
+
     glm::vec3 GetScale();
 
     void SetDeg(float d);
+
     float GetDeg();
+
     glm::mat4 GetTransformMat();
+
     void ForceSetTransformMat(glm::vec3 posVec, float degrees,
-                              glm::vec3 rotAxisVec, glm::vec3 scaleVec) ;
+                              glm::vec3 rotAxisVec, glm::vec3 scaleVec);
+
     void UpdateTransformMat(Shader *sh)  // update model matrix with own values
     ;
+
     //preco su tieto 2 pointery?
     Model *GetModel();
-    Shader *GetShader() ;
+
+    Shader *GetShader();
+
     void SetShader(Shader &s);
 
 };

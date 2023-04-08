@@ -14,5 +14,5 @@ void main()
 {
     TexCoords = aTexCoords;
     //gl_Position = projection * view * model * vec4(aPos, 1.0f);
-    gl_Position = projection * view * model *  vec4(aPos+ aNormal*0.009f, 1.0f); // commentes , extrude along normals not just scale
+    gl_Position = projection * view * model *  vec4(aPos+ aNormal*0.07f, 1.0f);// commentes , extrude along normals not just scale
 }

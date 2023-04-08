@@ -4,6 +4,7 @@
 
 
 ShaderInstance::ShaderInstance() = default;
+
 ShaderInstance::~ShaderInstance() = default;
 
 void ShaderInstance::SetShader(Shader *s) {

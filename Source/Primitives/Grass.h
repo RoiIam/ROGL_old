@@ -1,4 +1,5 @@
 #pragma once
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include "stb_image.h"
@@ -8,13 +9,14 @@
 #include "model.h"
 
 
-
-class Grass :public Model {
+class Grass : public Model {
 //private:
 
 public:
     Grass();
+
     ~Grass() override;
+
     Shader ourShader;
 
     static inline glm::vec3 min = glm::vec3(0, -0.5f, -0.01f);
@@ -36,9 +38,6 @@ public:
 
 
     //unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma);//mozme pouzit base
-
-
-    void Draw(glm::mat4 projection, glm::mat4 view, glm::mat4 model);
 
 
     void Draw(Shader &shader, bool simple) override;

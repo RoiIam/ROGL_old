@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include "Utilities/PerfAnalyzer.h"
 
 // constructor
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
@@ -40,7 +41,7 @@ void Mesh::Draw(Shader &shader) {
     // draw mesh
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-    //PerfAnalyzer::drawcallCount++;
+    PerfAnalyzer::drawcallCount++;
     glBindVertexArray(0);
 
     // always good practice to set everything back to defaults once configured.
@@ -50,7 +51,7 @@ void Mesh::Draw(Shader &shader) {
 void Mesh::DrawSimple(Shader &shader) {
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-    //PerfAnalyzer::drawcallCount++;
+    PerfAnalyzer::drawcallCount++;
     glBindVertexArray(0);
 }
 

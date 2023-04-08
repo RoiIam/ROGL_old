@@ -5,7 +5,6 @@
 #include "shader.h"
 
 
-
 #define MAX_BONE_INFLUENCE 4
 //# define vector std::vector
 struct Vertex {
@@ -33,18 +32,21 @@ struct Texture {
 
 class Mesh {
 public:
-    Mesh()= default;
+    Mesh() = default;
+
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
 
-    ~Mesh()= default;
+    ~Mesh() = default;
+
 // mesh Data
-    std::vector<Vertex>       vertices;
+    std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture>      textures;
+    std::vector<Texture> textures;
     unsigned int VAO;
 
 
     virtual void Draw(Shader &shader);
+
     virtual void DrawSimple(Shader &shader);
 
 

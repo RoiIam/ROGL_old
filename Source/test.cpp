@@ -1,6 +1,5 @@
 #include <iostream>
 
-void Help()
-{
+void Help() {
     std::cout << "oo2";
 }
