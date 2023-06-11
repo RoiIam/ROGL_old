@@ -143,7 +143,7 @@ float hashIQ(uint n)
     // integer hash copied from Hugo Elias
     n = (n << 13U) ^ n;
     n = n * (n * n * 15731U + 789221U) + 1376312589U;
-    return float(n & 0x7fffffffU) / float(0x7fffffff);
+    return float(n & 0x7fffffffU) / float(0x7fffffffU);
 }
 
 //=========================================================================================================================
@@ -219,7 +219,7 @@ float P22_theta_alpha(vec2 slope_h, int l, int s0, int t0)
 
     // Uncomment to remove random distribution rotation
     // Lead to glint alignments
-    // theta = 0.;
+    theta = 0.;
 
     float cosTheta = cos(theta);
     float sinTheta = sin(theta);
@@ -448,7 +448,7 @@ vec3 f_P(vec3 wo, vec3 wi)
     //my own impl. based on CG2
     //angle is nDotH
     vec3 halfV = normalize((VertexPos-Light.Position.xyz) + (VertexPos-CameraPosition));
-    //F = vec3(FresnelSchlick(dot(VertexNorm,halfV),0.2));
+    F = vec3(FresnelSchlick(dot(VertexNorm,halfV),0.2));
 
     // Eq. 14, Alg. 1, line 14
     // (wi dot wg) is cancelled by
@@ -456,6 +456,10 @@ vec3 f_P(vec3 wo, vec3 wi)
     return (F * G * D_P) / (4. * wo.z);
 }
 
+float random (vec2 uv)
+{
+    return fract(sin(dot(uv,vec2(12.9898,78.233)))*43758.5453123);
+}
 
 //=========================================================================================================================
 //=========================================== Evaluate rendering equation =================================================
@@ -488,10 +492,19 @@ void main()
 
     radiance_diffuse = f_diffuse(wo, wi) * Li;
 
-    radiance = 0.5 * radiance_diffuse + 0.5 * radiance_specular;
 
+    float rndm1 = random(wo.xy);
+    float rndm2 = random(wo.yz*wi.xy);
+    float rndm3 = random(wi.xz);
+
+    //there can be a switch from a uniform
+    //orig,white glints
+    //radiance = 0.5 * radiance_diffuse + 0.5 *radiance_specular;
+    //or glints are red
+    //radiance = 0.5 * radiance_diffuse + 0.5 * vec3(radiance_specular.x,0,0);
+    //or random colored glints
+    radiance = 0.5 * radiance_diffuse + (radiance_specular*-vec3(rndm1,rndm2,rndm3));
     // Gamma
     radiance = pow(radiance, vec3(1.0 / 2.2));
-    //vec4 texColor = texture(texture_diffuse1, TexCoord); //change...
-    FragColor = vec4(radiance, 1);//...change diffuse lambertian instead +texColor;
+    FragColor = vec4(radiance, 1);
 }

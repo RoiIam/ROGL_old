@@ -62,8 +62,6 @@ public:
     Shader *mesh_shader;
 
 private:
-    glm::vec3 lightPos = glm::vec3(3.0f, 3.5f, 1.5f);
-    glm::vec3 dirLightPos = glm::vec3(0.7f, -0.4f, -0.1f);
     int enableSpotlight = 1;
 
     float m = 0.5f;

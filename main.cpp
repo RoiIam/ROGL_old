@@ -57,8 +57,8 @@ void PrintShader();
 
 float backgroundClearCol[4] = {0.7f, 0.7f, 0.7f, 0.7f};
 
-float zNear = 0.01f;
-float zFar = 2000.0f;
+float zNear = 0.5f;
+float zFar = 10.0f;
 bool fullscreen = false;
 bool enableShading = false;
 bool enableCulling = false;
@@ -79,7 +79,7 @@ Camera *camera;
 WindowSettings windowSettings = WindowSettings();
 float sunFarPlane = 100.0f;
 glm::vec3 sunDir = {0.0f, 0.800f, -1};  // glm::vec3(1.0f);
-
+float lightOrthoSize = 10.0f;
 //Depth related stufff
 //-----------------------
 const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
@@ -99,6 +99,8 @@ std::shared_ptr<SceneInstance> sceneInstance;
 
 #pragma endregion
 
+
+Model *centroid;
 
 #pragma region IMGUI_stuff
 //this should be in separate class...
@@ -294,7 +296,7 @@ void DrawImGui() {
 
     // ImGui::SliderFloat4("Background Color",backgroundClearCol, 0 ,1 ,"%.3f");
 
-    ImGui::Value("Game Drawcalls", PerfAnalyzer::drawcallCount);
+    ImGui::Value("Drawcalls", PerfAnalyzer::drawcallCount);
     // PerfAnalyzer::drawcallCount;
     // now try gizmos
     if (sceneInstance->selectedInstance) {
@@ -310,6 +312,19 @@ void DrawImGui() {
     ImGui::DragFloat3("Sun offset", sun, 0.001f, -1, 1, "%.3f");
 
     sunDir = glm::make_vec3(sun);
+
+    // far plane near plane
+    float farUI = zFar;
+    float nearUI = zNear;
+    ImGui::InputFloat("Near plane cam", &nearUI, 0.1f, 0.5f, "%.3f");
+    ImGui::InputFloat("Far plane cam", &farUI, 0.1f, 0.5f, "%.3f");
+    zNear = nearUI;
+    zFar = farUI;
+
+    float orthoSize = lightOrthoSize;
+    ImGui::DragFloat("lighmap ortho size", &orthoSize,0.001f, 2.0f, 100.0f);
+    lightOrthoSize = orthoSize;
+
 
     if (sceneInstance != nullptr && sceneInstance->selectedInstance != nullptr) {
         if (sceneInstance->selectedInstance->light != nullptr)
@@ -759,7 +774,7 @@ void window_size_callback(GLFWwindow *window, int width, int height) {
 glm::mat4 RenderDepth() {
     //first pass, render scene from lights point of view in ortho perspective
     glm::mat4 modelMat = glm::mat4(1.0f);
-    float near_plane = 1.0f, far_plane = sunFarPlane * 1.5f;//27.5f;
+    float near_plane = 1.0f, far_plane = sunFarPlane;
 
 //glm::vec3 lightPos =  dynamic_cast<DirectionalLight *>(scene->dirLight)->direction;
     glm::vec3 lightPos = sceneInstance->dirLight_ObjInstance->GetPos();
@@ -798,12 +813,19 @@ glm::mat4 RenderDepth() {
 //when we want to cover bigger area we need to either move the light projection based on cam pos,
 // increase ortho size to cover bigger area(but dont make it too big otherwise we need bigger shadowmap resolution to compensate for smaller texel)
 // i.e bigger ortho means more screen pixels draw from one pixel of depthmap creating aliasing issues
-    glm::mat4 lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
+    float res=lightOrthoSize;
+    glm::mat4 lightProjection = glm::ortho(-res, res, -res, res, near_plane, zFar);
     glm::mat4 lightView = glm::lookAt(lightPos, centroid, glm::vec3(0.0, 1.0, 0.0));
-    sceneInstance->dirLight_ObjInstance->SetPos(lightPos);
+    //std::cout << glm::to_string(lightPos);
 
+
+    //spravme to jednoducho lightprojection bude 1-200
+    //lightProjection
+    //lightView bude len na kameru a lightPos je niekde za chrbtom, farplane*direction
+    lightPos = camera->Position+ sunDir* sunFarPlane;
+    lightView = glm::lookAt(lightPos, camera->Position, glm::vec3(0.0, 1.0, 0.0));
     glm::mat4 lightSpaceMatrix = lightProjection * lightView;
-
+    sceneInstance->dirLight_ObjInstance->SetPos(lightPos);
     simpleDepthShader.use();
     simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
@@ -821,7 +843,7 @@ glm::mat4 RenderDepth() {
     return lightSpaceMatrix;
 }
 
-//TODO what is this doing?
+
 void RenderTest(glm::mat4 lightSpaceMatrix) {
 //if(scene->disableShadows)
     //return;
@@ -949,6 +971,9 @@ int main() {
     //sc->windowSettings = &windowSettings; //toto nebude upne dobre treba to?
     camera = new Camera(glm::vec3(0.0f, .0f, 3.0f));
 
+    centroid = new Model("../Assets/Models/LightCube/LightCube.obj");
+    //light_shader = new Shader("..\\Assets\\Shaders\\Forward\\MultipleLights\\s_light.vert",
+    //                         "..\\Assets\\Shaders\\Forward\\MultipleLights\\s_light.frag");;
 
     // init IMGUI
     //  Setup Dear ImGui context
@@ -1068,7 +1093,7 @@ int main() {
 
         if (sceneInstance != nullptr && sceneInstance->dirLight_ObjInstance != nullptr) {
             if (enableShading) {
-                //std::cout << "test\n";
+                std::cout << "test\n";
                 glm::mat4 LSM = RenderDepth();
 
                 RenderTest(LSM);
@@ -1082,8 +1107,8 @@ int main() {
             //also
             sceneInstance->RenderLights();
             // draw debug line pointing from light pos to dir
-            /*
-             * memory leak...
+
+             //TODO memory leak...
             if(enableDebugLightRay) {
                 colShader.use();
                 modelMat = glm::mat4(1.0f);
@@ -1103,7 +1128,15 @@ int main() {
                 PerfAnalyzer::drawcallCount++;
                 glBindVertexArray(0);
             }
-           */
+
+            glm::mat4 model = glm::mat4(1.0f);
+            stencilShader.use();
+            model= glm::translate(model,centroidPos);
+            stencilShader.setMat4("model", model);
+            stencilShader.setMat4("view", uniforms.view);
+            stencilShader.setMat4("projection", uniforms.projection);
+            centroid->Draw(stencilShader, true);
+
             // drawline pointing from screen click
             /*
              *

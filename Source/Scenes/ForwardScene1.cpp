@@ -204,7 +204,7 @@ void ForwardScene1::SetupShaderMaterial() {
 
     //glints part
     glintChShader->use();
-
+    glm::vec3 lightPos = dirLight_ObjInstance->GetPos();
     glintChShader->setVec4("Light.Position", glm::vec4(lightPos, 1.0));
     glintChShader->setVec3("Light.L", glm::vec3(lightInten));
 
@@ -222,8 +222,8 @@ void ForwardScene1::SetupShaderMaterial() {
     glintChShader->setFloat("MaxAnisotropy", 8);
 
     glintChShader->setInt("DictionaryTex", 8);//has to be set to GL_TEXTURE XXX when glBindTexture for array dicoTex
-    dirLight_ObjInstance->SetPos(lightPos);
-    dirLight_ObjInstance->SetScale(glm::vec3(0.3f));
+    //dirLight_ObjInstance->SetPos(lightPos);
+    //dirLight_ObjInstance->SetScale(glm::vec3(0.3f));
 
 }
 
@@ -244,11 +244,12 @@ void ForwardScene1::UIGlintParams() {
     ImGui::SliderFloat("Roughness Y", &alpha_y, 0.01f, 1.0f);
     ImGui::SliderFloat("Log microfacet density", &logMicrofacetDensity, 15.f, 40.f);
     ImGui::SliderFloat("Microfacet relative area", &microfacetRelativeArea, 0.01f, 1.f);
+    glm::vec3 lightPos = dirLight_ObjInstance->GetPos();
     float v[] = {lightPos.x, lightPos.y, lightPos.z};
-    ImGui::DragFloat3("Light Pos", v, 0.15f, -15.0f, 15.f);
-    lightPos = glm::make_vec3(v);
+    //ImGui::DragFloat3("Light Pos", v, 0.15f, -15.0f, 15.f);
+    //we shouldnt change it
     ImGui::DragFloat("Light Inten", &lightInten, 0.25f, 0.0, 100);
-
+    //ImGui::ListBox("Tvar trblietky: ");
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
                 ImGui::GetIO().Framerate);
