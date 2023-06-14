@@ -99,4 +99,15 @@ void Mesh::setupMesh() {
     glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, m_Weights));
     glBindVertexArray(0);
 }
+//Mesh::~Mesh()=default;
+Mesh::~Mesh()
+{
+// Delete();
+}
+void Mesh::Delete()
+{
+    glDeleteVertexArrays(1,&VAO);
+    glDeleteBuffers(1,&VBO);
+    glDeleteBuffers(1,&EBO);
+}
 //#endif

@@ -58,7 +58,7 @@ void PrintShader();
 float backgroundClearCol[4] = {0.7f, 0.7f, 0.7f, 0.7f};
 
 float zNear = 0.5f;
-float zFar = 10.0f;
+float zFar = 50.0f;
 bool fullscreen = false;
 bool enableShading = false;
 bool enableCulling = false;
@@ -77,9 +77,9 @@ glm::vec3 centroidPos;
 
 Camera *camera;
 WindowSettings windowSettings = WindowSettings();
-float sunFarPlane = 100.0f;
-glm::vec3 sunDir = {0.0f, 0.800f, -1};  // glm::vec3(1.0f);
-float lightOrthoSize = 10.0f;
+float sunOffsetPos = 23.0f;
+glm::vec3 sunDir = {0.2f, 0.500f, -0.1};  // glm::vec3(1.0f);
+float lightOrthoSize = 20.0f;
 //Depth related stufff
 //-----------------------
 const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
@@ -100,7 +100,7 @@ std::shared_ptr<SceneInstance> sceneInstance;
 #pragma endregion
 
 
-Model *centroid;
+Model *centroidModel;
 
 #pragma region IMGUI_stuff
 //this should be in separate class...
@@ -212,18 +212,15 @@ void ImGuiLightProperties(ObjectInstance *objL) {
 }
 
 void DrawImGui() {
+
     ImGuiIO &io = ImGui::GetIO();
-
     // feed inputs to dear imgui, start new frame, now moved to scene...
-
     static bool test2 = false;
     ImGui::Begin("Tool window", &test2, ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar);
 
     if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
 
-
     // Menu Bar
-    static bool test = false;
     if (ImGui::BeginMenuBar()) {
 
         //create menu bar
@@ -265,12 +262,6 @@ void DrawImGui() {
         cf[2] = camera->WorldUp.z;
         ImGui::InputFloat3("Cam World Up", cf, "%.3f");
 
-        // get centroidPos
-        cf[0] = centroidPos.x;
-        cf[1] = centroidPos.y;
-        cf[2] = centroidPos.z;
-        ImGui::InputFloat3("CentroidPos", cf, "%.3f");
-
         // get cam euler rot
         float yaw = camera->Yaw;
         float pitch = camera->Pitch;
@@ -297,7 +288,7 @@ void DrawImGui() {
     // ImGui::SliderFloat4("Background Color",backgroundClearCol, 0 ,1 ,"%.3f");
 
     ImGui::Value("Drawcalls", PerfAnalyzer::drawcallCount);
-    // PerfAnalyzer::drawcallCount;
+
     // now try gizmos
     if (sceneInstance->selectedInstance) {
         glm::vec3 a = sceneInstance->selectedInstance->GetPos();
@@ -306,20 +297,25 @@ void DrawImGui() {
         b.y += 1;
         b.z += 1;
     }
-    ImGui::InputFloat("Far Sun Plane", &sunFarPlane, 0.1f, 0.5f, "%.3f");
-    float sun[] = {sunDir.x, sunDir.y, sunDir.z};
-    //ImGui::InputFloat3("sun offset", sun, "%.3f");
-    ImGui::DragFloat3("Sun offset", sun, 0.001f, -1, 1, "%.3f");
-
-    sunDir = glm::make_vec3(sun);
+    ImGui::InputFloat("Sun Offset From Target", &sunOffsetPos, 0.1f, 0.5f, "%.3f");
+    float sunDirUI[] = {sunDir.x, sunDir.y, sunDir.z};
+    ImGui::DragFloat3("Sun Direction", sunDirUI, 0.001f, -1, 1, "%.3f");
+    sunDir = glm::make_vec3(sunDirUI);
+    //DirectionalLight(sceneInstance->dirLight_ObjInstance->light).direction = sunDir;
+    if(sceneInstance->dirLight_ObjInstance)
+    {
+        auto dl = dynamic_cast<DirectionalLight *>(sceneInstance->dirLight_ObjInstance->light);
+        if(dl)
+            dl->direction = sunDir;
+    }
 
     // far plane near plane
-    float farUI = zFar;
-    float nearUI = zNear;
-    ImGui::InputFloat("Near plane cam", &nearUI, 0.1f, 0.5f, "%.3f");
-    ImGui::InputFloat("Far plane cam", &farUI, 0.1f, 0.5f, "%.3f");
-    zNear = nearUI;
-    zFar = farUI;
+    float zFarUI = zFar;
+    float zNearUI = zNear;
+    ImGui::InputFloat("Near plane cam", &zNearUI, 0.1f, 0.5f, "%.3f");
+    ImGui::InputFloat("Far plane cam", &zFarUI, 0.1f, 0.5f, "%.3f");
+    zNear = zNearUI;
+    zFar = zFarUI;
 
     float orthoSize = lightOrthoSize;
     ImGui::DragFloat("lighmap ortho size", &orthoSize,0.001f, 2.0f, 100.0f);
@@ -333,10 +329,10 @@ void DrawImGui() {
             ImGuiObjProperties(sceneInstance->selectedInstance);
     }
 
-    ImGui::Value("width n", windowSettings.CUR_HEIGHT);
-    ImGui::Value("Height n", windowSettings.CUR_HEIGHT);
-    ImGui::Value("width c", glfwGetVideoMode(windowSettings.monitor)->width);
-    ImGui::Value("Height c", glfwGetVideoMode(windowSettings.monitor)->height);
+    ImGui::Value("CUR_WIDTH", windowSettings.CUR_WIDTH);
+    ImGui::Value("CUR_HEIGHT", windowSettings.CUR_HEIGHT);
+    ImGui::Value("width mon", glfwGetVideoMode(windowSettings.monitor)->width);
+    ImGui::Value("height mon", glfwGetVideoMode(windowSettings.monitor)->height);
 
 
     ImGui::End();
@@ -600,15 +596,17 @@ void ReloadScene(int num) {
     //if(num != scene->num)
     if (true) {
         std::cout << "Reloading Scene\n";
-        if (sceneInstance != nullptr)
+        if (sceneInstance != nullptr) {
             sceneInstance->selectedInstance = nullptr;
+            sceneInstance->DeleteSceneBuffers();
+        }
         sceneInstance.reset();
         //testScene.reset();
         //scene->~Scene();
         //delete scene;
 
         //scene = nullptr;
-        forwardScene1 = nullptr;
+        forwardScene1 = nullptr;// if we dont do this, it will detect this as not null then it will not render anythong bcs dirlight at sceneinstance is null
         switch (num) {
             case 1:
                 forwardScene1 = static_cast <const std::shared_ptr<ForwardScene1> >(new ForwardScene1());
@@ -633,9 +631,9 @@ void ReloadScene(int num) {
 
 
         //scene = static_cast<const std::shared_ptrshared_ptr<Scene> >(new TestScene2());
+        sceneInstance->windowSettings = &windowSettings;//needs to go before setup otherwise buffers are initialized before setting
         sceneInstance->Setup(camera);
         sceneDescription = sceneInstance->sceneDescription;
-        sceneInstance->windowSettings = &windowSettings;
     }
 }
 
@@ -678,7 +676,11 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode,
                               int action, int mods) {
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_ESCAPE || key == GLFW_KEY_F9) {
-            if (key == GLFW_KEY_F9) show_demo_window = !show_demo_window;
+            if (key == GLFW_KEY_F9) {
+                show_demo_window = !show_demo_window;
+                if (camera->showCursor)
+                    camera->toggleCursor();
+            }
 
             camera->toggleCursor();  // ked som v esc a stuknem f9 bic sa nestane
             // ostatne funguje fajn,idk why
@@ -731,6 +733,8 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     // std::cout << width << " " << height << "\n";
     windowSettings.CUR_WIDTH = width;
     windowSettings.CUR_HEIGHT = height;
+
+    sceneInstance->ResizeScene();
 }
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
@@ -774,36 +778,11 @@ void window_size_callback(GLFWwindow *window, int width, int height) {
 glm::mat4 RenderDepth() {
     //first pass, render scene from lights point of view in ortho perspective
     glm::mat4 modelMat = glm::mat4(1.0f);
-    float near_plane = 1.0f, far_plane = sunFarPlane;
+    float near_plane = 1.0f, far_plane = sunOffsetPos;
 
 //glm::vec3 lightPos =  dynamic_cast<DirectionalLight *>(scene->dirLight)->direction;
     glm::vec3 lightPos = sceneInstance->dirLight_ObjInstance->GetPos();
 
-
-    float ratio = (float) windowSettings.CUR_WIDTH / (float) windowSettings.CUR_HEIGHT;
-//get frustrum sizes
-    float Hfar = 2 * tan(glm::radians(camera->Zoom) / 2) * zFar;
-    float Wfar = Hfar * ratio;
-    float Hnear = 2 * tan(glm::radians(camera->Zoom) / 2) * zNear;
-    float Wnear = Hnear * ratio;
-
-//create planes
-    glm::vec3 fc = camera->Position + camera->Front * zFar;
-    glm::vec3 ftl = fc + (camera->Up * Hfar / 2) - (camera->Right * Wfar / 2);
-    glm::vec3 ftr = fc + (camera->Up * Hfar / 2) + (camera->Right * Wfar / 2);
-    glm::vec3 fbl = fc - (camera->Up * Hfar / 2) - (camera->Right * Wfar / 2);
-    glm::vec3 fbr = fc - (camera->Up * Hfar / 2) + (camera->Right * Wfar / 2);
-
-    glm::vec3 nc = camera->Position + camera->Front * zNear;
-
-    glm::vec3 ntl = nc + (camera->Up * Hnear / 2) - (camera->Right * Wnear / 2);
-    glm::vec3 ntr = nc + (camera->Up * Hnear / 2) + (camera->Right * Wnear / 2);
-    glm::vec3 nbl = nc - (camera->Up * Hnear / 2) - (camera->Right * Wnear / 2);
-    glm::vec3 nbr = nc - (camera->Up * Hnear / 2) + (camera->Right * Wnear / 2);
-
-    glm::vec3 centroid = (ftl + ftr + fbl + fbr + ntl + ntr + nbl + nbr) / 8;
-    centroidPos = centroid;
-    lightPos = centroid + (sunDir) * (sunFarPlane / 2);// from centriod move back
     glm::vec3 g = glm::normalize(sunDir) * 10;
 //assign debug line points
     centroidLineSeg[3] = g.x;
@@ -815,15 +794,12 @@ glm::mat4 RenderDepth() {
 // i.e bigger ortho means more screen pixels draw from one pixel of depthmap creating aliasing issues
     float res=lightOrthoSize;
     glm::mat4 lightProjection = glm::ortho(-res, res, -res, res, near_plane, zFar);
-    glm::mat4 lightView = glm::lookAt(lightPos, centroid, glm::vec3(0.0, 1.0, 0.0));
-    //std::cout << glm::to_string(lightPos);
-
 
     //spravme to jednoducho lightprojection bude 1-200
     //lightProjection
     //lightView bude len na kameru a lightPos je niekde za chrbtom, farplane*direction
-    lightPos = camera->Position+ sunDir* sunFarPlane;
-    lightView = glm::lookAt(lightPos, camera->Position, glm::vec3(0.0, 1.0, 0.0));
+    lightPos = camera->Position+ glm::normalize(sunDir) * sunOffsetPos;
+    glm::mat4 lightView = glm::lookAt(lightPos, camera->Position, glm::vec3(0.0, 1.0, 0.0));
     glm::mat4 lightSpaceMatrix = lightProjection * lightView;
     sceneInstance->dirLight_ObjInstance->SetPos(lightPos);
     simpleDepthShader.use();
@@ -831,11 +807,11 @@ glm::mat4 RenderDepth() {
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
-    simpleDepthShader.setMat4("model", modelMat);
+    //simpleDepthShader.setMat4("model", modelMat);
 
 
-    if (forwardScene1 != nullptr)
-        forwardScene1->SetupShaderMaterial();
+    //if (forwardScene1 != nullptr)
+    //    forwardScene1->SetupShaderMaterial();
 
 //now render all receiving objects into the shadowmap
     sceneInstance->RenderObjectsS(&simpleDepthShader);
@@ -858,7 +834,7 @@ void RenderTest(glm::mat4 lightSpaceMatrix) {
     simpleShadowShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
     simpleShadowShader.setVec3("viewPos", camera->Position);
     simpleShadowShader.setVec3("lightPos", lightPos);
-    simpleShadowShader.setVec3("lightDir", sunDir);
+    simpleShadowShader.setVec3("lightDir", glm::normalize(sunDir));
     simpleShadowShader.setVec3("lightColor", sceneInstance->dirLight_ObjInstance->light->color);
     glActiveTexture(GL_TEXTURE11);
     glBindTexture(GL_TEXTURE_2D, depthMap);
@@ -971,7 +947,7 @@ int main() {
     //sc->windowSettings = &windowSettings; //toto nebude upne dobre treba to?
     camera = new Camera(glm::vec3(0.0f, .0f, 3.0f));
 
-    centroid = new Model("../Assets/Models/LightCube/LightCube.obj");
+    centroidModel = new Model("../Assets/Models/LightCube/LightCube.obj");
     //light_shader = new Shader("..\\Assets\\Shaders\\Forward\\MultipleLights\\s_light.vert",
     //                         "..\\Assets\\Shaders\\Forward\\MultipleLights\\s_light.frag");;
 
@@ -1037,13 +1013,12 @@ int main() {
 
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //scene list scene naah
-    //vector<Scene*> scenesList;
-    ReloadScene(1);//was 3, that has shader comp. errors for now
 
-    camera->toggleCursor(); //set to enabled by default
+
+
+
+    ReloadScene(3);
+    camera->toggleCursor(); //set to hidden by default
 
     //*************------------***************
     // ----------- render loop ---------------
@@ -1058,7 +1033,7 @@ int main() {
         uniforms.view = camera->GetViewMatrix(); //uniformy su ine tu ako v drawskybox //see translation unit, .cpp is one TU...
         uniforms.projection = glm::perspective(glm::radians(camera->Zoom),
                                                (float) windowSettings.CUR_WIDTH / (float) windowSettings.CUR_HEIGHT,
-                                               zNear, zFar + 100);
+                                               zNear, zFar);
         glfwPollEvents();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -1093,8 +1068,11 @@ int main() {
 
         if (sceneInstance != nullptr && sceneInstance->dirLight_ObjInstance != nullptr) {
             if (enableShading) {
-                std::cout << "test\n";
+                //std::cout << "test\n";
+                //renderbackfaces to fix peter panning for opaque objects, page 294
+                glCullFace(GL_FRONT);
                 glm::mat4 LSM = RenderDepth();
+                glCullFace(GL_BACK);
 
                 RenderTest(LSM);
 
@@ -1135,7 +1113,7 @@ int main() {
             stencilShader.setMat4("model", model);
             stencilShader.setMat4("view", uniforms.view);
             stencilShader.setMat4("projection", uniforms.projection);
-            centroid->Draw(stencilShader, true);
+            centroidModel->Draw(stencilShader, true);
 
             // drawline pointing from screen click
             /*

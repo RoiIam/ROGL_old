@@ -20,37 +20,33 @@ void ForwardScene1::Setup(Camera *cam) // override
 // uhh "//" both  // \\ and // /work, but in textures it fs up while using
     ourShader = new Shader("..\\Assets\\Shaders\\Forward\\01_SimpleTexture\\1.model_loading.vs",
                            "..\\Assets\\Shaders\\Forward\\01_SimpleTexture\\1.model_loading.fs");
-    pinkDebug = new Shader("..\\Assets\\Shaders\\Debug\\emptyPink.vert",
-                           "..\\Assets\\Shaders\\Debug\\emptyPink.frag");
+    pinkDebug = new Shader("..\\Assets\\Shaders\\Debug\\emptyPink.vert", "..\\Assets\\Shaders\\Debug\\emptyPink.frag");
     grassShader = new Shader("..\\Assets\\Shaders\\Forward\\Transparent\\transparentGrass.vert",
                              "..\\Assets\\Shaders\\Forward\\Transparent\\transparentGrass.frag");
 
     mesh_shader = new Shader("..\\Assets\\Shaders\\Forward\\MultipleLights\\mesh.vert",
                              "..\\Assets\\Shaders\\Forward\\MultipleLights\\mesh.frag");  // light compatible
 
-    basicShader = Shader("..\\Assets\\Shaders\\Forward\\basic.vert",
-                         "..\\Assets\\Shaders\\Forward\\basic.frag");
+    basicShader = Shader("..\\Assets\\Shaders\\Forward\\basic.vert", "..\\Assets\\Shaders\\Forward\\basic.frag");
 
     glintChShader = new Shader("..\\Assets\\Shaders\\Experimental\\glint_ch.vert",
                                "..\\Assets\\Shaders\\Experimental\\glint_ch.frag");
 
 //models load, setup
     ourModel = new Model("../Assets/Models/OwnCube/Cube.obj");
-    xModel = new
-            Model("../Assets/Models/OwnCube/Cube.gltf", pinkDebug);
+    xModel = new Model("../Assets/Models/OwnCube/Cube.gltf", pinkDebug);
 
     shrekModel = new Model(
             "../Assets/Models/Shrek/Shrek_mod.gltf"); // src https://sketchfab.com/3d-models/shrek-ee9fbba7e7a841dbb817cc6cec678355
 
-    sphereModel = new Model(
-            "../Assets/Models/sphere/sphere.obj");
+    sphereModel = new Model("../Assets/Models/sphere/sphere.obj");
     SetupGlobalLight();
 
     cube_ObjInstance = new ObjectInstance(*ourModel, *ourShader, "cube",
                                           nullptr); // to assign shader it has to be already created or it will be null!!
     xModel_ObjInstance = new ObjectInstance(*xModel);
     xModel_ObjInstance->Name = "xModelName";
-    //TODO glints
+
     shrekModel_ObjInstance = new ObjectInstance(*shrekModel, *glintChShader, "shrek", nullptr);
     sphereModel_ObjInstance = new ObjectInstance(*sphereModel, *glintChShader, "sphere", nullptr);
 
@@ -59,7 +55,7 @@ void ForwardScene1::Setup(Camera *cam) // override
 
     selectableObjInstances.push_back(cube_ObjInstance);
     selectableObjInstances.push_back(shrekModel_ObjInstance);
-    shrekModel_ObjInstance->SetPos(glm::vec3(2, 0, 2));;
+    shrekModel_ObjInstance->SetPos(glm::vec3(1.2f, 0.9f, 0.35f));;
     shrekModel_ObjInstance->SetScale(glm::vec3(0.1));
 
     selectableObjInstances.push_back(xModel_ObjInstance);
@@ -85,7 +81,6 @@ void ForwardScene1::Setup(Camera *cam) // override
     selectableObjInstances.push_back(dirLight_ObjInstance);
 
 
-    //TODO glints
     //GLuint dicoTex = Texture::loadMultiscaleMarginalDistributions(MEDIA_PATH+std::string("dictionary/dict_16_192_64_0p5_0p02"), numberOfLevels, numberOfDistributionsPerChannel);
     dicoTex = loadTex("..//Assets//dict//dict_16_192_64_0p5_0p02", 16, 64);
     glActiveTexture(GL_TEXTURE8);
@@ -205,7 +200,9 @@ void ForwardScene1::SetupShaderMaterial() {
     //glints part
     glintChShader->use();
     glm::vec3 lightPos = dirLight_ObjInstance->GetPos();
+
     glintChShader->setVec4("Light.Position", glm::vec4(lightPos, 1.0));
+    //glintChShader->setVec4("Light.Position", glm::vec4(dirLight_ObjInstance->GetPos(), 1.0));
     glintChShader->setVec3("Light.L", glm::vec3(lightInten));
 
     glintChShader->setFloat("Material.Alpha_x", alpha_x);
@@ -238,7 +235,7 @@ void ForwardScene1::ImGuiHierarchy() {
 }
 
 void ForwardScene1::UIGlintParams() {
-    ImGui::Begin("Parameters");
+    ImGui::Begin("Glint Parameters");
 
     ImGui::SliderFloat("Roughness X", &alpha_x, 0.01f, 1.0f);
     ImGui::SliderFloat("Roughness Y", &alpha_y, 0.01f, 1.0f);
@@ -254,4 +251,9 @@ void ForwardScene1::UIGlintParams() {
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
                 ImGui::GetIO().Framerate);
     ImGui::End();
+}
+
+void ForwardScene1::DeleteSceneBuffers() {
+    glDeleteTextures(1, &texID);
+
 }

@@ -36,9 +36,7 @@ public:
             1.0f, 0.5f, 0.0f, 1.0f, 1.0f
     };
 
-
     //unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma);//mozme pouzit base
-
 
     void Draw(Shader &shader, bool simple) override;
 };

@@ -503,7 +503,7 @@ void main()
     //or glints are red
     //radiance = 0.5 * radiance_diffuse + 0.5 * vec3(radiance_specular.x,0,0);
     //or random colored glints
-    radiance = 0.5 * radiance_diffuse + (radiance_specular*-vec3(rndm1,rndm2,rndm3));
+    radiance = 0.5 * radiance_diffuse + (radiance_specular*vec3(rndm1,rndm2,rndm3));
     // Gamma
     radiance = pow(radiance, vec3(1.0 / 2.2));
     FragColor = vec4(radiance, 1);

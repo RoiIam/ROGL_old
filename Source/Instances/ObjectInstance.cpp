@@ -22,7 +22,12 @@ ObjectInstance::ObjectInstance(Model &tmp, Shader &shdr, const string &name, Lig
 
 }
 
-ObjectInstance::~ObjectInstance() = default;
+//ObjectInstance::~ObjectInstance() = default;
+ObjectInstance::~ObjectInstance()
+{
+    delete model;
+    //delete shader;
+};
 
 
 // render using this.... no need to set model mat

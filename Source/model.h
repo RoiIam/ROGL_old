@@ -31,7 +31,6 @@ public:
     std::string directory;
     bool gammaCorrection;
 
-
     glm::vec3 boundMin = glm::vec3(100000, 100000, 100000);
     glm::vec3 boundMax = glm::vec3(-100000, -100000, -100000);
 
@@ -53,6 +52,7 @@ private:
     void processNode(aiNode *node, const aiScene *scene);
 
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
+
 
     // checks all material textures of a given type and loads the textures if they're not loaded yet.
     // the required info is returned as a Texture struct.

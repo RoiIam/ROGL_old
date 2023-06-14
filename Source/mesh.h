@@ -35,9 +35,8 @@ public:
     Mesh() = default;
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-
-    ~Mesh() = default;
-
+    //~Mesh() = default;
+    virtual ~Mesh();
 // mesh Data
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -48,7 +47,7 @@ public:
     virtual void Draw(Shader &shader);
 
     virtual void DrawSimple(Shader &shader);
-
+    void Delete();
 
 private:
     // render data

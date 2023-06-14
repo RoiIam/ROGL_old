@@ -11,13 +11,18 @@
 class DeferredScene1 : public SceneInstance {
 
     //there are no constructors, should we use base::base?
+
     using SceneInstance::SceneInstance;
+
+public:
+    DeferredScene1();
+
+    ~DeferredScene1() override;
 
     Model *ourModel;
     ObjectInstance *cube_ObjInstance;
 
     Shader depth_shader;
-    Shader mesh_shader;
     Shader light_shaderCube;
     //= Shader("..\\Assets\\Shaders\\Debug\\emptyPink.vert", "..\\Assets\\Shaders\\Debug\\emptyPink.frag");
 
@@ -35,6 +40,7 @@ class DeferredScene1 : public SceneInstance {
     bool isDebugAlbedo = false;
 
 
+    // 9*4 for models and 32 lights
     const unsigned int NR_LIGHTS = 32;
     std::vector<glm::vec3> lightPositions;
     std::vector<glm::vec3> lightColors;
@@ -53,6 +59,9 @@ class DeferredScene1 : public SceneInstance {
 
     void RenderSceneInstance(Shader *shader) override;
 
+    void ResizeScene() override;
+
+    void DeleteSceneBuffers() override;
 };
 
 #endif //ROGL_DEFERREDSCENE1_H

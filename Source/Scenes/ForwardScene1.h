@@ -11,7 +11,7 @@ class ForwardScene1 : public SceneInstance { //make it public so we can access c
 public:
     ForwardScene1();
 
-    ~ForwardScene1();
+    ~ForwardScene1() override;
 
 private:
 
@@ -83,4 +83,6 @@ public:
     void ImGuiHierarchy() override;
 
     void UIGlintParams();
+
+    void DeleteSceneBuffers() override;
 };

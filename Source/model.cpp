@@ -11,7 +11,21 @@ Model::Model(std::string const &path, bool gamma) : gammaCorrection(gamma)//muse
     loadModel(path);
 }
 
-Model::~Model() = default;
+//Model::~Model() = default;
+Model::~Model() {
+    for (Mesh m: meshes) {
+        for (Texture t: m.textures)
+            glDeleteTextures(1, &t.id);
+        m.textures.clear();
+        m.Delete();
+
+    }
+    std::cout << "deleting..." << directory << std::endl;
+    meshes.clear();
+    textures_loaded.clear();
+
+    //TODO delete textures, maybe do it in the mesh....
+};
 
 // draws the model, and thus all its meshes
 void Model::Draw(Shader &shader, bool simple) {
@@ -161,6 +175,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 
     // return a mesh object created from the extracted mesh data
     return Mesh(vertices, indices, textures);
+    //return new Mesh(vertices, indices, textures);
 }
 
 

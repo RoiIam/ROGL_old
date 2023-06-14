@@ -12,6 +12,7 @@
 #include "Camera/Camera.h"
 #include "Instances/ShaderInstance.h"
 #include "Primitives/Cube.h"
+#include "Primitives/Quad.h"
 #include <glm/gtx/string_cast.hpp>
 
 #include "Lights/DirectionalLight.h"
@@ -39,7 +40,7 @@ class SceneInstance {
 public:
     SceneInstance();
 
-    ~SceneInstance();
+    virtual ~SceneInstance();
 
     WindowSettings *windowSettings;//preco ma scena kazdy svoj?
 
@@ -62,7 +63,7 @@ public:
     glm::vec3 dirLightDirection = glm::vec3(0.5f, -1.0f, 0.5f);
     Shader *light_shader;
     Model *lightCube;
-    ObjectInstance *dirLight_ObjInstance;
+    ObjectInstance *dirLight_ObjInstance = NULL;
     //vector<Light*> lights;
     Shader basicShader = Shader("..\\Assets\\Shaders\\Forward\\basic.vert", "..\\Assets\\Shaders\\Forward\\basic.frag");
 
@@ -98,4 +99,8 @@ public:
     void LoadSceneInstance(std::string path);
 
     void renderQuad();
+
+    virtual void ResizeScene();
+
+    virtual void DeleteSceneBuffers();
 };

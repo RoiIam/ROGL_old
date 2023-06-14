@@ -13,10 +13,19 @@
 
 class DeferredScene2 : public SceneInstance {//should we use public?
 
+
     using SceneInstance::SceneInstance;//should we?
+
+public:
+
+    DeferredScene2();
+
+    ~DeferredScene2() override;
+
 // we start with only this....
     Model *sponzaModel;
     ObjectInstance *sponzaObjInstance;
+    ObjectInstance *waterObjInstance;
     Shader *meshLightShader;
     Shader *basicShader;
     bool OpenSecond = false;
@@ -30,7 +39,7 @@ class DeferredScene2 : public SceneInstance {//should we use public?
     //stuff for simple lights stage 1
 #pragma region stage_1 //TODO move this to .cpp?
     Shader *simpleLights = new Shader("..\\Assets\\Shaders\\Forward\\MultipleLights\\forwardMultiple.vert",
-                                      "..\\Assets\\Shaders\\MultipleLights\\forwardMultiple.frag");
+                                      "..\\Assets\\Shaders\\Forward\\MultipleLights\\forwardMultiple.frag");
     //glm::vec3 dirLightDirImGui = dirLight_ObjInstance->GetPos();
     float dirLightDirImGui[3] = {-0.222f, -0.666f, -0.444f};
     glm::vec3 dirlightCol = glm::vec3(0.945f, 0.894f, 0.753f);
@@ -41,8 +50,8 @@ class DeferredScene2 : public SceneInstance {//should we use public?
 #pragma endregion stage_1
     //forward+shadows
 #pragma region stage_2
-    Shader *shadowLights = new Shader("..\\Assets\\Shaders\\Shadows\\forwardMultipleShadows.vert",
-                                      "..\\Assets\\Shaders\\Shadows\\forwardMultipleShadows.frag");
+    Shader *shadowLights = new Shader("..\\Assets\\Shaders\\Forward\\Shadows\\forwardMultipleShadows.vert",
+                                      "..\\Assets\\Shaders\\Forward\\Shadows\\forwardMultipleShadows.frag");
 #pragma endregion stage_2
 
     //SSAO

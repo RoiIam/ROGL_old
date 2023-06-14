@@ -14,8 +14,12 @@ SceneInstance::SceneInstance() {
     stencilShader = new StencilShaderInstance();
 };
 
-SceneInstance::~SceneInstance() = default;
-
+//SceneInstance::~SceneInstance() = default;
+SceneInstance::~SceneInstance() {
+    lightObjInstances.clear();
+    opaqueObjInstances.clear();
+    selectableObjInstances.clear();
+}
 void SceneInstance::Setup(Camera *cam) {
     camera = cam;
     selectedHierarchyObj = -1;
@@ -217,6 +221,7 @@ void SceneInstance::LoadSceneInstance(std::string path) {
 }
 
 
+//TODO move this to separate quad
 void SceneInstance::renderQuad() {
     if (quadVAO == 0) {
         float quadVertices[] = {
@@ -227,7 +232,7 @@ void SceneInstance::renderQuad() {
                 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
         };
         // setup plane VAO
-        glGenVertexArrays(1, &quadVAO);
+        glGenVertexArrays(1, &quadVAO); //TODO dont forget to free up memory...
         glGenBuffers(1, &quadVBO);
         glBindVertexArray(quadVAO);
         glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
@@ -240,4 +245,13 @@ void SceneInstance::renderQuad() {
     glBindVertexArray(quadVAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
+}
+
+void SceneInstance::ResizeScene()
+{
+
+}
+void SceneInstance::DeleteSceneBuffers() //override
+{
+
 }

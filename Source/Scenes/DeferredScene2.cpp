@@ -1,19 +1,31 @@
 #include "DeferredScene2.h"
+#include <utility>
+
+DeferredScene2::DeferredScene2() = default;
+
+DeferredScene2::~DeferredScene2() = default;
 
 void DeferredScene2::Setup(Camera *cam) {
     camera = cam;
     sceneDescription = "This is a final scene showcasing forward and deferred rendering step by step, check the 'Interactive' UI window";
     disableShadows = false;
     sponzaModel = new Model("..\\Assets\\Models\\Sponza\\sponza.obj");
-    meshLightShader = new Shader("..\\Assets\\Shaders\\MultipleLights\\mesh.vert",
-                                 "..\\Assets\\Shaders\\MultipleLights\\mesh.frag");
-    basicShader = new Shader("..\\Assets\\Shaders\\01_SimpleTexture\\1.model_loading.vs",
-                             "..\\Assets\\Shaders\\01_SimpleTexture\\1.model_loading.fs");
+    meshLightShader = new Shader("..\\Assets\\Shaders\\Forward\\MultipleLights\\mesh.vert",
+                                 "..\\Assets\\Shaders\\Forward\\MultipleLights\\mesh.frag");
+    basicShader = new Shader("..\\Assets\\Shaders\\Forward\\01_SimpleTexture\\1.model_loading.vs",
+                             "..\\Assets\\Shaders\\Forward\\01_SimpleTexture\\1.model_loading.fs");
     sponzaObjInstance = new ObjectInstance(*sponzaModel, *basicShader, "sponza", nullptr);
     sponzaObjInstance->SetScale(glm::vec3(0.020f));
     selectableObjInstances.push_back(sponzaObjInstance);
     SetupGlobalLight();
     selectableObjInstances.push_back(dirLight_ObjInstance);
+
+    //Model *a =new Quad();
+    waterObjInstance = new ObjectInstance(*(new Quad(nullptr)), *basicShader, "waterQuad", nullptr);
+    waterObjInstance->SetScale(glm::vec3(5));
+    waterObjInstance->SetDeg(-90.0f);//make sure its correctly rotated-facing up along X
+    waterObjInstance->SetRot(glm::vec3(1, 0, 0));//rotates based on prev set Degrees
+    selectableObjInstances.push_back(waterObjInstance);
 }
 
 void DeferredScene2::SetupForwardLights() {
@@ -41,6 +53,10 @@ void DeferredScene2::SetupForwardLights() {
     //simpleLights->setVec3("dirLight.direction",static_cast<DirectionalLight>(dirLight_ObjInstance->light).direction);  //uhh static casts
 
     /*glm::vec3 a =static_cast<DirectionalLight>(dirLight_ObjInstance->light).direction;*/
+
+
+    //water setup
+    //waterObjInstance->SetPos(glm::make_vec3("0.0"));//should work?
 }
 
 float DeferredScene2::lerp(float a, float b, float f) {
@@ -145,8 +161,7 @@ void DeferredScene2::SetupSSAO() {
     // generate noise texture
     // ----------------------
     for (unsigned int i = 0; i < 16; i++) {
-        glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0,
-                        randomFloats(generator) * 2.0 - 1.0,
+        glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0,
                         0.0f); // rotate around z-axis (in tangent space)
         ssaoNoise.push_back(noise);
     }
@@ -434,6 +449,9 @@ void DeferredScene2::ImGuiHierarchy() {
             break;
 
     }
-
+    ImGui::TextWrapped("%s", std::string("curr stage ").append(
+            std::to_string(demoStage)).c_str()); //cant use std::to_chars even with std::to_chars
     ImGui::End();
 }
+
+

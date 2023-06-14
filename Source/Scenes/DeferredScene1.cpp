@@ -1,5 +1,12 @@
 #include "DeferredScene1.h"
 
+
+DeferredScene1::DeferredScene1() = default;
+
+DeferredScene1::~DeferredScene1() {
+    delete cube_ObjInstance; //TODO this is wrong?
+}
+
 void DeferredScene1::ImGuiHierarchy() {
     SceneInstance::ImGuiHierarchy();
 
@@ -55,16 +62,12 @@ void DeferredScene1::Setup(Camera *cam) {
 
     ourModel = new Model("../Assets/Models/OwnCube/Cube.obj");
     depth_shader = Shader("..\\Assets\\Shaders\\Debug\\emptyPink.vert", "..\\Assets\\Shaders\\Debug\\emptyPink.frag");
-    mesh_shader = Shader("..\\Assets\\Shaders\\MultipleLights\\mesh.vert",
-                         "..\\Assets\\Shaders\\MultipleLights\\mesh.frag");
+
     cube_ObjInstance = new ObjectInstance(*ourModel, depth_shader, " cubeInst", nullptr); // this is correct
-    selectableObjInstances.
-            push_back(cube_ObjInstance);
+    selectableObjInstances.push_back(cube_ObjInstance);
 
 
-    cube_ObjInstance->
-            SetPos(glm::vec3(1)
-    );
+    cube_ObjInstance->SetPos(glm::vec3(1));
 //light_shader->setVec3("light.position", l->GetPos());
     depth_shader.setVec3("viewPos", camera->Position);
 //also draw the lamp object
@@ -112,8 +115,7 @@ void DeferredScene1::Setup(Camera *cam) {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 // finally check if framebuffer is complete
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        std::cout << "Framebuffer not complete!" <<
-                  std::endl;
+        std::cout << "Framebuffer not complete!" << std::endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 // lighting info
@@ -121,24 +123,17 @@ void DeferredScene1::Setup(Camera *cam) {
 
     int seed = 22;
     srand(seed);
-    for (
-            unsigned int i = 0;
-            i < NR_LIGHTS;
-            i++) {
+    for (unsigned int i = 0; i < NR_LIGHTS; i++) {
 // calculate slightly random offsets
         float xPos = static_cast<float>(((rand() % 100) / 100.0) * 6 - 3.0);
         float yPos = static_cast<float>(((rand() % 100) / 100.0) * 4.0 - 2.4);
         float zPos = static_cast<float>(((rand() % 100) / 100.0) * 4.0 - 3.0);
-        lightPositions.
-                push_back(glm::vec3(xPos, yPos, zPos)
-        );
+        lightPositions.push_back(glm::vec3(xPos, yPos, zPos));
 // also calculate random color
         float rColor = static_cast<float>(((rand() % 100) / 200.0f) + 0.5); // between 0.5 and 1.0
         float gColor = static_cast<float>(((rand() % 100) / 200.0f) + 0.5); // between 0.5 and 1.0
         float bColor = static_cast<float>(((rand() % 100) / 200.0f) + 0.5); // between 0.5 and 1.0
-        lightColors.
-                push_back(glm::vec3(rColor, gColor, bColor)
-        );
+        lightColors.push_back(glm::vec3(rColor, gColor, bColor));
         seed++;
     }
 
@@ -153,33 +148,15 @@ void DeferredScene1::Setup(Camera *cam) {
     shaderLightingPass.setInt("gAlbedoSpec", 2);
 
 
-    objectPositions.
-            push_back(glm::vec3(-3.0, -0.5, -3.0)
-    );
-    objectPositions.
-            push_back(glm::vec3(0.0, -0.5, -3.0)
-    );
-    objectPositions.
-            push_back(glm::vec3(3.0, -0.5, -3.0)
-    );
-    objectPositions.
-            push_back(glm::vec3(-3.0, -0.5, 0.0)
-    );
-    objectPositions.
-            push_back(glm::vec3(0.0, -0.5, 0.0)
-    );
-    objectPositions.
-            push_back(glm::vec3(3.0, -0.5, 0.0)
-    );
-    objectPositions.
-            push_back(glm::vec3(-3.0, -0.5, 3.0)
-    );
-    objectPositions.
-            push_back(glm::vec3(0.0, -0.5, 3.0)
-    );
-    objectPositions.
-            push_back(glm::vec3(3.0, -0.5, 3.0)
-    );
+    objectPositions.push_back(glm::vec3(-3.0, -0.5, -3.0));
+    objectPositions.push_back(glm::vec3(0.0, -0.5, -3.0));
+    objectPositions.push_back(glm::vec3(3.0, -0.5, -3.0));
+    objectPositions.push_back(glm::vec3(-3.0, -0.5, 0.0));
+    objectPositions.push_back(glm::vec3(0.0, -0.5, 0.0));
+    objectPositions.push_back(glm::vec3(3.0, -0.5, 0.0));
+    objectPositions.push_back(glm::vec3(-3.0, -0.5, 3.0));
+    objectPositions.push_back(glm::vec3(0.0, -0.5, 3.0));
+    objectPositions.push_back(glm::vec3(3.0, -0.5, 3.0));
 
 }
 
@@ -207,15 +184,8 @@ void DeferredScene1::RenderSceneInstance(Shader *shader) {
     shaderGeometryPass.setMat4("projection", projection);
     shaderGeometryPass.setMat4("view", view);
     int seed = 22;
-    for (
-            unsigned int i = 0;
-            i < objectPositions.
-
-                    size();
-
-            i++) {
-        srand(seed
-                      ++);
+    for (unsigned int i = 0; i < objectPositions.size(); i++) {
+        srand(seed++);
         float xPos = static_cast<float>((rand() % 5) - 2.7);
         float yPos = static_cast<float>((rand() % 5) - 2.7);
         float zPos = static_cast<float>((rand() % 5) - 2.7);
@@ -224,15 +194,9 @@ void DeferredScene1::RenderSceneInstance(Shader *shader) {
 //model = glm::scale(model, glm::vec3(0.5f));
         shaderGeometryPass.setMat4("model", model);
 //cube_ObjInstance->SetPos(objectPositions[i]);
-        cube_ObjInstance->
-                SetPos(glm::vec3(xPos, yPos, zPos)
-        );
-        cube_ObjInstance->
-                SetScale(glm::vec3(0.5f)
-        );
-        cube_ObjInstance->
-                Render(&shaderGeometryPass,
-                       false);
+        cube_ObjInstance->SetPos(glm::vec3(xPos, yPos, zPos));
+        cube_ObjInstance->SetScale(glm::vec3(0.5f));
+        cube_ObjInstance->Render(&shaderGeometryPass, false);
 //backpack.Draw(shaderGeometryPass);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -246,9 +210,7 @@ renderQuad();
 // 2. lighting pass: calculate lighting by iterating over a screen filled quad pixel-by-pixel using the gbuffer's content.
 // -----------------------------------------------------------------------------------------------------------------------
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    shaderLightingPass.
-
-            use();
+    shaderLightingPass.use();
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, gPosition);
@@ -257,28 +219,14 @@ renderQuad();
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
 // send light relevant uniforms
-    for (
-            unsigned int i = 0;
-            i < lightPositions.
-
-                    size();
-
-            i++) {
-        shaderLightingPass.setVec3("lights[" +
-                                   std::to_string(i)
-                                   + "].Position", lightPositions[i]);
-        shaderLightingPass.setVec3("lights[" +
-                                   std::to_string(i)
-                                   + "].Color", lightColors[i]);
+    for (unsigned int i = 0; i < lightPositions.size(); i++) {
+        shaderLightingPass.setVec3("lights[" + std::to_string(i) + "].Position", lightPositions[i]);
+        shaderLightingPass.setVec3("lights[" + std::to_string(i) + "].Color", lightColors[i]);
 // update attenuation parameters and calculate radius
         const float linear = 0.7f;
         const float quadratic = 1.8f;
-        shaderLightingPass.setFloat("lights[" +
-                                    std::to_string(i)
-                                    + "].Linear", linear);
-        shaderLightingPass.setFloat("lights[" +
-                                    std::to_string(i)
-                                    + "].Quadratic", quadratic);
+        shaderLightingPass.setFloat("lights[" + std::to_string(i) + "].Linear", linear);
+        shaderLightingPass.setFloat("lights[" + std::to_string(i) + "].Quadratic", quadratic);
     }
     shaderLightingPass.setVec3("viewPos", camera->Position);
 
@@ -298,16 +246,8 @@ renderQuad();
 
 // 3. render lights on top of scene
 // --------------------------------
-    for (
-            unsigned int i = 0;
-            i < lightPositions.
-
-                    size();
-
-            i++) {
-        light_shaderCube.
-
-                use();
+    for (unsigned int i = 0; i < lightPositions.size(); i++) {
+        light_shaderCube.use();
 
         light_shaderCube.setVec3("light.position", lightPositions[i]);
         light_shaderCube.setVec3("viewPos", camera->Position);
@@ -318,16 +258,12 @@ renderQuad();
         modelMat = glm::scale(modelMat, glm::vec3(0.25f));
         light_shaderCube.setMat4("model", modelMat);
 //dirLight_ObjInstance->Render();
-        lightCube.
-                Draw(light_shaderCube,
-                     true);
+        lightCube.Draw(light_shaderCube, true);
     }
 
 //render either buffers
     if (isDebugPos) {
-        shaderFBODebug.
-
-                use();
+        shaderFBODebug.use();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gPosition);
@@ -336,9 +272,7 @@ renderQuad();
 
     }
     if (isDebugNorm) {
-        shaderFBODebug.
-
-                use();
+        shaderFBODebug.use();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gNormal);
@@ -347,14 +281,73 @@ renderQuad();
 
     }
     if (isDebugAlbedo) {
-        shaderFBODebug.
-
-                use();
+        shaderFBODebug.use();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
-
         renderQuad();
 
     }
+}
+
+
+void DeferredScene1::ResizeScene() {
+
+    //TODO CLEAR PREVIOUS
+    //del * = gBuffer,gPos
+    DeleteSceneBuffers();
+
+
+    //defered part
+// configure g-buffer framebuffer
+// ------------------------------
+    glGenFramebuffers(1, &gBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+
+// position color buffer
+    glGenTextures(1, &gPosition);
+    glBindTexture(GL_TEXTURE_2D, gPosition);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGBA,
+                 GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
+// normal color buffer
+    glGenTextures(1, &gNormal);
+    glBindTexture(GL_TEXTURE_2D, gNormal);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGBA,
+                 GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
+// color + specular color buffer
+    glGenTextures(1, &gAlbedoSpec);
+    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
+// tell OpenGL which color attachments we'll use (of this framebuffer) for rendering
+
+    glDrawBuffers(3, attachments);
+// create and attach depth buffer (renderbuffer)
+
+    glGenRenderbuffers(1, &rboDepth);
+    glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+// finally check if framebuffer is complete
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        std::cout << "Framebuffer not complete!" << std::endl;
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+
+void DeferredScene1::DeleteSceneBuffers() {
+    glDeleteTextures(1, &gPosition);
+    glDeleteTextures(1, &gNormal);
+    glDeleteTextures(1, &gAlbedoSpec);
+    glDeleteFramebuffers(1, &gBuffer);
+    glDeleteRenderbuffers(1, &rboDepth);
 }

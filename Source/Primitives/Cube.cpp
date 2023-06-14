@@ -1,6 +1,16 @@
 #include "Cube.h"
 
 
+
+Cube::Cube() = default;
+Cube::~Cube(){
+        glDeleteTextures(1,&cubemapTexture);
+        glDeleteVertexArrays(1,&vao);
+    glDeleteVertexArrays(1,&vbo);
+
+
+}
+
 unsigned int Cube::loadCubemap(std::vector<std::string> faces) {
     unsigned int textureID;
     glGenTextures(1, &textureID);
