@@ -16,6 +16,7 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "Lights/DirectionalLight.h"
+#include "Utilities/GraphicsOptions.h"
 
 //#include "Lights/Light.h" //redefinition , already in objectinstance
 
@@ -45,6 +46,9 @@ public:
     WindowSettings *windowSettings;//preco ma scena kazdy svoj?
 
     Camera *camera;
+    GraphicsOptions * graphicsOptions = NULL;
+
+
     glm::mat4 projection;
     glm::mat4 view;
     std::string sceneDescription = "test Scene";
@@ -68,14 +72,13 @@ public:
     Shader basicShader = Shader("..\\Assets\\Shaders\\Forward\\basic.vert", "..\\Assets\\Shaders\\Forward\\basic.frag");
 
     int selectedHierarchyObj = -1;
-    bool disableShadows = true;
 
     ObjectInstance *selectedInstance = nullptr; // either ray RMB  or ImGui window //if not set to nullptr, then crash
     Cube cubePrimitive = Cube(nullptr);
 
     StencilShaderInstance *stencilShader;
 
-    virtual void Setup(Camera *cam);
+    virtual void Setup(Camera *cam, GraphicsOptions * graphicsOptions);
 
     //render selectable objects with supplied shader
     void RenderObjectsS(Shader *s);

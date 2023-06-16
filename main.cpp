@@ -52,6 +52,18 @@ void ReloadScene(int num);
 
 void PrintShader();
 
+
+
+#pragma region common_settings //common resources for scenes
+#include "Utilities/GraphicsOptions.h"
+
+GraphicsOptions * graphicsOptions;
+
+
+#pragma endregion
+
+
+
 #pragma region settings_params
 //TODO reorganize
 
@@ -60,7 +72,7 @@ float backgroundClearCol[4] = {0.7f, 0.7f, 0.7f, 0.7f};
 float zNear = 0.5f;
 float zFar = 50.0f;
 bool fullscreen = false;
-bool enableShading = false;
+
 bool enableCulling = false;
 float cf[3];
 unsigned int SCR_WIDTH = 800;
@@ -272,9 +284,9 @@ void DrawImGui() {
 
     ImGui::Checkbox("Enable face culling", &enable_culling);
 
-    ImGui::Checkbox("Switch shadows on (default off)", &enableShading);
+    ImGui::Checkbox("Switch shadows on (default off)", &graphicsOptions->enableShadows);
 
-    if (enableShading)
+    if (graphicsOptions->enableShadows)
         ImGui::Checkbox("Show Quad debug", &enableDebugDepthQuad);
 
 
@@ -632,7 +644,7 @@ void ReloadScene(int num) {
 
         //scene = static_cast<const std::shared_ptrshared_ptr<Scene> >(new TestScene2());
         sceneInstance->windowSettings = &windowSettings;//needs to go before setup otherwise buffers are initialized before setting
-        sceneInstance->Setup(camera);
+        sceneInstance->Setup(camera, graphicsOptions);
         sceneDescription = sceneInstance->sceneDescription;
     }
 }
@@ -946,6 +958,8 @@ int main() {
 
     //sc->windowSettings = &windowSettings; //toto nebude upne dobre treba to?
     camera = new Camera(glm::vec3(0.0f, .0f, 3.0f));
+    graphicsOptions = new GraphicsOptions();
+
 
     centroidModel = new Model("../Assets/Models/LightCube/LightCube.obj");
     //light_shader = new Shader("..\\Assets\\Shaders\\Forward\\MultipleLights\\s_light.vert",
@@ -1067,7 +1081,7 @@ int main() {
 
 
         if (sceneInstance != nullptr && sceneInstance->dirLight_ObjInstance != nullptr) {
-            if (enableShading) {
+            if (graphicsOptions->enableShadows) {
                 //std::cout << "test\n";
                 //renderbackfaces to fix peter panning for opaque objects, page 294
                 glCullFace(GL_FRONT);

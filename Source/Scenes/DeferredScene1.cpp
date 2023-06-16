@@ -44,8 +44,9 @@ ImGui::Image((void *) gAlbedoSpec,ImVec2( w,t),  ImVec2(0, 1),ImVec2(1, 0), ImVe
 
 }
 
-void DeferredScene1::Setup(Camera *cam) {
-    camera = cam;
+void DeferredScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
+
+    SceneInstance::Setup(cam, graphicsOptions);
     sceneDescription = "This is a test scene for deferred rendering with many point lights";
 
 //deferred
@@ -139,9 +140,7 @@ void DeferredScene1::Setup(Camera *cam) {
 
 // shader configuration
 // --------------------
-    shaderLightingPass.
-
-            use();
+    shaderLightingPass.use();
 
     shaderLightingPass.setInt("gPosition", 0);
     shaderLightingPass.setInt("gNormal", 1);
@@ -177,9 +176,7 @@ void DeferredScene1::RenderSceneInstance(Shader *shader) {
 //glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 //glm::mat4 view = camera->GetViewMatrix();
     glm::mat4 model = glm::mat4(1.0f);
-    shaderGeometryPass.
-
-            use();
+    shaderGeometryPass.use();
 
     shaderGeometryPass.setMat4("projection", projection);
     shaderGeometryPass.setMat4("view", view);

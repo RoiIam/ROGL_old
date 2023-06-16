@@ -12,9 +12,10 @@ ForwardScene1::ForwardScene1() = default;
 ForwardScene1::~ForwardScene1() = default;
 
 
-void ForwardScene1::Setup(Camera *cam) // override
+void ForwardScene1::Setup(Camera *cam, GraphicsOptions * graphicsOptions) // override
 {
-    camera = cam;
+    SceneInstance::Setup(cam,graphicsOptions);
+
     sceneDescription = "This is a test scene for forward rendering with support for shadows";
 //shaders load, setup
 // uhh "//" both  // \\ and // /work, but in textures it fs up while using
@@ -40,7 +41,7 @@ void ForwardScene1::Setup(Camera *cam) // override
             "../Assets/Models/Shrek/Shrek_mod.gltf"); // src https://sketchfab.com/3d-models/shrek-ee9fbba7e7a841dbb817cc6cec678355
 
     sphereModel = new Model("../Assets/Models/sphere/sphere.obj");
-    SetupGlobalLight();
+
 
     cube_ObjInstance = new ObjectInstance(*ourModel, *ourShader, "cube",
                                           nullptr); // to assign shader it has to be already created or it will be null!!

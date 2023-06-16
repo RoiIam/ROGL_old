@@ -30,11 +30,8 @@ public:
     Shader *basicShader;
     bool OpenSecond = false;
 
-    void Setup(Camera *cam) override;
+    void Setup(Camera *cam, GraphicsOptions *graphicsOptions) override;
 
-    // now add more stuff
-    //bool activate_gui_shadows=false;
-    int demoStage = 0;
 
     //stuff for simple lights stage 1
 #pragma region stage_1 //TODO move this to .cpp?

@@ -72,7 +72,7 @@ public:
     //TODO glints
     GLuint loadTex(const std::string &baseName, const unsigned int nlevels, const GLsizei ndists);
 
-    void Setup(Camera *cam) override; // only once before the render loop
+    void Setup(Camera *cam, GraphicsOptions * graphicsOptions) override; // only once before the render loop
 
 
     //jsut our testscene needs this

@@ -5,10 +5,12 @@ DeferredScene2::DeferredScene2() = default;
 
 DeferredScene2::~DeferredScene2() = default;
 
-void DeferredScene2::Setup(Camera *cam) {
-    camera = cam;
+void DeferredScene2::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
+
+    SceneInstance::Setup(cam, graphicsOptions);
+    //camera = cam;
     sceneDescription = "This is a final scene showcasing forward and deferred rendering step by step, check the 'Interactive' UI window";
-    disableShadows = false;
+
     sponzaModel = new Model("..\\Assets\\Models\\Sponza\\sponza.obj");
     meshLightShader = new Shader("..\\Assets\\Shaders\\Forward\\MultipleLights\\mesh.vert",
                                  "..\\Assets\\Shaders\\Forward\\MultipleLights\\mesh.frag");
@@ -17,7 +19,7 @@ void DeferredScene2::Setup(Camera *cam) {
     sponzaObjInstance = new ObjectInstance(*sponzaModel, *basicShader, "sponza", nullptr);
     sponzaObjInstance->SetScale(glm::vec3(0.020f));
     selectableObjInstances.push_back(sponzaObjInstance);
-    SetupGlobalLight();
+
     selectableObjInstances.push_back(dirLight_ObjInstance);
 
     //Model *a =new Quad();
@@ -26,6 +28,8 @@ void DeferredScene2::Setup(Camera *cam) {
     waterObjInstance->SetDeg(-90.0f);//make sure its correctly rotated-facing up along X
     waterObjInstance->SetRot(glm::vec3(1, 0, 0));//rotates based on prev set Degrees
     selectableObjInstances.push_back(waterObjInstance);
+
+    SetupForwardLights();
 }
 
 void DeferredScene2::SetupForwardLights() {
@@ -64,7 +68,7 @@ float DeferredScene2::lerp(float a, float b, float f) {
 }
 
 void DeferredScene2::SetupSSAO() {
-    disableShadows = true;
+
     //make sure to run it onlly once
     if (notFirstTime)
         return;
@@ -203,7 +207,7 @@ void DeferredScene2::SetupSSAO() {
 }
 
 void DeferredScene2::RenderSceneInstance(Shader *shader) {
-    if (demoStage != 3) {
+    if (graphicsOptions->rendererType == GraphicsOptions::RendererType::forward) {
         SceneInstance::RenderSceneInstance(shader);
     } else {
 
@@ -218,15 +222,7 @@ void DeferredScene2::RenderSceneInstance(Shader *shader) {
 // -----------------------------------------------------------------
         glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-//projection = uniforms.projection;  //glm::perspective(glm::radians(camera->Zoom), (float)windowSettings->CUR_WIDTH / (float)indowSettings.CUR_HEIGHT, 0.1f, 50.0f);
-//glm::mat4 view = uniforms.view;
-//glm::mat4 model = glm::mat4(1.0f);
-//shaderGeometryPass->use();
-//shaderGeometryPass->setMat4("projection", projection);
-//shaderGeometryPass->setMat4("view", view);
-//glActiveTexture(GL_TEXTURE0);
 
-//selectableObjInstances[0]->Render(shaderGeometryPass,false);
         RenderObjectsS(shaderGeometryPass);
 //renderQuad();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -265,8 +261,6 @@ void DeferredScene2::RenderSceneInstance(Shader *shader) {
 // 4. lighting pass: traditional deferred Blinn-Phong lighting with added screen-space ambient occlusion
 // -----------------------------------------------------------------------------------------------------
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
         Shader *shaderToUse;
         if (enableSSAO)
             shaderToUse = shaderLightingPass;
@@ -275,17 +269,11 @@ void DeferredScene2::RenderSceneInstance(Shader *shader) {
         shaderToUse->use();
 // send light relevant uniforms
 
-//from glm::vec3 lightPosView = glm::vec3(camera->GetViewMatrix() * glm::vec4(lightPos, 1.0));
         glm::vec3 lightPosView = glm::vec3(uniforms.view * glm::vec4(dirLight_ObjInstance->GetPos(), 0.0));
-//shaderLightingPass->setVec3("dirLight.direction", glm::make_vec3(dirLightDirImGui));
-
         shaderToUse->setVec3("light.Position", lightPosView);
-
         glm::vec3 lightColor = glm::vec3(0.2, 0.2, 0.7);
         shaderToUse->setVec3("light.Color", dirLight_ObjInstance->light->color);
-//shaderToUse->setVec3("light.Color",lightColor);
 
-///eee
 // Update attenuation parameters
         const float linear = 0.09f;
         const float quadratic = 0.032f;
@@ -326,18 +314,15 @@ void DeferredScene2::LoadModel(std::string path) {
     Model *m = new Model(path, false);
 
     Shader *s;
-    switch (demoStage) {
-        case 1:
+    switch (graphicsOptions->rendererType) {
+        case GraphicsOptions::RendererType::forward: //0
             s = simpleLights;
             break;
-        case 2:
-            s = simpleLights;
-            break;
-        case 3:
+        case GraphicsOptions::RendererType::deferred: //1
             s = shaderLightingPass;
             break;
         default:
-            s = basicShader;
+            s = NULL;
             break;
 
     }
@@ -352,40 +337,26 @@ void DeferredScene2::ImGuiHierarchy() {
 
     ImGui::Begin("Interactive");
     ImGui::TextWrapped(
-            "Welcome to this demo. You see famous Sponza demo in with Phong lighting. By pressing buttons bellow, you will add more graphical features that will make it look even better! "
-            "Please work through them one by one from the top, otherwise the next button wont be active");
+            "Welcome to this Sponza demo with Blinn-Phong lighting. By pressing buttons bellow, you will add more graphical features that will make it look even better!");
 
+
+    if (ImGui::CollapsingHeader("Various Options")) {
+        ImGui::Checkbox("Switch shadows on (default off)", &graphicsOptions->enableShadows);
+    }
 //imgui buttons that handle switching of demo stages and their setup
 #pragma region buttonsAndSetup
-    if (ImGui::Button("Add simple lights") && demoStage == 0) {
-//sponzaObjInstance->SetShader(*simpleLights);
-//TODO should be for every object
-        for (ObjectInstance *oi: selectableObjInstances) {
-            if (oi->light != nullptr) continue;
-
-            oi->SetShader(*simpleLights);
-        }
-//set light properties
-//setup Cam
-        glm::vec3 startPos = glm::vec3(1.333f, 1.111f, 3.777f);
-//camera->SetPosDir(startPos,glm::vec3(0.0, 1.0, 0.0),-157.0f,6.9f);
-        demoStage = 1;
-    }
-    if (ImGui::Button("Add directional light with shadows") && demoStage == 1) {
 
 
-        demoStage = 2;
-    }
-    ImGui::TextWrapped(
-            "NOTE: for shadows to work you need to have checked the box 'Switch shadows on' in the 'Tool Window' UI Window!");
     ImGui::TextWrapped("Use 'Sun offset' in the 'Tool Window' UI Window to change sun direction");
-    if (ImGui::Button("Change to deferred") && demoStage == 2) {
+    if (ImGui::Button("Change to deferred rendering") &&
+        graphicsOptions->rendererType == GraphicsOptions::RendererType::forward) {
         SetupSSAO();
 
-        demoStage = 3;
+        graphicsOptions->rendererType = GraphicsOptions::RendererType::deferred;
     }
-    if (ImGui::Button("return back to forward, directional light with shadows ") && demoStage == 3) {
-        demoStage = 2;
+    if (ImGui::Button("Return back to forward rendering") &&
+        graphicsOptions->rendererType == GraphicsOptions::RendererType::deferred) {
+        graphicsOptions->rendererType = GraphicsOptions::RendererType::forward;
     }
     ImGui::TextWrapped("Loads model from hard drive and selects it: ");
 
@@ -397,42 +368,12 @@ void DeferredScene2::ImGuiHierarchy() {
 
 #pragma endregion buttons
 //not working for now DirectionalLight*  a = dynamic_cast<DirectionalLight*>(dirLight);
-    switch (demoStage) {
-        case 0:
-            break;
-        case 1:// simple forward lights
-            ImGui::TextWrapped(
-                    "Feel free to manipulate  selected lights either by right clicking on them or from the list.");
-            SetupForwardLights();
+    switch (graphicsOptions->rendererType) {
 
-            ImGui::SliderFloat3("Sun direction", dirLightDirImGui, -1, 1, "%.3f");
-//DirectionalLight*  a = dynamic_cast<DirectionalLight*>(dirLight);
-//=   static_cast<DirectionalLight>(dirLight_ObjInstance->light);
-
-//a->direction = glm::make_vec3(dirLightDirImGui);
-//simpleLights->setVec3("dirLight.direction", a->direction);  //uhh static casts
-            simpleLights->setVec3("dirLight.direction", glm::make_vec3(dirLightDirImGui));
-
-            static ImVec4 color = ImVec4(dirlightCol.x, dirlightCol.y, dirlightCol.z, 1);
-            ImGui::ColorEdit3("Sun Color", (float *) &color);
-            if (ImGui::IsItemActive())  // continous edit or IsItemDeactivatedAfterEdit-
-// only after i lift mouse
-            {
-                dirlightCol.x = color.x;
-                dirlightCol.y = color.y;
-                dirlightCol.z = color.z;
-
-// std::cout << color.x << " " << color.y << " " << color.z << std::endl;
-            }
-//daj prvotne nastavenie svetla dir a col + mozno aj kameru na nove miesto,
-//    kresli debug pre deferred priamo cez...
-            simpleLights->setVec3("dirLight.diffuse", dirlightCol);
-
-            break;
-        case 2://dir light with shadows
+        case GraphicsOptions::RendererType::forward://dir light with shadows //0
 //simpleLights->setVec3("dirLight.diffuse", dirlightCol);
             break;
-        case 3://deferred pipeline
+        case GraphicsOptions::RendererType::deferred://deferred pipeline //1
 
             ImGui::Checkbox("enable SSAO", &enableSSAO);
             ImGui::InputInt("AO power", &powerSSAO, 1);
@@ -442,15 +383,15 @@ void DeferredScene2::ImGuiHierarchy() {
 //dynamic_cast<DirectionalLight*>(dirLight_ObjInstance->light)->direction = glm::vec3(dirLightDirection);
             ImGui::Checkbox("showDebug SSAO", &isDebugSSAO);
             break;
-        case 4://deffered+ shadows? or ssao
-
-            break;
+            //case 4: //deffered+ shadows? or ssao
+            //break;
         default:
             break;
 
     }
     ImGui::TextWrapped("%s", std::string("curr stage ").append(
-            std::to_string(demoStage)).c_str()); //cant use std::to_chars even with std::to_chars
+            std::to_string(graphicsOptions->rendererType)).c_str()); //cant use std::to_chars even with std::to_chars
+    //now it can print only number, enum names are not complied etc
     ImGui::End();
 }
 

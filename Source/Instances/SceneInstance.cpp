@@ -20,8 +20,9 @@ SceneInstance::~SceneInstance() {
     opaqueObjInstances.clear();
     selectableObjInstances.clear();
 }
-void SceneInstance::Setup(Camera *cam) {
+void SceneInstance::Setup(Camera *cam, GraphicsOptions  *graphicsOptions) {
     camera = cam;
+    this->graphicsOptions = graphicsOptions; //should we use this->sameNameAsParam...?
     selectedHierarchyObj = -1;
     SetupGlobalLight();
 }

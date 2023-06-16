@@ -55,7 +55,7 @@ public:
     void ImGuiHierarchy() override;
 
 
-    void Setup(Camera *cam) override;
+    void Setup(Camera *cam,GraphicsOptions * graphicsOptions) override;
 
     void RenderSceneInstance(Shader *shader) override;
 
