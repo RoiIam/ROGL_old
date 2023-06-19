@@ -25,6 +25,8 @@ public:
     unsigned int transparentTexture;
     unsigned int transparentVAO, transparentVBO;
 
+
+    // same as  https://learnopengl.com/code_viewer_gh.php?code=src/4.advanced_opengl/3.1.blending_discard/blending_discard.cpp
     static inline float transparentVertices[] = {
             // positions         // texture Coords (swapped y coordinates because texture is flipped upside down)  // swap not neededd
             0.0f, 0.5f, 0.0f, 0.0f, 1.0f,

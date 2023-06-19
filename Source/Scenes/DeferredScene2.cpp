@@ -22,14 +22,10 @@ void DeferredScene2::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
 
     selectableObjInstances.push_back(dirLight_ObjInstance);
 
-    //Model *a =new Quad();
-    waterObjInstance = new ObjectInstance(*(new Quad(nullptr)), *basicShader, "waterQuad", nullptr);
-    waterObjInstance->SetScale(glm::vec3(5));
-    waterObjInstance->SetDeg(-90.0f);//make sure its correctly rotated-facing up along X
-    waterObjInstance->SetRot(glm::vec3(1, 0, 0));//rotates based on prev set Degrees
-    selectableObjInstances.push_back(waterObjInstance);
 
     SetupForwardLights();
+
+    SetupWater();
 }
 
 void DeferredScene2::SetupForwardLights() {
@@ -55,12 +51,112 @@ void DeferredScene2::SetupForwardLights() {
     // directional light
     //mesh_shader->setVec3("dirLight.direction",glm::make_vec3(dirLightDirImGui));
     //simpleLights->setVec3("dirLight.direction",static_cast<DirectionalLight>(dirLight_ObjInstance->light).direction);  //uhh static casts
-
     /*glm::vec3 a =static_cast<DirectionalLight>(dirLight_ObjInstance->light).direction;*/
+}
+
+void DeferredScene2::SetupWater() {
+
+    Water *a = new Water(&waterShader);
+
+    waterObjInstance = new ObjectInstance(*(a), waterShader, "waterQuad", nullptr);
+
+    waterObjInstance->SetScale(glm::vec3(5));
+    waterObjInstance->SetDeg(-90.0f, "X");//make sure its correctly rotated-facing up along X
+    waterObjInstance->SetDeg(-90.0f, "Z");//make sure its correctly rotated-facing up along Z
+
+    //waterObjInstance->SetRot(glm::vec3(0, 1, 0));//rotates based on prev set Degrees
+
+    selectableObjInstances.push_back(waterObjInstance);
+    waterObjInstance->disableRender = true;
+
 
 
     //water setup
     //waterObjInstance->SetPos(glm::make_vec3("0.0"));//should work?
+
+    //create reflection frame buffer
+    //init frame buffer
+    glGenFramebuffers(1, &reflectionFrameBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, reflectionFrameBuffer);
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+    //init texture attachment
+    glGenTextures(1, &reflectionTexture);
+    glBindTexture(GL_TEXTURE_2D, reflectionTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, reflectionTexture, 0);
+    //init depth buffer attachment
+    glGenRenderbuffers(1, &reflectionDepthBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, reflectionDepthBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, reflectionDepthBuffer);
+    // finally check if framebuffer is complete
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        std::cout << "Framebuffer reflectionDepthBuffer not complete!" << std::endl;
+
+    //unbind
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+    //create reflection frame buffer
+    //init refraction frame buffer
+    glGenFramebuffers(1, &refractionFrameBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, refractionFrameBuffer);
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+    //init texture attachment
+    glGenTextures(1, &refractionTexture);
+    glBindTexture(GL_TEXTURE_2D, refractionTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, refractionTexture, 0);
+    //init depth buffer attachment
+    glGenRenderbuffers(1, &refractionDepthBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, refractionDepthBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, refractionDepthBuffer);
+    // finally check if framebuffer is complete
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        std::cout << "Framebuffer refractionDepthBuffer not complete!" << std::endl;
+    //unbind
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    //TODO this is bad code... assign after binding...
+    a->reflectionTexture = reflectionTexture;
+    a->refractionTexture = refractionTexture;
+}
+
+
+void DeferredScene2::RenderWater() {
+    //std::cout << "RenderWater!" << std::endl;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0); // make sure not bound
+    //glBindFramebuffer(GL_FRAMEBUFFER,reflectionFrameBuffer);
+
+
+
+    if (renderReflection)
+        glBindTexture(GL_TEXTURE_2D, reflectionTexture);
+    else if (renderRefraction)
+        glBindTexture(GL_TEXTURE_2D, refractionTexture);
+    if (renderReflection or renderRefraction) {
+        //to test, render renderQuad
+
+        //draws white if selected?
+        shaderFBODebug.use();
+        renderQuad();
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 float DeferredScene2::lerp(float a, float b, float f) {
@@ -389,6 +485,17 @@ void DeferredScene2::ImGuiHierarchy() {
             break;
 
     }
+
+
+#pragma region water
+
+    ImGui::SliderFloat("Background Color", &mixValUI, 0, 1, "%.3f");
+    waterShader.use();
+    waterShader.setFloat("mixVal", mixValUI);
+    ImGui::Checkbox("renderQuad debug water, renderReflection", &renderReflection);
+    ImGui::Checkbox("renderQuad debug water, renderRefraction", &renderRefraction);
+
+#pragma endregion water
     ImGui::TextWrapped("%s", std::string("curr stage ").append(
             std::to_string(graphicsOptions->rendererType)).c_str()); //cant use std::to_chars even with std::to_chars
     //now it can print only number, enum names are not complied etc

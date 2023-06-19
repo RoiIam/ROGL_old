@@ -17,9 +17,17 @@ uniform mat4 view;
 uniform mat4 model;
 uniform mat4 lightSpaceMatrix;
 
+uniform vec4 plane;
+
+
 void main()
 {
-    vs_out.FragPos = vec3(model * vec4(aPos, 1.0));
+
+    vec4 transMat = model * vec4(aPos, 1.0);
+    vs_out.FragPos = vec3(transMat);
+
+    gl_ClipDistance[0]= dot(transMat,plane); //get distance from vertex to plane
+
     vs_out.Normal = transpose(inverse(mat3(model))) * aNormal;
     vs_out.TexCoords = aTexCoords;
     //vs_out.TexCoords =   vec2(TexCoords.x, -TexCoords.y);

@@ -7,13 +7,7 @@
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 enum Camera_Movement {
-    FORWARD,
-    BACKWARD,
-    LEFT,
-    RIGHT,
-    UP,
-    DOWN,
-    NONE
+    FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN, NONE
 };
 
 
@@ -75,13 +69,12 @@ public:
     void toggleCursor();
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
+    void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = false);
     //constrainPitch was GLboolean from glad.h, idk why
 
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(float yoffset);
 
-private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors();
 };

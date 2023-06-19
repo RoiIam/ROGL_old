@@ -1,6 +1,8 @@
 #include "Quad.h"
 
 
+Quad::Quad() = default;
+
 Quad::~Quad() {
     glDeleteTextures(1, &texture);
     glDeleteVertexArrays(1, &vao);

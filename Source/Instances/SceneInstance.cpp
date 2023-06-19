@@ -20,7 +20,8 @@ SceneInstance::~SceneInstance() {
     opaqueObjInstances.clear();
     selectableObjInstances.clear();
 }
-void SceneInstance::Setup(Camera *cam, GraphicsOptions  *graphicsOptions) {
+
+void SceneInstance::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
     camera = cam;
     this->graphicsOptions = graphicsOptions; //should we use this->sameNameAsParam...?
     selectedHierarchyObj = -1;
@@ -29,14 +30,17 @@ void SceneInstance::Setup(Camera *cam, GraphicsOptions  *graphicsOptions) {
 
 //render selectable objects with supplied shader
 void SceneInstance::RenderObjectsS(Shader *s) {
-    int a = 0;
+    //int a = 0;
     for (auto oi: selectableObjInstances) {
-        if (oi->light != nullptr)
+        if (oi->light != nullptr || oi->disableRender)
             continue;
-        oi->Render(s, false);
+        else if (oi->forceRenderOwnShader)
+            oi->Render(oi->GetShader(), false);
+        else
+            oi->Render(s, false);
         //std::cout << oi->Name << "\n";
         //std::cout <<"sceneinstance renderObjectsS "<< a << "\n";
-        a++;
+        //a++;
 
     }
 }
@@ -176,8 +180,8 @@ void SceneInstance::SetupGlobalLight() {
         return;
     }
     //pozor ak light je null toto segfaultne lebo tiez bude null
-    dynamic_cast<DirectionalLight *>(dirLight_ObjInstance->light)->direction
-            = glm::vec3(dirLightDirection); //dynamic is better than static but works only with virtual destructor? wut
+    dynamic_cast<DirectionalLight *>(dirLight_ObjInstance->light)->direction = glm::vec3(
+            dirLightDirection); //dynamic is better than static but works only with virtual destructor? wut
     lightObjInstances.push_back(dirLight_ObjInstance);
     //its safer to not do it here
     //selectableObjInstances.push_back(dirLight_ObjInstance);add as instance do it later , now its first in  queue //maybe make this as generic fucntion, we need to always do this for lights, opaque and selectable
@@ -208,7 +212,7 @@ void SceneInstance::ImGuiHierarchy() {
         }
     }
     if (selectedHierarchyObj != -1 && selectableObjInstances[selectedHierarchyObj] != nullptr) {
-        ImGui::Checkbox("disable render ", &selectableObjInstances[selectedHierarchyObj]->enableRender);
+        ImGui::Checkbox("disable render ", &selectableObjInstances[selectedHierarchyObj]->enableVisualRender);
     }
     //debug ImGui::Text("%s%d count %d", "selected \n", selected, n);
     //later draw some selected variables/uniforms
@@ -227,11 +231,8 @@ void SceneInstance::renderQuad() {
     if (quadVAO == 0) {
         float quadVertices[] = {
                 // positions        // texture Coords
-                -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-                -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-                1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-                1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        };
+                -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+                -1.0f, 0.0f, 1.0f, 0.0f,};
         // setup plane VAO
         glGenVertexArrays(1, &quadVAO); //TODO dont forget to free up memory...
         glGenBuffers(1, &quadVBO);
@@ -243,15 +244,16 @@ void SceneInstance::renderQuad() {
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
     }
+
     glBindVertexArray(quadVAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
 }
 
-void SceneInstance::ResizeScene()
-{
+void SceneInstance::ResizeScene() {
 
 }
+
 void SceneInstance::DeleteSceneBuffers() //override
 {
 

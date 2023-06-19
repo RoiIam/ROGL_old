@@ -6,6 +6,7 @@
 #include "Primitives/DefaultCube.h"
 #include "Primitives/Grass.h"
 #include "../Lights//Light.h"
+#include "Primitives/Water.h"
 #include "glm/gtc/type_ptr.hpp" //for make_vec3
 
 #include "FileDialog/FileDialog.h"
@@ -89,6 +90,32 @@ public:
     void RenderSceneInstance(Shader *shader) override;
 
 #pragma endregion stage_3
+
+#pragma region water
+    //create reflection and refraction buffers
+    unsigned int reflectionFrameBuffer;
+    unsigned int reflectionTexture;
+    unsigned int reflectionDepthBuffer;
+
+    unsigned int refractionFrameBuffer;
+    unsigned int refractionTexture;
+    unsigned int refractionDepthBuffer;
+
+
+    //ui
+    float mixValUI = 0.5;
+
+    bool renderRefraction = false;
+    bool renderReflection = false;
+
+    Shader waterShader = Shader("..\\Assets\\Shaders\\Forward\\Water\\water.vert",
+                                "..\\Assets\\Shaders\\Forward\\Water\\water.frag");
+
+    void SetupWater();
+
+    void RenderWater();
+
+#pragma endregion water
 
     void LoadModel(std::string path);
 

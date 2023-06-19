@@ -12,9 +12,9 @@ ForwardScene1::ForwardScene1() = default;
 ForwardScene1::~ForwardScene1() = default;
 
 
-void ForwardScene1::Setup(Camera *cam, GraphicsOptions * graphicsOptions) // override
+void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // override
 {
-    SceneInstance::Setup(cam,graphicsOptions);
+    SceneInstance::Setup(cam, graphicsOptions);
 
     sceneDescription = "This is a test scene for forward rendering with support for shadows";
 //shaders load, setup
@@ -194,8 +194,6 @@ void ForwardScene1::SetupShaderMaterial() {
     model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
     model = glm::translate(model, cube_ObjInstance->GetPos());//just test of setpos
     ourShader->setMat4("model", model);
-    cube_ObjInstance->SetRot(glm::vec3(0.0f, 0.0f, 1.0f));
-    cube_ObjInstance->SetDeg(00.0f);
     //printf("SetupShaderMaterial\n");
 
     //glints part

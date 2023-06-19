@@ -53,15 +53,14 @@ void ReloadScene(int num);
 void PrintShader();
 
 
-
 #pragma region common_settings //common resources for scenes
+
 #include "Utilities/GraphicsOptions.h"
 
-GraphicsOptions * graphicsOptions;
+GraphicsOptions *graphicsOptions;
 
 
 #pragma endregion
-
 
 
 #pragma region settings_params
@@ -94,7 +93,7 @@ glm::vec3 sunDir = {0.2f, 0.500f, -0.1};  // glm::vec3(1.0f);
 float lightOrthoSize = 20.0f;
 //Depth related stufff
 //-----------------------
-const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
+const unsigned int SHADOW_WIDTH = 8192 / 4, SHADOW_HEIGHT = 8192 / 4;
 unsigned int depthMapFBO;
 // create depth texture
 unsigned int depthMap;
@@ -107,6 +106,7 @@ bool enableDebugLightRay = true;
 //scene stuff - needs to be declared earlier
 std::string sceneDescription = "Put short description of scene here";
 std::shared_ptr<ForwardScene1> forwardScene1;//this used to be TestScene
+std::shared_ptr<DeferredScene2> deferredScene2 = NULL;
 std::shared_ptr<SceneInstance> sceneInstance;
 
 #pragma endregion
@@ -147,6 +147,7 @@ bool enable_culling = true;
 bool changeCol = false;
 
 float pos[3];
+float rot[3];
 
 void ImGuiObjProperties(ObjectInstance *obj) {
     ImGuiIO &io = ImGui::GetIO();
@@ -162,6 +163,13 @@ void ImGuiObjProperties(ObjectInstance *obj) {
     ImGui::DragFloat3("Obj Position", pos, 0.05f, -10000, 10000, "%.3f");
     ImGui::SetItemUsingMouseWheel();
 
+    //rot
+    rot[0] = obj->GetDeg("X");
+    rot[1] = obj->GetDeg("Y");
+    rot[2] = obj->GetDeg("Z");
+    ImGui::DragFloat3("Obj Rotation", rot, 0.05f, -10000, 10000, "%.3f");
+    ImGui::SetItemUsingMouseWheel();
+
     // scale
     float scale[] = {obj->GetScale().x, obj->GetScale().y, obj->GetScale().z};
     ImGui::DragFloat3("Obj Scale", scale, 0.05f, -10000, 10000, "%.3f");
@@ -173,6 +181,9 @@ void ImGuiObjProperties(ObjectInstance *obj) {
     //show changes
     obj->SetPos(glm::vec3(pos[0], pos[1], pos[2]));
     obj->SetScale(glm::make_vec3(scale));
+    obj->SetDeg(rot[0], "X");
+    obj->SetDeg(rot[1], "Y");
+    obj->SetDeg(rot[2], "Z");
 
     //show assigned shader
     //ImGui::Text("Shader assigned:"+ obj->GetShader());
@@ -285,6 +296,8 @@ void DrawImGui() {
     ImGui::Checkbox("Enable face culling", &enable_culling);
 
     ImGui::Checkbox("Switch shadows on (default off)", &graphicsOptions->enableShadows);
+    ImGui::Checkbox("Switch water on (default off)", &graphicsOptions->enableWater);
+
 
     if (graphicsOptions->enableShadows)
         ImGui::Checkbox("Show Quad debug", &enableDebugDepthQuad);
@@ -314,10 +327,9 @@ void DrawImGui() {
     ImGui::DragFloat3("Sun Direction", sunDirUI, 0.001f, -1, 1, "%.3f");
     sunDir = glm::make_vec3(sunDirUI);
     //DirectionalLight(sceneInstance->dirLight_ObjInstance->light).direction = sunDir;
-    if(sceneInstance->dirLight_ObjInstance)
-    {
+    if (sceneInstance->dirLight_ObjInstance) {
         auto dl = dynamic_cast<DirectionalLight *>(sceneInstance->dirLight_ObjInstance->light);
-        if(dl)
+        if (dl)
             dl->direction = sunDir;
     }
 
@@ -330,7 +342,7 @@ void DrawImGui() {
     zFar = zFarUI;
 
     float orthoSize = lightOrthoSize;
-    ImGui::DragFloat("lighmap ortho size", &orthoSize,0.001f, 2.0f, 100.0f);
+    ImGui::DragFloat("lighmap ortho size", &orthoSize, 0.001f, 2.0f, 100.0f);
     lightOrthoSize = orthoSize;
 
 
@@ -356,17 +368,16 @@ void DrawImGui() {
 #pragma region SceneStuff
 
 //test planes for OBB colisions
-bool TestRayOBBIntersection(
-        glm::vec3 ray_origin,     // Ray origin, in world space
-        glm::vec3 ray_direction,  // Ray direction (NOT target position!), in world
+bool TestRayOBBIntersection(glm::vec3 ray_origin,     // Ray origin, in world space
+                            glm::vec3 ray_direction,  // Ray direction (NOT target position!), in world
         // space. Must be normalize()'d.
-        glm::vec3 aabb_min,       // Minimum X,Y,Z coords of the mesh when not
+                            glm::vec3 aabb_min,       // Minimum X,Y,Z coords of the mesh when not
         // transformed at all.
-        glm::vec3 aabb_max,  // Maximum X,Y,Z coords. Often aabb_min*-1 if your mesh
+                            glm::vec3 aabb_max,  // Maximum X,Y,Z coords. Often aabb_min*-1 if your mesh
         // is centered, but it's not always the case.
-        glm::mat4 ModelMatrix,  // Transformation applied to the mesh (which will
+                            glm::mat4 ModelMatrix,  // Transformation applied to the mesh (which will
         // thus be also applied to its bounding box)
-        float &intersection_distance  // Output : distance between ray_origin and
+                            float &intersection_distance  // Output : distance between ray_origin and
         // the intersection with the OBB
 ) {
     // Intersection method from Real-Time Rendering and Essential Mathematics for Games
@@ -374,8 +385,7 @@ bool TestRayOBBIntersection(
     float tMin = 0.0f;
     float tMax = 100000.0f;
 
-    glm::vec3 OBBposition_worldspace(ModelMatrix[3].x, ModelMatrix[3].y,
-                                     ModelMatrix[3].z);
+    glm::vec3 OBBposition_worldspace(ModelMatrix[3].x, ModelMatrix[3].y, ModelMatrix[3].z);
 
     glm::vec3 delta = OBBposition_worldspace - ray_origin;
 
@@ -510,11 +520,9 @@ void TestMouse2(glm::vec3 dir) {
 
         }
 
-        if (TestRayOBBIntersection(camera->Position, dir, aabb_min, aabb_max, model,
-                                   intersection_distance)) {
+        if (TestRayOBBIntersection(camera->Position, dir, aabb_min, aabb_max, model, intersection_distance)) {
             std::cout << "picked object " << sceneInstance->selectableObjInstances[i]->GetModel()->directory
-                      << sceneInstance->selectableObjInstances[i]->Name
-                      << " id " << intersection_distance << "\n"
+                      << sceneInstance->selectableObjInstances[i]->Name << " id " << intersection_distance << "\n"
                       //<< " mat" << std::endl
                       //<< "min "
                       //<< glm::to_string(scene->objectInstances[i]->GetModel()->boundMin)
@@ -569,13 +577,11 @@ void Drawline() {
     glm::vec3 ndcr = glm::vec3(x, y, z);
 
     // Homogeneous Clip Coordinates
-    glm::vec4 homogeneous_clip_coordinates_ray =
-            glm::vec4(ndcr.x, ndcr.y, -1.0f, 1.0f);
+    glm::vec4 homogeneous_clip_coordinates_ray = glm::vec4(ndcr.x, ndcr.y, -1.0f, 1.0f);
 
     // 4D Eye (Camera) Coordinates
     cameraDrawPos = camera->Position;
-    glm::vec4 camera_ray =
-            glm::mat4(glm::inverse(sceneInstance->projection)) * homogeneous_clip_coordinates_ray;
+    glm::vec4 camera_ray = glm::mat4(glm::inverse(sceneInstance->projection)) * homogeneous_clip_coordinates_ray;
     camera_ray = glm::vec4(camera_ray.x, camera_ray.y, -1.0f, 0.0f);
 
     // 4D World Coordinatesf
@@ -664,19 +670,16 @@ void SwitchFullscreen() {
         windowSettings.CUR_WIDTH = glfwGetVideoMode(windowSettings.monitor)->width;
         windowSettings.CUR_HEIGHT = glfwGetVideoMode(windowSettings.monitor)->height;
 
-        glfwSetWindowMonitor(windowSettings.window, windowSettings.monitor,
-                             GLFW_DONT_CARE, GLFW_DONT_CARE, windowSettings.CUR_WIDTH, windowSettings.CUR_HEIGHT,
-                             GLFW_DONT_CARE);
+        glfwSetWindowMonitor(windowSettings.window, windowSettings.monitor, GLFW_DONT_CARE, GLFW_DONT_CARE,
+                             windowSettings.CUR_WIDTH, windowSettings.CUR_HEIGHT, GLFW_DONT_CARE);
     } else {
         windowSettings.CUR_HEIGHT = SCR_WIDTH;
         windowSettings.CUR_HEIGHT = SCR_HEIGHT;
-        glfwSetWindowMonitor(windowSettings.window, nullptr, 50, 50, SCR_WIDTH,
-                             SCR_HEIGHT, GLFW_DONT_CARE);
+        glfwSetWindowMonitor(windowSettings.window, nullptr, 50, 50, SCR_WIDTH, SCR_HEIGHT, GLFW_DONT_CARE);
     }
 }
 
-static void mouse_button_callback(GLFWwindow *window, int button, int action,
-                                  int mods) {
+static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
         Drawline();  // uhh we neeed to keep drawing it...
         // Draw line of sight latest
@@ -684,8 +687,7 @@ static void mouse_button_callback(GLFWwindow *window, int button, int action,
     }
 }
 
-static void keyboard_callback(GLFWwindow *window, int key, int scancode,
-                              int action, int mods) {
+static void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_ESCAPE || key == GLFW_KEY_F9) {
             if (key == GLFW_KEY_F9) {
@@ -738,8 +740,7 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode,
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     // make sure the viewport matches the new window dimensions; note that width
     // and height will be significantly larger than specified on retina displays.
-    if (height == 0 ||
-        width == 0)  // prevent errors from minimizing and moving windows
+    if (height == 0 || width == 0)  // prevent errors from minimizing and moving windows
         return;
     glViewport(0, 0, width, height);
     // std::cout << width << " " << height << "\n";
@@ -757,8 +758,7 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
     }
 
     float xoffset = xpos - lastX;
-    float yoffset =
-            lastY - ypos;  // reversed since y-coordinates go from bottom to top
+    float yoffset = lastY - ypos;  // reversed since y-coordinates go from bottom to top
 
     lastX = xpos;
     lastY = ypos;
@@ -804,13 +804,13 @@ glm::mat4 RenderDepth() {
 //when we want to cover bigger area we need to either move the light projection based on cam pos,
 // increase ortho size to cover bigger area(but dont make it too big otherwise we need bigger shadowmap resolution to compensate for smaller texel)
 // i.e bigger ortho means more screen pixels draw from one pixel of depthmap creating aliasing issues
-    float res=lightOrthoSize;
+    float res = lightOrthoSize;
     glm::mat4 lightProjection = glm::ortho(-res, res, -res, res, near_plane, zFar);
 
     //spravme to jednoducho lightprojection bude 1-200
     //lightProjection
     //lightView bude len na kameru a lightPos je niekde za chrbtom, farplane*direction
-    lightPos = camera->Position+ glm::normalize(sunDir) * sunOffsetPos;
+    lightPos = camera->Position + glm::normalize(sunDir) * sunOffsetPos;
     glm::mat4 lightView = glm::lookAt(lightPos, camera->Position, glm::vec3(0.0, 1.0, 0.0));
     glm::mat4 lightSpaceMatrix = lightProjection * lightView;
     sceneInstance->dirLight_ObjInstance->SetPos(lightPos);
@@ -970,9 +970,8 @@ int main() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     // Setup Platform/Renderer bindings
-    ImGui_ImplGlfw_InitForOpenGL(
-            windowSettings.window,
-            true);  // remove callbacks with false, to manually control them, but let it be true to allow for input (of chars prolly)
+    ImGui_ImplGlfw_InitForOpenGL(windowSettings.window,
+                                 true);  // remove callbacks with false, to manually control them, but let it be true to allow for input (of chars prolly)
     ImGui_ImplOpenGL3_Init(NULL);
     ImGuiIO &io = ImGui::GetIO();
 
@@ -983,8 +982,7 @@ int main() {
     // build and compile shaders
     // -------------------------
     int enableSpotlight = 1;
-    colShader = Shader("..\\Assets\\Shaders\\Forward\\basic.vert",
-                       "..\\Assets\\Shaders\\Forward\\basic.frag");
+    colShader = Shader("..\\Assets\\Shaders\\Forward\\basic.vert", "..\\Assets\\Shaders\\Forward\\basic.frag");
     //TODO raycasting z misi nejde, ked zapnem lights tak je stale z obrazovky
     //TODO depth map FBO shaders are wrong
     // configure depth map FBO
@@ -1029,8 +1027,6 @@ int main() {
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 
-
-
     ReloadScene(3);
     camera->toggleCursor(); //set to hidden by default
 
@@ -1055,8 +1051,7 @@ int main() {
         //std::cout<< "uniV main\n" << glm::to_string(uniforms.view);
         glm::mat4 modelMat = glm::mat4(1.0f);
 
-        glClearColor(backgroundClearCol[0], backgroundClearCol[1],
-                     backgroundClearCol[2], backgroundClearCol[3]);
+        glClearColor(backgroundClearCol[0], backgroundClearCol[1], backgroundClearCol[2], backgroundClearCol[3]);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         if (enableCulling)
@@ -1065,15 +1060,14 @@ int main() {
             glDisable(GL_CULL_FACE);
 
         if (!camera->showCursor) {
-            glfwSetInputMode(windowSettings.window, GLFW_CURSOR,
-                             GLFW_CURSOR_DISABLED);
+            glfwSetInputMode(windowSettings.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             ImGui::SetWindowFocus(nullptr);
         } else {
-            glfwSetInputMode(windowSettings.window, GLFW_CURSOR,
-                             GLFW_CURSOR_NORMAL);
+            glfwSetInputMode(windowSettings.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         }
 
-
+        simpleShadowShader.use();
+        simpleShadowShader.setVec4("plane", glm::vec4(0, 1, 0, 0));
 
         //yeah testscene is special case
         if (forwardScene1 == nullptr)
@@ -1081,7 +1075,8 @@ int main() {
 
 
         if (sceneInstance != nullptr && sceneInstance->dirLight_ObjInstance != nullptr) {
-            if (graphicsOptions->enableShadows) {
+            if (graphicsOptions->enableShadows && !graphicsOptions->enableWater) {
+                //TODO make this code better...
                 //std::cout << "test\n";
                 //renderbackfaces to fix peter panning for opaque objects, page 294
                 glCullFace(GL_FRONT);
@@ -1090,18 +1085,110 @@ int main() {
 
                 RenderTest(LSM);
 
+            }
+                //TODO make this better / not in main...
+            else if (graphicsOptions->enableWater) {
+                //TODO this is baaad code...
+
+                //check if we are in correct scene
+
+                deferredScene2 = dynamic_pointer_cast<DeferredScene2>(
+                        sceneInstance);// if we want to chache the result, we need to clear this
+                //bool same = dynamic_cast<DeferredScene2*>(sceneInstance.get()) != nullptr;
+
+                //if(deferredScene2 || same)
+                //if(same) {
+                if (deferredScene2) {
+
+
+                    deferredScene2->waterObjInstance->disableRender = true;
+                    deferredScene2->waterObjInstance->forceRenderOwnShader = false;
+                    glCullFace(GL_FRONT);
+                    glm::mat4 LSM = RenderDepth();
+                    glCullFace(GL_BACK);
+
+                    //create plane, and clipping distance - modify meshShadow.vert
+                    glEnable(GL_CLIP_DISTANCE0);
+                    simpleShadowShader.use();
+                    //set the height
+                    float height = deferredScene2->waterObjInstance->GetPos().y;
+                    simpleShadowShader.setVec4("plane", glm::vec4(0, 1, 0, -height));
+
+                    //also position the camera for the reflection
+                    float camHeight = 2 * (camera->Position.y - height);
+                    //glm::vec3 origCamPos = camera->Position;
+                    camera->Position.y -= camHeight;
+                    camera->Pitch = -camera->Pitch;
+                    //dont forget to update the view matrix
+                    camera->updateCameraVectors();
+                    uniforms.view = camera->GetViewMatrix();
+                    //reflection
+
+                    glBindFramebuffer(GL_FRAMEBUFFER,
+                                      deferredScene2->reflectionFrameBuffer);// or deferredScene2->bindReflectionFrameBuffer();
+                    RenderTest(LSM);
+                    //return the cam
+                    camera->Position.y += camHeight;
+                    camera->Pitch = -camera->Pitch;
+                    //dont forget to update the view matrix
+                    camera->updateCameraVectors();
+                    uniforms.view = camera->GetViewMatrix();
+                    //unbind();
+                    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+                    //refraction
+                    simpleShadowShader.use();
+                    simpleShadowShader.setVec4("plane", glm::vec4(0, -1, 0, height));
+                    glBindFramebuffer(GL_FRAMEBUFFER,
+                                      deferredScene2->refractionFrameBuffer);// or deferredScene2->bindReflectionFrameBuffer();
+
+                    //also position the camera for the refraction
+
+                    RenderTest(LSM);
+                    //unbind();
+                    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+                    //render normally
+                    //disable clipping
+                    glDisable(GL_CLIP_DISTANCE0); //might not work?
+                    //enable water rendering + to draw with its own shader
+                    deferredScene2->waterObjInstance->disableRender = false;
+                    deferredScene2->waterObjInstance->forceRenderOwnShader = true;
+                    //set the shader vals
+                    deferredScene2->waterShader.use();
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, deferredScene2->reflectionTexture); //do i need this line?
+                    deferredScene2->waterShader.setInt("reflectionTexture", 0);
+                    glActiveTexture(GL_TEXTURE1);
+                    glBindTexture(GL_TEXTURE_2D, deferredScene2->refractionTexture); //do i need this line?
+                    deferredScene2->waterShader.setInt("refractionTexture", 1);
+
+                    RenderTest(LSM);
+                    //render water quad
+                    //deferredScene2->RenderWater();
+
+                    //sceneInstance->RenderSceneInstance(nullptr);
+                } else {
+                    if (forwardScene1 != nullptr)
+                        forwardScene1->SetupShaderMaterial();
+                    sceneInstance->RenderSceneInstance(nullptr);
+                }
             } else {
                 if (forwardScene1 != nullptr)
                     forwardScene1->SetupShaderMaterial();
                 sceneInstance->RenderSceneInstance(nullptr);
 
             }
+
+
+
             //also
             sceneInstance->RenderLights();
             // draw debug line pointing from light pos to dir
 
-             //TODO memory leak...
-            if(enableDebugLightRay) {
+            //TODO memory leak...
+            if (enableDebugLightRay) {
                 colShader.use();
                 modelMat = glm::mat4(1.0f);
                 modelMat = glm::translate(modelMat, centroidPos);
@@ -1114,7 +1201,7 @@ int main() {
                 glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
                 glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6, &centroidLineSeg, GL_STATIC_DRAW);
                 glEnableVertexAttribArray(0);
-                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
+                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *) 0);
                 glLineWidth(6.3f);
                 glDrawArrays(GL_LINE_STRIP, 0, 3);
                 PerfAnalyzer::drawcallCount++;
@@ -1123,7 +1210,7 @@ int main() {
 
             glm::mat4 model = glm::mat4(1.0f);
             stencilShader.use();
-            model= glm::translate(model,centroidPos);
+            model = glm::translate(model, centroidPos);
             stencilShader.setMat4("model", model);
             stencilShader.setMat4("view", uniforms.view);
             stencilShader.setMat4("projection", uniforms.projection);

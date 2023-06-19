@@ -14,6 +14,7 @@ class GraphicsOptions {
     enum RendererType {forward,deferred};
     RendererType rendererType = forward;
     bool enableShadows = false;
+    bool enableWater = false;
 };
 
 

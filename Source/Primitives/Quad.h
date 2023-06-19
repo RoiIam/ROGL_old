@@ -12,15 +12,16 @@
 #include "model.h"
 
 class Quad : public Model {
-private:
+protected:
     //Declaring buffer parameters
     GLuint vao, vbo;
 
     unsigned int texture;
 
 public:
+    Quad();
 
-    explicit Quad(Shader *shader);
+    Quad(Shader *shader);
 
     ~Quad() override;
 
@@ -31,13 +32,9 @@ public:
     // Declares the Vertex Array, where the coordinates of all the 8 cube vertices are stored
     inline static float vertices[] = {
             // positions        // texture Coords
-            0.0f, 0.5f, 0.0f, 0.0f, 1.0f,
-            0.0f, -0.5f, 0.0f, 0.0f, 0.0f,
-            1.0f, -0.5f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, -0.5f, 0.0f, 1.0f, 0.0f,
 
-            0.0f, 0.5f, 0.0f, 0.0f, 1.0f,
-            1.0f, -0.5f, 0.0f, 1.0f, 0.0f,
-            1.0f, 0.5f, 0.0f, 1.0f, 1.0f};
+            0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 1.0f};
 
 
     //void render(glm::mat4 *projection, glm::mat4 *view);
