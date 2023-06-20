@@ -2,12 +2,14 @@
 out vec4 FragColor;
 
 uniform vec4 col = vec4(1, 0.0, 0, 1.0);
-uniform float mixVal = 0.5;
+uniform float fresnelStrength = 0.5;
 uniform float distortionStrength = 0.02;
 uniform vec2 moveFactor = vec2(0,0);
 
 in vec2 TexCoords;
 in vec4 clipSpace;
+in vec3 toCamVector;
+
 
 uniform sampler2D reflectionTexture;
 uniform sampler2D refractionTexture;
@@ -43,7 +45,16 @@ void main()
 
     vec4 reflectionColor = texture(reflectionTexture, reflectionTexCoords);
     vec4 refractionColor = texture(refractionTexture, refractionTexCoords);//vec4 reflectionColor = texture(reflectionTexture,TexCoords);//vec4 refractionColor = texture(refractionTexture,TexCoords);//FragColor = col;// mix(reflectionColor,refractionColor,0.5);
-    vec4 finalColor = mix(reflectionColor, refractionColor, mixVal);///FragColor = reflectionColor,refractionColor;
+
+ vec3 viewVector = normalize(toCamVector);
+    vec3 waterNormal = vec3(0,1,0);
+float fresnelFactor = dot(viewVector, waterNormal);
+    fresnelFactor=pow(fresnelFactor, fresnelStrength);
+
+
+    //vec4 finalColor = mix(reflectionColor, refractionColor, fresnelStrength);
+    vec4 finalColor = mix(reflectionColor, refractionColor, fresnelFactor);
+
     FragColor= mix(finalColor, vec4(0,0.3,0.5,1.0),0.2);
 
 }

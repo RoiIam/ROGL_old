@@ -103,7 +103,7 @@ public:
 
 
     //ui
-    float mixValUI = 0.5;
+    float fresnelStrengthUI = 0.5;
 
     bool renderRefraction = false;
     bool renderReflection = false;

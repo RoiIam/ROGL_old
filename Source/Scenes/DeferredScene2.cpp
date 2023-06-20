@@ -56,7 +56,7 @@ void DeferredScene2::SetupForwardLights() {
 
 void DeferredScene2::SetupWater() {
 
-    Water *a = new Water(&waterShader);
+    Water *a = new Water(&waterShader,camera);
 
     waterObjInstance = new ObjectInstance(*(a), waterShader, "waterQuad", nullptr);
 
@@ -489,9 +489,9 @@ void DeferredScene2::ImGuiHierarchy() {
 
 #pragma region water
 
-    ImGui::SliderFloat("Background Color", &mixValUI, 0, 1, "%.3f");
+    ImGui::SliderFloat("water fresnelStrength", &fresnelStrengthUI, 0.1, 10, "%.3f");
     waterShader.use();
-    waterShader.setFloat("mixVal", mixValUI);
+    waterShader.setFloat("fresnelStrength", fresnelStrengthUI);
     ImGui::Checkbox("renderQuad debug water, renderReflection", &renderReflection);
     ImGui::Checkbox("renderQuad debug water, renderRefraction", &renderRefraction);
 

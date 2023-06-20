@@ -22,6 +22,9 @@ void Water::Draw(Shader &shader, bool simple) {
     moveFactor.y = std::fmod(moveFactor.y, 1.0f);
     shader.setVec2("moveFactor", moveFactor);
 
+
+    shader.setVec3("cameraPos", cam->Position);
+
     glDrawArrays(GL_TRIANGLES, 0, 6);
     PerfAnalyzer::drawcallCount++;
     glBindVertexArray(0);
@@ -31,8 +34,10 @@ void Water::Draw(Shader &shader, bool simple) {
 }
 
 
-Water::Water(Shader *shader) {
+Water::Water(Shader *shader, Camera * cam) {
 
+
+    this->cam = cam;
     if (shader != nullptr)
         ourShader = *shader;
     else

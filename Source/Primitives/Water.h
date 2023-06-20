@@ -2,14 +2,14 @@
 #define ROGL_WATER_H
 
 #include "Quad.h"
-
+#include "Camera/Camera.h"
 class Water : public Quad {
 
 
 
 public:
 
-    Water(Shader *shader);
+    Water(Shader *shader, Camera * cam);
 
     unsigned int reflectionTexture;
     unsigned int refractionTexture;
@@ -17,6 +17,9 @@ public:
 
     glm::vec2 moveFactor = glm::vec2(0);
     glm::vec2 waveSpeed = glm::vec2(0.003f,0);
+
+    Camera * cam;
+
     void Draw(Shader &shader, bool simple) override;
     //void SetTextures();
 };
