@@ -5,15 +5,23 @@ uniform vec4 col = vec4(1, 0.0, 0, 1.0);
 uniform float fresnelStrength = 0.5;
 uniform float distortionStrength = 0.02;
 uniform vec2 moveFactor = vec2(0,0);
+uniform vec3 lightColor;
+
+
 
 in vec2 TexCoords;
 in vec4 clipSpace;
 in vec3 toCamVector;
-
+in vec3 fromLightVector;
 
 uniform sampler2D reflectionTexture;
 uniform sampler2D refractionTexture;
 uniform sampler2D dudvTexture;
+uniform sampler2D normalMapTexture;
+
+
+float shineDamper = 20;
+float reflectivity = 0.5;
 
 void main()
 {
@@ -22,7 +30,7 @@ void main()
     vec2 reflectionTexCoords = vec2(ndc.x, 1.0-ndc.y);
     vec2 refractionTexCoords = vec2(ndc.x, ndc.y);
 
-    vec2 distortion1 = texture(dudvTexture, vec2 (TexCoords.x+moveFactor.x,TexCoords.y+moveFactor.y)).rg * 2.0 - 1.0;
+    //vec2 distortion1 = texture(dudvTexture, vec2 (TexCoords.x+moveFactor.x,TexCoords.y+moveFactor.y)).rg * 2.0 - 1.0;
 
     //or use
     //vec2 distortion1 = texture(dudvTexture, vec2 (TexCoords.x+moveFactor.x,TexCoords.y)).rg * 2.0 - 1.0;
@@ -32,13 +40,21 @@ void main()
     //refractionTexCoords +=finalDistortion;
 
 
-    distortion1 *=distortionStrength;
-    reflectionTexCoords +=distortion1;
+    //new distortion calc
+    vec2 distortedTexCoords = texture(dudvTexture, vec2(TexCoords.x + moveFactor.x, TexCoords.y)).rg*0.1;
+    distortedTexCoords = TexCoords + vec2(distortedTexCoords.x, distortedTexCoords.y+moveFactor.y);
+    vec2 totalDistortion = (texture(dudvTexture, distortedTexCoords).rg * 2.0 - 1.0) * distortionStrength;
+
+    //distortion1 *=distortionStrength;
+
+    //reflectionTexCoords +=distortion1;
+    reflectionTexCoords +=totalDistortion;
     reflectionTexCoords.x = clamp(reflectionTexCoords.x, 0.001, 0.999);
     reflectionTexCoords.y = clamp(reflectionTexCoords.y, 0.001, 0.999);
 
 
-    refractionTexCoords +=distortion1;
+    //reflectionTexCoords +=distortion1;
+    refractionTexCoords +=totalDistortion;
     refractionTexCoords = clamp(refractionTexCoords,0.001,0.999);
 
 
@@ -46,15 +62,26 @@ void main()
     vec4 reflectionColor = texture(reflectionTexture, reflectionTexCoords);
     vec4 refractionColor = texture(refractionTexture, refractionTexCoords);//vec4 reflectionColor = texture(reflectionTexture,TexCoords);//vec4 refractionColor = texture(refractionTexture,TexCoords);//FragColor = col;// mix(reflectionColor,refractionColor,0.5);
 
- vec3 viewVector = normalize(toCamVector);
+    vec3 viewVector = normalize(toCamVector);
     vec3 waterNormal = vec3(0,1,0);
-float fresnelFactor = dot(viewVector, waterNormal);
+    float fresnelFactor = dot(viewVector, waterNormal);
     fresnelFactor=pow(fresnelFactor, fresnelStrength);
+
+    //get normal
+    vec4 normalMapColor = texture(normalMapTexture, distortedTexCoords);
+    vec3 normal =vec3(normalMapColor.r*2.0-1.0,normalMapColor.b,normalMapColor.g*2.0-1.0);
+    normal = normalize(normal);
+
+    //calc spec lightning
+    vec3 reflectedLight = reflect(normalize(fromLightVector), normal);
+    float specular = max(dot(reflectedLight, viewVector), 0.0);
+    specular = pow(specular, shineDamper);
+    vec3 specularHighlights = lightColor * specular * reflectivity;
 
 
     //vec4 finalColor = mix(reflectionColor, refractionColor, fresnelStrength);
     vec4 finalColor = mix(reflectionColor, refractionColor, fresnelFactor);
-
+    finalColor += vec4(specularHighlights,0.0);
     FragColor= mix(finalColor, vec4(0,0.3,0.5,1.0),0.2);
 
 }

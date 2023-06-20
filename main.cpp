@@ -1164,6 +1164,15 @@ int main() {
                     glBindTexture(GL_TEXTURE_2D, deferredScene2->refractionTexture); //do i need this line?
                     deferredScene2->waterShader.setInt("refractionTexture", 1);
 
+
+                    auto sun = deferredScene2->dirLight_ObjInstance;
+                    deferredScene2->waterShader.setVec3("lightPos", sun->GetPos());
+                    deferredScene2->waterShader.setVec3("lightColor", dynamic_cast<Light *>(sun->light)->color);
+
+
+
+
+
                     RenderTest(LSM);
                     //render water quad
                     //deferredScene2->RenderWater();

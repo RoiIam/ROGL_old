@@ -104,6 +104,7 @@ public:
 
     //ui
     float fresnelStrengthUI = 0.5;
+    float waveSpeedUI[2];
 
     bool renderRefraction = false;
     bool renderReflection = false;

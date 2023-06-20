@@ -15,6 +15,11 @@ void Water::Draw(Shader &shader, bool simple) {
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, dudvTexture);
     shader.setInt("dudvTexture", 2);
+    //normal
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, normalMapTexture);
+    shader.setInt("normalMapTexture", 3);
+
 
     moveFactor.x += waveSpeed.x; //not frame independent for now...
     moveFactor.x = std::fmod(moveFactor.x, 1.0f);
@@ -46,6 +51,7 @@ Water::Water(Shader *shader, Camera * cam) {
 
 
     dudvTexture= Model::TextureFromFile("waterDUDV.png", "..\\Assets\\Textures\\", false);
+    normalMapTexture= Model::TextureFromFile("matchingNormalMap.png", "..\\Assets\\Textures\\", false);
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);

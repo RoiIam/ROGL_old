@@ -489,6 +489,12 @@ void DeferredScene2::ImGuiHierarchy() {
 
 #pragma region water
 
+    waveSpeedUI[0] = ((Water*)waterObjInstance->GetModel())->waveSpeed.x;
+    waveSpeedUI[1] = ((Water*)waterObjInstance->GetModel())->waveSpeed.y;
+    ImGui::SliderFloat2("water speed, direction", waveSpeedUI, -0.0025, 0.0025 ,"%.04f");
+    ((Water*)waterObjInstance->GetModel())->waveSpeed = glm::make_vec2(waveSpeedUI);
+
+
     ImGui::SliderFloat("water fresnelStrength", &fresnelStrengthUI, 0.1, 10, "%.3f");
     waterShader.use();
     waterShader.setFloat("fresnelStrength", fresnelStrengthUI);

@@ -7,6 +7,8 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 uniform vec3 cameraPos;
+uniform vec3 lightPos;
+
 
 uniform float tiling = 1;
 
@@ -14,6 +16,7 @@ uniform float tiling = 1;
 out vec2 TexCoords;
 out vec4 clipSpace;
 out vec3 toCamVector;
+out vec3 fromLightVector;
 
 
 void main()
@@ -25,4 +28,6 @@ void main()
     TexCoords = aTexCoords * tiling;
     gl_Position = clipSpace;
     toCamVector =  cameraPos - worldPos.xyz;
+    fromLightVector =  worldPos.xyz -lightPos;
+
 }

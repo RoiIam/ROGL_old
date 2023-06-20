@@ -14,9 +14,14 @@ public:
     unsigned int reflectionTexture;
     unsigned int refractionTexture;
     unsigned int dudvTexture;
+    unsigned int normalMapTexture;
+
+
+
+
 
     glm::vec2 moveFactor = glm::vec2(0);
-    glm::vec2 waveSpeed = glm::vec2(0.003f,0);
+    glm::vec2 waveSpeed = glm::vec2(0.0016f,0.0009f);
 
     Camera * cam;
 
