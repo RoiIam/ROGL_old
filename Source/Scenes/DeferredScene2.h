@@ -100,6 +100,7 @@ public:
     unsigned int refractionFrameBuffer;
     unsigned int refractionTexture;
     unsigned int refractionDepthBuffer;
+    unsigned int refractionDepthTexture;
 
 
     //ui

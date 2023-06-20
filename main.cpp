@@ -1169,6 +1169,9 @@ int main() {
                     deferredScene2->waterShader.setVec3("lightPos", sun->GetPos());
                     deferredScene2->waterShader.setVec3("lightColor", dynamic_cast<Light *>(sun->light)->color);
 
+                    deferredScene2->waterShader.setFloat("zNear", zNear);
+                    deferredScene2->waterShader.setFloat("zFar", zFar);
+
 
 
 

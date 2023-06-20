@@ -13,8 +13,10 @@ public:
 
     unsigned int reflectionTexture;
     unsigned int refractionTexture;
+    unsigned int refractionDepthTexture;
     unsigned int dudvTexture;
     unsigned int normalMapTexture;
+    unsigned int depthMap;
 
 
 

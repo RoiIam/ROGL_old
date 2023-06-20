@@ -20,6 +20,12 @@ void Water::Draw(Shader &shader, bool simple) {
     glBindTexture(GL_TEXTURE_2D, normalMapTexture);
     shader.setInt("normalMapTexture", 3);
 
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, refractionDepthTexture);
+    shader.setInt("depthMap", 4);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     moveFactor.x += waveSpeed.x; //not frame independent for now...
     moveFactor.x = std::fmod(moveFactor.x, 1.0f);

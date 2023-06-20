@@ -60,11 +60,11 @@ void DeferredScene2::SetupWater() {
 
     waterObjInstance = new ObjectInstance(*(a), waterShader, "waterQuad", nullptr);
 
-    waterObjInstance->SetScale(glm::vec3(5));
+    waterObjInstance->SetPos(glm::vec3(0,3.35,-7.5));
+
+    waterObjInstance->SetScale(glm::vec3(45));
     waterObjInstance->SetDeg(-90.0f, "X");//make sure its correctly rotated-facing up along X
     waterObjInstance->SetDeg(-90.0f, "Z");//make sure its correctly rotated-facing up along Z
-
-    //waterObjInstance->SetRot(glm::vec3(0, 1, 0));//rotates based on prev set Degrees
 
     selectableObjInstances.push_back(waterObjInstance);
     waterObjInstance->disableRender = true;
@@ -119,10 +119,17 @@ void DeferredScene2::SetupWater() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, refractionTexture, 0);
     //init depth buffer attachment
-    glGenRenderbuffers(1, &refractionDepthBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, refractionDepthBuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, refractionDepthBuffer);
+    glGenTextures(1, &refractionDepthTexture);
+    glBindTexture(GL_TEXTURE_2D, refractionDepthTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0,
+                 GL_DEPTH_COMPONENT,
+                 GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, refractionDepthTexture, 0);
+    
     // finally check if framebuffer is complete
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cout << "Framebuffer refractionDepthBuffer not complete!" << std::endl;
@@ -132,6 +139,7 @@ void DeferredScene2::SetupWater() {
     //TODO this is bad code... assign after binding...
     a->reflectionTexture = reflectionTexture;
     a->refractionTexture = refractionTexture;
+    a->refractionDepthTexture = refractionDepthTexture;
 }
 
 

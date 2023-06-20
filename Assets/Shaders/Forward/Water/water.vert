@@ -10,7 +10,7 @@ uniform vec3 cameraPos;
 uniform vec3 lightPos;
 
 
-uniform float tiling = 1;
+uniform float tiling = 10; //should be scaled according to the water tile size, this imapcts size of ripples
 
 
 out vec2 TexCoords;
