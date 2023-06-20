@@ -12,7 +12,15 @@ void Water::Draw(Shader &shader, bool simple) {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, refractionTexture);
     shader.setInt("refractionTexture", 1);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, dudvTexture);
+    shader.setInt("dudvTexture", 2);
 
+    moveFactor.x += waveSpeed.x; //not frame independent for now...
+    moveFactor.x = std::fmod(moveFactor.x, 1.0f);
+    moveFactor.y += waveSpeed.y; //not frame independent for now...
+    moveFactor.y = std::fmod(moveFactor.y, 1.0f);
+    shader.setVec2("moveFactor", moveFactor);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
     PerfAnalyzer::drawcallCount++;
@@ -31,6 +39,8 @@ Water::Water(Shader *shader) {
         ourShader = Shader("..\\Assets\\Shaders\\Forward\\Water\\water.vert",
                            "..\\Assets\\Shaders\\Forward\\Water\\water.frag");
 
+
+    dudvTexture= Model::TextureFromFile("waterDUDV.png", "..\\Assets\\Textures\\", false);
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);

@@ -6,12 +6,14 @@ layout (location = 1) in vec2 aTexCoords;
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
+uniform float tiling = 1;
 
-//out vec2 TexCoords;
+
+out vec2 TexCoords;
 out vec4 clipSpace;
 void main()
 {
     clipSpace = projection * view * model * vec4(aPos, 1.0f);
-    //TexCoords = aTexCoords;
+    TexCoords = aTexCoords * tiling;
     gl_Position = clipSpace;
 }
