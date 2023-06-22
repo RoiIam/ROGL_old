@@ -29,29 +29,7 @@ void DeferredScene2::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
 }
 
 void DeferredScene2::SetupForwardLights() {
-    simpleLights->use();
-    model = glm::mat4(1.0f);  // same , below
-    // m += 0.008f; dont move
-    //model = glm::translate(model, glm::vec3(-5.0f, 0.0f, 0.5f));
-    //model = glm::scale(
-    //    model, glm::vec3(1.0f, 1.0f, 1.0f));  // lets try setting it here
-    //unsigned int transformLoc = glGetUniformLocation(mesh_shader->ID, "model");
-    // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model));
-    //simpleLights->setMat4("model", model);
-    //simpleLights->setVec3("light.position", lightPos);
-    simpleLights->setVec3("viewPos", camera->Position);
-    // light properties
-    simpleLights->setVec3("dirLight.ambient", 0.05f, 0.05f, 0.1f);
-    simpleLights->setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.7f);
-    simpleLights->setVec3("dirLight.specular", 0.7f, 0.7f, 0.7f);
-    simpleLights->setVec3("dirLight.direction", 0.7f, 0.7f, -0.7f);
-    // material properties
-    //simpleLights->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-    simpleLights->setFloat("material.shininess", 32.0f);
-    // directional light
-    //mesh_shader->setVec3("dirLight.direction",glm::make_vec3(dirLightDirImGui));
-    //simpleLights->setVec3("dirLight.direction",static_cast<DirectionalLight>(dirLight_ObjInstance->light).direction);  //uhh static casts
-    /*glm::vec3 a =static_cast<DirectionalLight>(dirLight_ObjInstance->light).direction;*/
+
 }
 
 void DeferredScene2::SetupWater() {
@@ -129,7 +107,7 @@ void DeferredScene2::SetupWater() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, refractionDepthTexture, 0);
-    
+
     // finally check if framebuffer is complete
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cout << "Framebuffer refractionDepthBuffer not complete!" << std::endl;
@@ -420,7 +398,7 @@ void DeferredScene2::LoadModel(std::string path) {
     Shader *s;
     switch (graphicsOptions->rendererType) {
         case GraphicsOptions::RendererType::forward: //0
-            s = simpleLights;
+            s = NULL;
             break;
         case GraphicsOptions::RendererType::deferred: //1
             s = shaderLightingPass;
@@ -475,7 +453,6 @@ void DeferredScene2::ImGuiHierarchy() {
     switch (graphicsOptions->rendererType) {
 
         case GraphicsOptions::RendererType::forward://dir light with shadows //0
-//simpleLights->setVec3("dirLight.diffuse", dirlightCol);
             break;
         case GraphicsOptions::RendererType::deferred://deferred pipeline //1
 

@@ -1069,9 +1069,6 @@ int main() {
         simpleShadowShader.use();
         simpleShadowShader.setVec4("plane", glm::vec4(0, 1, 0, 0));
 
-        //yeah testscene is special case
-        if (forwardScene1 == nullptr)
-            sceneInstance->RenderSceneInstance(nullptr);
 
 
         if (sceneInstance != nullptr && sceneInstance->dirLight_ObjInstance != nullptr) {
@@ -1172,28 +1169,25 @@ int main() {
                     deferredScene2->waterShader.setFloat("zNear", zNear);
                     deferredScene2->waterShader.setFloat("zFar", zFar);
 
-
-
-
-
                     RenderTest(LSM);
                     //render water quad
                     //deferredScene2->RenderWater();
 
                     //sceneInstance->RenderSceneInstance(nullptr);
-                } else {
+                }
+
+                else {
                     if (forwardScene1 != nullptr)
                         forwardScene1->SetupShaderMaterial();
                     sceneInstance->RenderSceneInstance(nullptr);
                 }
-            } else {
+            }
+
+            else {
                 if (forwardScene1 != nullptr)
                     forwardScene1->SetupShaderMaterial();
                 sceneInstance->RenderSceneInstance(nullptr);
-
             }
-
-
 
             //also
             sceneInstance->RenderLights();

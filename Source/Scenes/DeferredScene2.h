@@ -36,8 +36,7 @@ public:
 
     //stuff for simple lights stage 1
 #pragma region stage_1 //TODO move this to .cpp?
-    Shader *simpleLights = new Shader("..\\Assets\\Shaders\\Forward\\MultipleLights\\forwardMultiple.vert",
-                                      "..\\Assets\\Shaders\\Forward\\MultipleLights\\forwardMultiple.frag");
+
     //glm::vec3 dirLightDirImGui = dirLight_ObjInstance->GetPos();
     float dirLightDirImGui[3] = {-0.222f, -0.666f, -0.444f};
     glm::vec3 dirlightCol = glm::vec3(0.945f, 0.894f, 0.753f);

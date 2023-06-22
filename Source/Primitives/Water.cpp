@@ -40,7 +40,7 @@ void Water::Draw(Shader &shader, bool simple) {
     PerfAnalyzer::drawcallCount++;
     glBindVertexArray(0);
     glActiveTexture(GL_TEXTURE0);
-
+    glDisable(GL_BLEND);
 
 }
 
