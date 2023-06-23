@@ -35,6 +35,7 @@
 #include "Scenes/ForwardScene1.h"
 #include "Scenes/DeferredScene1.h"
 #include "Scenes/DeferredScene2.h"
+#include "Primitives/Path.h"
 
 //for glints_ch
 #define TINYEXR_USE_MINIZ 0
@@ -83,6 +84,12 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+float cameraSpeed = 250.0f;
+glm::vec3 freeCamLookDir = glm::vec3(0);
+unsigned int nextCamPosIndex = 0;
+float freeCamT = 0;
+
+Path freeCamPath = Path();
 
 glm::vec3 centroidPos;
 
@@ -119,7 +126,6 @@ Model *centroidModel;
 
 bool show_demo_window = false;  // use F9
 
-static char *path;
 
 glm::vec3 dirlightCol = {0.6f, 0.2f, 0.3f};  // glm::vec3(1.0f);
 float dirlightColChange[3];
@@ -291,12 +297,33 @@ void DrawImGui() {
         float eulerRot[3] = {yaw, pitch, 0};
 
         ImGui::InputFloat2("Cam Rotation", eulerRot, "%.3f");
+        ImGui::Value("timed value freeCamT ", freeCamT);
+
     }
 
     ImGui::Checkbox("Enable face culling", &enable_culling);
 
-    ImGui::Checkbox("Switch shadows on (default off)", &graphicsOptions->enableShadows);
-    ImGui::Checkbox("Switch water on (default off)", &graphicsOptions->enableWater);
+
+    if (ImGui::Checkbox("Switch shadows on (default off)", &graphicsOptions->enableShadows)) {
+        if (!(deferredScene2 = dynamic_pointer_cast<DeferredScene2>(sceneInstance)) && graphicsOptions->enableShadows)
+            return;
+        deferredScene2->enableSSAO = false;
+        deferredScene2->graphicsOptions->rendererType = GraphicsOptions::RendererType::forward;
+
+    }
+
+    if (ImGui::Checkbox("Switch shadows and water on (default off)", &graphicsOptions->enableWater)) {
+        if (!(deferredScene2 = dynamic_pointer_cast<DeferredScene2>(sceneInstance)))
+            return;
+        if (!graphicsOptions->enableWater) {
+            deferredScene2->waterObjInstance->disableRender = true;
+            deferredScene2->waterObjInstance->forceRenderOwnShader = false;
+        } else if (graphicsOptions->enableWater) {
+            deferredScene2->enableSSAO = false;
+            deferredScene2->graphicsOptions->rendererType = GraphicsOptions::RendererType::forward;
+
+        }
+    }
 
 
     if (graphicsOptions->enableShadows)
@@ -353,11 +380,27 @@ void DrawImGui() {
             ImGuiObjProperties(sceneInstance->selectedInstance);
     }
 
+    if (ImGui::Checkbox("Set cinematic camera", &camera->blockControls)) {
+        //std::cout << "item cinamtic cam changed..."<<std::endl;
+        if (camera->blockControls) {
+            nextCamPosIndex = 0;
+
+        } else {
+
+        }
+    }
+
+    if (camera->blockControls) {
+        float freeCamLookDirUI[] = {freeCamLookDir.x, freeCamLookDir.y, freeCamLookDir.z};
+        ImGui::InputFloat("free cam speed", &cameraSpeed, 0.1f, 0.5f, "%.2f");
+        ImGui::DragFloat3("Free cam look At", freeCamLookDirUI, 0.1f, -100, 100, "%.3f");
+        freeCamLookDir = glm::make_vec3(freeCamLookDirUI);
+    }
+
     ImGui::Value("CUR_WIDTH", windowSettings.CUR_WIDTH);
     ImGui::Value("CUR_HEIGHT", windowSettings.CUR_HEIGHT);
     ImGui::Value("width mon", glfwGetVideoMode(windowSettings.monitor)->width);
     ImGui::Value("height mon", glfwGetVideoMode(windowSettings.monitor)->height);
-
 
     ImGui::End();
 }
@@ -832,7 +875,7 @@ glm::mat4 RenderDepth() {
 }
 
 
-void RenderTest(glm::mat4 lightSpaceMatrix) {
+void RenderTest(glm::mat4 lightSpaceMatrix, bool renderSelected = false) {
 //if(scene->disableShadows)
     //return;
     //second pass, render scene as normal with shadow mapping (using depth map)
@@ -857,7 +900,7 @@ void RenderTest(glm::mat4 lightSpaceMatrix) {
         forwardScene1->SetupShaderMaterial();
 
 
-    sceneInstance->RenderSceneInstance(&simpleShadowShader);
+    sceneInstance->RenderSceneInstance(&simpleShadowShader, renderSelected);
     glActiveTexture(GL_TEXTURE0);
 
 }
@@ -897,6 +940,33 @@ void PrintShader() {
 
 
 #pragma endregion
+
+void MoveCamera() {
+    //get camera pos, calculate new destination
+    glm::vec3 curCamPos = camera->Position;
+    glm::vec3 destination = freeCamPath.finalPoints[nextCamPosIndex];
+    glm::vec3 destinationDir = destination - curCamPos;
+
+    //might cause issues if it goes too fast and overshoots
+    //if destination is close enough, pick next point
+    if (glm::length(destinationDir) <= 0.1f)//.length() is wrong
+    {
+        nextCamPosIndex += 1;
+        //loop the next point if out of range
+        nextCamPosIndex = nextCamPosIndex % (freeCamPath.finalPoints.size() - 1);
+        std::cout << "reset Cam, new index is " << nextCamPosIndex << "\n";
+    }
+    freeCamT = cameraSpeed * deltaTime;
+    glm::vec3 nexCamPos =
+            curCamPos + glm::normalize(freeCamPath.finalPoints[nextCamPosIndex] - curCamPos) * 0.01 * freeCamT;
+
+
+    camera->Position = nexCamPos;
+    glm::vec3 target = freeCamLookDir - curCamPos;
+    if (sceneInstance->selectedInstance)
+        target = sceneInstance->selectedInstance->GetPos() - curCamPos;
+    camera->updateCameraVectors(target);
+}
 
 int main() {
 
@@ -1030,6 +1100,9 @@ int main() {
     ReloadScene(3);
     camera->toggleCursor(); //set to hidden by default
 
+    //create free camera path
+    freeCamPath.bezierShape(1);
+
     //*************------------***************
     // ----------- render loop ---------------
     // ------------************---------------
@@ -1038,7 +1111,12 @@ int main() {
         PerfAnalyzer::drawcallCount = 0; //reset for new frame
         float currentFrame = glfwGetTime(); // delta time used for camera now
         deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+
+
+        if (camera->blockControls) {
+            MoveCamera();
+            //std::cout<< "movCam \n" ;
+        }
 
         uniforms.view = camera->GetViewMatrix(); //uniformy su ine tu ako v drawskybox //see translation unit, .cpp is one TU...
         uniforms.projection = glm::perspective(glm::radians(camera->Zoom),
@@ -1070,7 +1148,6 @@ int main() {
         simpleShadowShader.setVec4("plane", glm::vec4(0, 1, 0, 0));
 
 
-
         if (sceneInstance != nullptr && sceneInstance->dirLight_ObjInstance != nullptr) {
             if (graphicsOptions->enableShadows && !graphicsOptions->enableWater) {
                 //TODO make this code better...
@@ -1080,7 +1157,7 @@ int main() {
                 glm::mat4 LSM = RenderDepth();
                 glCullFace(GL_BACK);
 
-                RenderTest(LSM);
+                RenderTest(LSM, true);
 
             }
                 //TODO make this better / not in main...
@@ -1169,24 +1246,20 @@ int main() {
                     deferredScene2->waterShader.setFloat("zNear", zNear);
                     deferredScene2->waterShader.setFloat("zFar", zFar);
 
-                    RenderTest(LSM);
+                    RenderTest(LSM, true);
                     //render water quad
                     //deferredScene2->RenderWater();
 
                     //sceneInstance->RenderSceneInstance(nullptr);
-                }
-
-                else {
+                } else {
                     if (forwardScene1 != nullptr)
                         forwardScene1->SetupShaderMaterial();
-                    sceneInstance->RenderSceneInstance(nullptr);
+                    sceneInstance->RenderSceneInstance(nullptr, true);
                 }
-            }
-
-            else {
+            } else {
                 if (forwardScene1 != nullptr)
                     forwardScene1->SetupShaderMaterial();
-                sceneInstance->RenderSceneInstance(nullptr);
+                sceneInstance->RenderSceneInstance(nullptr, true);
             }
 
             //also
@@ -1259,7 +1332,7 @@ int main() {
         //TODO maybe allow changing shader params
         //TODO make sun color functional again
         //TODO separate,cleanup,refactor the code for shadowmaps...
-
+        lastFrame = currentFrame;
 
         DrawImGui();
 

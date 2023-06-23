@@ -75,7 +75,7 @@ void Camera::toggleCursor() {
 
 // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch) {
-    if (showCursor)
+    if (showCursor || blockControls)
         return;
 
     xoffset *= MouseSensitivity;
@@ -117,4 +117,28 @@ void Camera::updateCameraVectors() {
     Right = glm::normalize(glm::cross(Front,
                                       WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
     Up = glm::normalize(glm::cross(Right, Front));
+}
+
+//override front calculation
+/*void Camera::updateCameraVectors(glm::vec3 front) {
+
+    Front = glm::normalize(front);
+
+    Pitch= glm::degrees(glm::atan(Front.y,Front.x));
+    Yaw= -glm::degrees(glm::asin(Front.z));
+    updateCameraVectors();
+}*/
+
+
+void Camera::updateCameraVectors(glm::vec3 front) {
+
+    Front = glm::normalize(front);
+
+    //Yaw= -glm::degrees(glm::atan(Front.x/-(Front.z)))+180;
+
+    Yaw= glm::degrees(glm::atan(Front.z,(Front.x)));
+
+    //Pitch= -glm::degrees(glm::atan(Front.x/Front.z));
+    Pitch= glm::degrees(glm::atan(Front.y,glm::sqrt(Front.x*Front.x+Front.z*Front.z)));
+    updateCameraVectors();
 }

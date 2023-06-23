@@ -46,7 +46,7 @@ public:
     WindowSettings *windowSettings;//preco ma scena kazdy svoj?
 
     Camera *camera;
-    GraphicsOptions * graphicsOptions = NULL;
+    GraphicsOptions *graphicsOptions = NULL;
 
 
     glm::mat4 projection;
@@ -78,13 +78,13 @@ public:
 
     StencilShaderInstance *stencilShader;
 
-    virtual void Setup(Camera *cam, GraphicsOptions * graphicsOptions);
+    virtual void Setup(Camera *cam, GraphicsOptions *graphicsOptions);
 
     //render selectable objects with supplied shader
     void RenderObjectsS(Shader *s);
 
     //render whole scene, can be overriden
-    virtual void RenderSceneInstance(Shader *s); // later renderer class?
+    virtual void RenderSceneInstance(Shader *s, bool renderSelected); // later renderer class?
 
     //render lights in lightinstances
     virtual void RenderLights();

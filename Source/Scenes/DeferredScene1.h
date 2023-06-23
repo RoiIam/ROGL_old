@@ -57,7 +57,7 @@ public:
 
     void Setup(Camera *cam,GraphicsOptions * graphicsOptions) override;
 
-    void RenderSceneInstance(Shader *shader) override;
+    void RenderSceneInstance(Shader *shader, bool renderSelected) override;
 
     void ResizeScene() override;
 

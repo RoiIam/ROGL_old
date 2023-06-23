@@ -46,13 +46,12 @@ void SceneInstance::RenderObjectsS(Shader *s) {
 }
 
 // TODO override render whole SceneInstance, can be overriden
-void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
+void SceneInstance::RenderSceneInstance(Shader *s, bool renderSelected) // later renderer class?
 {
     // render
     glClearColor(0.5, 0.5, 0.5, 0);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
 
 
     DrawSky();
@@ -72,9 +71,10 @@ void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
     glStencilMask(0xFF);  // enable writing to the stencil buffer
     // draw the below instead
 
-    if (selectedInstance != nullptr) {
-        selectedInstance->GetShader()->use();
-        selectedInstance->Render();
+    if (selectedInstance != nullptr && renderSelected) {
+        basicShader.use();
+        //selectedInstance->GetShader()->use();
+        selectedInstance->Render(&basicShader, true);
     }
     glStencilMask(0x00);  // disable writing to the stencil buffer
     glEnable(GL_DEPTH_TEST); //reenable depth
@@ -83,7 +83,7 @@ void SceneInstance::RenderSceneInstance(Shader *s) // later renderer class?
     RenderObjectsS(s);
 
     // draw stencil tested ovelay
-    if (selectedInstance != nullptr) {
+    if (selectedInstance != nullptr && renderSelected) {
         //std::cout << "Draw Stencil\n";
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
         glStencilMask(0x00);  // disable writing to the stencil buffer

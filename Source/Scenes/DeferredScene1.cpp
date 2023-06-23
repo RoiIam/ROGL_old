@@ -159,7 +159,7 @@ void DeferredScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
 
 }
 
-void DeferredScene1::RenderSceneInstance(Shader *shader) {
+void DeferredScene1::RenderSceneInstance(Shader *shader, bool renderSelected) {
 //Scene::RenderScene(shader);
 
 

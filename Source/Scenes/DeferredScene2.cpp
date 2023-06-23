@@ -34,11 +34,11 @@ void DeferredScene2::SetupForwardLights() {
 
 void DeferredScene2::SetupWater() {
 
-    Water *a = new Water(&waterShader,camera);
+    Water *a = new Water(&waterShader, camera);
 
     waterObjInstance = new ObjectInstance(*(a), waterShader, "waterQuad", nullptr);
 
-    waterObjInstance->SetPos(glm::vec3(0,3.35,-7.5));
+    waterObjInstance->SetPos(glm::vec3(0, 3.35, -7.5));
 
     waterObjInstance->SetScale(glm::vec3(45));
     waterObjInstance->SetDeg(-90.0f, "X");//make sure its correctly rotated-facing up along X
@@ -100,8 +100,7 @@ void DeferredScene2::SetupWater() {
     glGenTextures(1, &refractionDepthTexture);
     glBindTexture(GL_TEXTURE_2D, refractionDepthTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT, 0,
-                 GL_DEPTH_COMPONENT,
-                 GL_FLOAT, NULL);
+                 GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -288,9 +287,9 @@ void DeferredScene2::SetupSSAO() {
 
 }
 
-void DeferredScene2::RenderSceneInstance(Shader *shader) {
+void DeferredScene2::RenderSceneInstance(Shader *shader, bool renderSelected = false) {
     if (graphicsOptions->rendererType == GraphicsOptions::RendererType::forward) {
-        SceneInstance::RenderSceneInstance(shader);
+        SceneInstance::RenderSceneInstance(shader, renderSelected);
     } else {
 
 //NOTE its pointless to raypick, use menu instead
@@ -309,37 +308,38 @@ void DeferredScene2::RenderSceneInstance(Shader *shader) {
 //renderQuad();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+        if (enableSSAO) {
 // 2. generate SSAO texture
 // ------------------------
-        glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
-        glClear(GL_COLOR_BUFFER_BIT);
-        shaderSSAO->use();
+            glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+            glClear(GL_COLOR_BUFFER_BIT);
+            shaderSSAO->use();
 // Send kernel + rotation
-        for (unsigned int i = 0; i < 64; ++i)
-            shaderSSAO->setVec3("samples[" + std::to_string(i) + "]",
-                                ssaoKernel[i]); // if this breaks, well we ddont run setupssao eh
-        shaderSSAO->setMat4("projection", projection);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, gPosition);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, gNormal);
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, noiseTexture);
-        renderQuad();
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            for (unsigned int i = 0; i < 64; ++i)
+                shaderSSAO->setVec3("samples[" + std::to_string(i) + "]",
+                                    ssaoKernel[i]); // if this breaks, well we ddont run setupssao eh
+            shaderSSAO->setMat4("projection", projection);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, gPosition);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, gNormal);
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, noiseTexture);
+            renderQuad();
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
 // 3. blur SSAO texture to remove noise
 // ------------------------------------
-        glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
-        glClear(GL_COLOR_BUFFER_BIT);
-        shaderSSAOBlur->use();
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
-        renderQuad();
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
+            glClear(GL_COLOR_BUFFER_BIT);
+            shaderSSAOBlur->use();
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
+            renderQuad();
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-
+        }
 // 4. lighting pass: traditional deferred Blinn-Phong lighting with added screen-space ambient occlusion
 // -----------------------------------------------------------------------------------------------------
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -433,12 +433,16 @@ void DeferredScene2::ImGuiHierarchy() {
     if (ImGui::Button("Change to deferred rendering") &&
         graphicsOptions->rendererType == GraphicsOptions::RendererType::forward) {
         SetupSSAO();
+        graphicsOptions->enableShadows = false;
+        graphicsOptions->enableWater = false;
+        waterObjInstance->disableRender = true;
 
         graphicsOptions->rendererType = GraphicsOptions::RendererType::deferred;
     }
     if (ImGui::Button("Return back to forward rendering") &&
         graphicsOptions->rendererType == GraphicsOptions::RendererType::deferred) {
         graphicsOptions->rendererType = GraphicsOptions::RendererType::forward;
+        enableSSAO = false;
     }
     ImGui::TextWrapped("Loads model from hard drive and selects it: ");
 
@@ -456,7 +460,11 @@ void DeferredScene2::ImGuiHierarchy() {
             break;
         case GraphicsOptions::RendererType::deferred://deferred pipeline //1
 
-            ImGui::Checkbox("enable SSAO", &enableSSAO);
+            if (ImGui::Checkbox("enable SSAO", &enableSSAO)) {
+                if (enableSSAO) {
+
+                }
+            }
             ImGui::InputInt("AO power", &powerSSAO, 1);
 
 
@@ -474,10 +482,10 @@ void DeferredScene2::ImGuiHierarchy() {
 
 #pragma region water
 
-    waveSpeedUI[0] = ((Water*)waterObjInstance->GetModel())->waveSpeed.x;
-    waveSpeedUI[1] = ((Water*)waterObjInstance->GetModel())->waveSpeed.y;
-    ImGui::SliderFloat2("water speed, direction", waveSpeedUI, -0.0025, 0.0025 ,"%.04f");
-    ((Water*)waterObjInstance->GetModel())->waveSpeed = glm::make_vec2(waveSpeedUI);
+    waveSpeedUI[0] = ((Water *) waterObjInstance->GetModel())->waveSpeed.x;
+    waveSpeedUI[1] = ((Water *) waterObjInstance->GetModel())->waveSpeed.y;
+    ImGui::SliderFloat2("water speed, direction", waveSpeedUI, -0.0025, 0.0025, "%.04f");
+    ((Water *) waterObjInstance->GetModel())->waveSpeed = glm::make_vec2(waveSpeedUI);
 
 
     ImGui::SliderFloat("water fresnelStrength", &fresnelStrengthUI, 0.1, 10, "%.3f");

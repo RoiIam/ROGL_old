@@ -86,7 +86,7 @@ public:
 
     void SetupSSAO();
 
-    void RenderSceneInstance(Shader *shader) override;
+    void RenderSceneInstance(Shader *shader, bool renderSelected) override;
 
 #pragma endregion stage_3
 

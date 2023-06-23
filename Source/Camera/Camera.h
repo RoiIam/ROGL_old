@@ -46,6 +46,7 @@ public:
     bool dMove = false;
 
     bool slowCamControl = false;
+    bool blockControls = false;
 
     // constructor with vectors
     //tu nema byt takato deklaracia?
@@ -77,4 +78,7 @@ public:
 
     // calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors();
+
+    //given the front vector calc yaw and pitch
+    void updateCameraVectors(glm::vec3 front);
 };
