@@ -16,7 +16,8 @@ void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // over
 {
     SceneInstance::Setup(cam, graphicsOptions);
 
-    sceneDescription = "This is a test scene for forward rendering with support for shadows";
+    sceneDescription = "This is a test scene for forward rendering with support for shadows."
+                       "Press ESC to show/hide cursor.";
 //shaders load, setup
 // uhh "//" both  // \\ and // /work, but in textures it fs up while using
     ourShader = new Shader("..\\Assets\\Shaders\\Forward\\01_SimpleTexture\\1.model_loading.vs",
@@ -187,8 +188,8 @@ GLuint ForwardScene1::loadTex(const std::string &baseName, const unsigned int nl
 
 void ForwardScene1::SetupShaderMaterial() {
     ourShader->use();
-    ourShader->setMat4("projection", projection);
-    ourShader->setMat4("view", view);
+    ourShader->setMat4("projection", uniforms.projection);
+    ourShader->setMat4("view", uniforms.view);
     model = glm::mat4(1.0f);
     model = glm::rotate(model, glm::radians(00.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));

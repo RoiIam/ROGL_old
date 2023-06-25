@@ -47,7 +47,8 @@ ImGui::Image((void *) gAlbedoSpec,ImVec2( w,t),  ImVec2(0, 1),ImVec2(1, 0), ImVe
 void DeferredScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
 
     SceneInstance::Setup(cam, graphicsOptions);
-    sceneDescription = "This is a test scene for deferred rendering with many point lights";
+    sceneDescription = "This is a test scene for deferred rendering with many point lights."
+                       " Press ESC to show/hide cursor.";
 
 //deferred
     shaderGeometryPass = Shader("..\\Assets\\Shaders\\Deferred\\g_buffer.vert",
@@ -72,7 +73,6 @@ void DeferredScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
 //light_shader->setVec3("light.position", l->GetPos());
     depth_shader.setVec3("viewPos", camera->Position);
 //also draw the lamp object
-    view = camera->GetViewMatrix();
 
 
 //defered part
@@ -179,8 +179,8 @@ void DeferredScene1::RenderSceneInstance(Shader *shader, bool renderSelected) {
     glm::mat4 model = glm::mat4(1.0f);
     shaderGeometryPass.use();
 
-    shaderGeometryPass.setMat4("projection", projection);
-    shaderGeometryPass.setMat4("view", view);
+    shaderGeometryPass.setMat4("projection", uniforms.projection);
+    shaderGeometryPass.setMat4("view", uniforms.view);
     int seed = 22;
     for (unsigned int i = 0; i < objectPositions.size(); i++) {
         srand(seed++);

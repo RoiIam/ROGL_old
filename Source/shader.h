@@ -22,7 +22,7 @@ public:
 
     ~Shader();
 
-    Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr);
+    Shader(  std::string vertexPath,   std::string fragmentPath,  std::string geometryPath="");
 
     unsigned int ID;
 

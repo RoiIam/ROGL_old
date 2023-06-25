@@ -55,9 +55,7 @@ void SceneInstance::RenderSceneInstance(Shader *s, bool renderSelected) // later
 
 
     DrawSky();
-    //set in main, wwe just acces them
-    view = uniforms.view;
-    projection = uniforms.projection;
+
 
     //std::cout<< "uniV Scenei\n" << glm::to_string(uniforms.view);
 
@@ -152,15 +150,13 @@ void SceneInstance::DrawSky() {
     // cubemaps skybox
 
     // values are equal to depth buffer's content
-    view = glm::mat4(glm::mat3(camera->GetViewMatrix()));  // remove translation from the view matrix
+    glm::mat4 skyView = glm::mat4(glm::mat3(camera->GetViewMatrix()));  // remove translation from the view matrix
 
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when";
 
     //we need custom view bcs its not dependant on
-    cubePrimitive.render(&uniforms.projection, &view);
+    cubePrimitive.render(&uniforms.projection, &skyView);
     glDepthFunc(GL_LESS);  // set depth function back to default was GL_LESS.... // now get it back
-
-    view = camera->GetViewMatrix(); //should be using OGLR::Managers::Uniform now...
 }
 
 

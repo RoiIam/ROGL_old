@@ -3,9 +3,6 @@
 #include "FileDialog.h"
 #include <Windows.h>
 
-#ifndef OFN_NOCHANGEDIR
-#define OFN_NOCHANGEDIR
-#endif
 
 char *FileDialog::Open() {
     char *filter = "All Files (*.*)\0*.*\0";
@@ -17,8 +14,13 @@ char *FileDialog::Open() {
     ofn.lpstrFilter = filter;
     ofn.lpstrFile = filename;
     ofn.nMaxFile = MAX_PATH;
-    //to remove last dir visited , should use ofn.lpstrInitialDir = null or OFN_NOCHANGEDIR but its not defined?
-    //ofn.FlagsEx.Cha
+
+    //to remove last dir visited , we should use ofn.lpstrInitialDir = null or set ofn.Flags = OFN_NOCHANGEDIR
+    //this has to be set otherwise Opening caised fstream to be broken for shaders etc
+    //because windows will set this dir as root instead og .exe of the app as it was originally
+    //https://stackoverflow.com/questions/48166280/cant-close-openfilename
+    ofn.Flags = OFN_NOCHANGEDIR;
+
     if (GetOpenFileName(&ofn)) {
         char *res = new char[MAX_PATH];
         memcpy(res, filename, MAX_PATH);

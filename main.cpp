@@ -75,8 +75,8 @@ bool fullscreen = false;
 
 bool enableCulling = false;
 float cf[3];
-unsigned int SCR_WIDTH = 800;
-unsigned int SCR_HEIGHT = 600;
+unsigned int SCR_WIDTH = 1200;
+unsigned int SCR_HEIGHT = 800;
 
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
@@ -108,7 +108,7 @@ Shader simpleDepthShader;
 Shader debugDepthQuad;
 Shader simpleShadowShader;
 bool enableDebugDepthQuad = false;
-bool enableDebugLightRay = true;
+bool enableDebugLightRay = false;
 
 //scene stuff - needs to be declared earlier
 std::string sceneDescription = "Put short description of scene here";
@@ -150,7 +150,7 @@ glm::vec3 cameraDrawPos;
 Shader colShader;
 Shader stencilShader;
 bool enable_culling = true;
-bool changeCol = false;
+
 
 float pos[3];
 float rot[3];
@@ -303,34 +303,34 @@ void DrawImGui() {
 
     ImGui::Checkbox("Enable face culling", &enable_culling);
 
-
     if (ImGui::Checkbox("Switch shadows on (default off)", &graphicsOptions->enableShadows)) {
-        if (!(deferredScene2 = dynamic_pointer_cast<DeferredScene2>(sceneInstance)) && graphicsOptions->enableShadows)
-            return;
-        deferredScene2->enableSSAO = false;
-        deferredScene2->graphicsOptions->rendererType = GraphicsOptions::RendererType::forward;
-
+        if (deferredScene2) {
+            if (graphicsOptions->enableShadows) {
+                deferredScene2->enableSSAO = false;
+                deferredScene2->graphicsOptions->rendererType = GraphicsOptions::RendererType::forward;
+            }
+        }
     }
 
     if (ImGui::Checkbox("Switch shadows and water on (default off)", &graphicsOptions->enableWater)) {
-        if (!(deferredScene2 = dynamic_pointer_cast<DeferredScene2>(sceneInstance)))
-            return;
-        if (!graphicsOptions->enableWater) {
-            deferredScene2->waterObjInstance->disableRender = true;
-            deferredScene2->waterObjInstance->forceRenderOwnShader = false;
-        } else if (graphicsOptions->enableWater) {
-            deferredScene2->enableSSAO = false;
-            deferredScene2->graphicsOptions->rendererType = GraphicsOptions::RendererType::forward;
-
+        if (deferredScene2) {
+            if (!graphicsOptions->enableWater) {
+                deferredScene2->waterObjInstance->disableRender = true;
+                deferredScene2->waterObjInstance->forceRenderOwnShader = false;
+            } else if (graphicsOptions->enableWater) {
+                deferredScene2->enableSSAO = false;
+                deferredScene2->graphicsOptions->rendererType = GraphicsOptions::RendererType::forward;
+            }
         }
     }
 
 
+
     if (graphicsOptions->enableShadows)
-        ImGui::Checkbox("Show Quad debug", &enableDebugDepthQuad);
+        ImGui::Checkbox("Show light depthmap debug", &enableDebugDepthQuad);
 
 
-    ImGui::Checkbox("Show Light Ray Debug", &enableDebugLightRay);
+    ImGui::Checkbox("Show Light Ray Dir Debug", &enableDebugLightRay);
     // for debug DepthDebug on ImGUi ignore red tint, we wpuld eeed to alter textureformat
     // see https://github.com/inkyblackness/imgui-go/issues/42 to
     if (enableDebugDepthQuad) {
@@ -624,11 +624,11 @@ void Drawline() {
 
     // 4D Eye (Camera) Coordinates
     cameraDrawPos = camera->Position;
-    glm::vec4 camera_ray = glm::mat4(glm::inverse(sceneInstance->projection)) * homogeneous_clip_coordinates_ray;
+    glm::vec4 camera_ray = glm::mat4(glm::inverse(uniforms.projection)) * homogeneous_clip_coordinates_ray;
     camera_ray = glm::vec4(camera_ray.x, camera_ray.y, -1.0f, 0.0f);
 
     // 4D World Coordinatesf
-    glm::vec3 world_coordinates_ray = glm::inverse(sceneInstance->view) * camera_ray;
+    glm::vec3 world_coordinates_ray = glm::inverse(uniforms.view) * camera_ray;
     // world_coordinates_ray = world_coordinates_ray.Normalize();
 
     // because we are in local coords, shader sets pos to camera and we start at 0
@@ -990,6 +990,8 @@ int main() {
     //dont forget scene, window and monitor
 
     windowSettings.monitor = glfwGetPrimaryMonitor();
+    windowSettings.CUR_WIDTH = SCR_WIDTH;
+    windowSettings.CUR_HEIGHT = SCR_HEIGHT;
     windowSettings.window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello World", NULL, NULL);
     if (!windowSettings.window) {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -1287,6 +1289,9 @@ int main() {
                 glBindVertexArray(0);
             }
 
+
+            /*
+            // draw centroid, currently not using this centroid method
             glm::mat4 model = glm::mat4(1.0f);
             stencilShader.use();
             model = glm::translate(model, centroidPos);
@@ -1294,7 +1299,7 @@ int main() {
             stencilShader.setMat4("view", uniforms.view);
             stencilShader.setMat4("projection", uniforms.projection);
             centroidModel->Draw(stencilShader, true);
-
+            */
             // drawline pointing from screen click
             /*
              *
@@ -1327,11 +1332,6 @@ int main() {
 
         }
 
-        //TODO add more working parameters for objects
-        //TODO test loading of object
-        //TODO maybe allow changing shader params
-        //TODO make sun color functional again
-        //TODO separate,cleanup,refactor the code for shadowmaps...
         lastFrame = currentFrame;
 
         DrawImGui();

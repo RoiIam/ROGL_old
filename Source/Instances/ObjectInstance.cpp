@@ -6,7 +6,10 @@
 // allow more instances with the same model and or shader
 //
 
-ObjectInstance::ObjectInstance(Model &tmp) { model = &tmp; }
+ObjectInstance::ObjectInstance(Model &tmp) {
+    model = &tmp;
+    shader = new Shader("..\\Assets\\Shaders\\Debug\\emptyPink.vert",
+                 "..\\Assets\\Shaders\\Debug\\emptyPink.frag");}
 // creates model instance, pass empty name to assign generated one, pass null light for renderable objects only// yeah bad design for now
 
 ObjectInstance::ObjectInstance(Model &tmp, Shader &shdr, const std::string &name, Light *l) {

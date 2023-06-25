@@ -48,9 +48,6 @@ public:
     Camera *camera;
     GraphicsOptions *graphicsOptions = NULL;
 
-
-    glm::mat4 projection;
-    glm::mat4 view;
     std::string sceneDescription = "test Scene";
 
     std::vector<ObjectInstance *> selectableObjInstances; //objects including lights that can be selected

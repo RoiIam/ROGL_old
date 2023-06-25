@@ -318,7 +318,9 @@ void DeferredScene2::RenderSceneInstance(Shader *shader, bool renderSelected = f
             for (unsigned int i = 0; i < 64; ++i)
                 shaderSSAO->setVec3("samples[" + std::to_string(i) + "]",
                                     ssaoKernel[i]); // if this breaks, well we ddont run setupssao eh
-            shaderSSAO->setMat4("projection", projection);
+            shaderSSAO->setMat4("projection", uniforms.projection);
+            shaderSSAO->setMat4("viw", uniforms.view);
+
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, gPosition);
             glActiveTexture(GL_TEXTURE1);
@@ -398,13 +400,13 @@ void DeferredScene2::LoadModel(std::string path) {
     Shader *s;
     switch (graphicsOptions->rendererType) {
         case GraphicsOptions::RendererType::forward: //0
-            s = NULL;
+            s = basicShader;
             break;
         case GraphicsOptions::RendererType::deferred: //1
             s = shaderLightingPass;
             break;
         default:
-            s = NULL;
+            s = basicShader;
             break;
 
     }
@@ -418,18 +420,23 @@ void DeferredScene2::ImGuiHierarchy() {
 
 
     ImGui::Begin("Interactive");
-    ImGui::TextWrapped(
-            "Welcome to this Sponza demo with Blinn-Phong lighting. By pressing buttons bellow, you will add more graphical features that will make it look even better!");
+    ImGui::TextWrapped("Welcome to this Sponza demo with Blinn-Phong lighting. "
+                       "By pressing buttons bellow, you will add more graphical features that "
+                       "will make it look even better!"
+                       "Press ESC to show/hide cursor.");
 
 
     if (ImGui::CollapsingHeader("Various Options")) {
         ImGui::Checkbox("Switch shadows on (default off)", &graphicsOptions->enableShadows);
+        ImGui::Checkbox("Switch shadows and water on (default off)", &graphicsOptions->enableWater);
     }
 //imgui buttons that handle switching of demo stages and their setup
 #pragma region buttonsAndSetup
 
 
-    ImGui::TextWrapped("Use 'Sun offset' in the 'Tool Window' UI Window to change sun direction");
+    ImGui::TextWrapped("Use 'Sun direction' in the 'Tool Window' UI Window to change sun direction");
+    ImGui::TextWrapped("Press ESC to show/hide cursor");
+
     if (ImGui::Button("Change to deferred rendering") &&
         graphicsOptions->rendererType == GraphicsOptions::RendererType::forward) {
         SetupSSAO();
@@ -448,7 +455,8 @@ void DeferredScene2::ImGuiHierarchy() {
 
     if (ImGui::Button("Load Model into scene")) {
 //OpenSecond = true;
-        static char *path = FileDialog::Open();
+        char *path = FileDialog::Open();
+        //std::string path = "C:\\Users\\robko\\Documents\\CLion\\OGLR\\Assets\\Models\\OwnCube\\Cube.obj";
         LoadModel(path);
     }
 
@@ -461,16 +469,17 @@ void DeferredScene2::ImGuiHierarchy() {
         case GraphicsOptions::RendererType::deferred://deferred pipeline //1
 
             if (ImGui::Checkbox("enable SSAO", &enableSSAO)) {
-                if (enableSSAO) {
-
+                if (!enableSSAO) {
+                    isDebugSSAO = false;
                 }
             }
-            ImGui::InputInt("AO power", &powerSSAO, 1);
+            //ImGui::InputInt("AO power", &powerSSAO, 1);
 
 
 //shaderLightingPass->setVec3("Light.direction", );
 //dynamic_cast<DirectionalLight*>(dirLight_ObjInstance->light)->direction = glm::vec3(dirLightDirection);
-            ImGui::Checkbox("showDebug SSAO", &isDebugSSAO);
+            if (enableSSAO)
+                ImGui::Checkbox("showDebug SSAO", &isDebugSSAO);
             break;
             //case 4: //deffered+ shadows? or ssao
             //break;
@@ -481,19 +490,19 @@ void DeferredScene2::ImGuiHierarchy() {
 
 
 #pragma region water
+    if (graphicsOptions->enableWater) {
+        waveSpeedUI[0] = ((Water *) waterObjInstance->GetModel())->waveSpeed.x;
+        waveSpeedUI[1] = ((Water *) waterObjInstance->GetModel())->waveSpeed.y;
+        ImGui::SliderFloat2("water speed, direction", waveSpeedUI, -0.0025, 0.0025, "%.04f");
+        ((Water *) waterObjInstance->GetModel())->waveSpeed = glm::make_vec2(waveSpeedUI);
 
-    waveSpeedUI[0] = ((Water *) waterObjInstance->GetModel())->waveSpeed.x;
-    waveSpeedUI[1] = ((Water *) waterObjInstance->GetModel())->waveSpeed.y;
-    ImGui::SliderFloat2("water speed, direction", waveSpeedUI, -0.0025, 0.0025, "%.04f");
-    ((Water *) waterObjInstance->GetModel())->waveSpeed = glm::make_vec2(waveSpeedUI);
 
-
-    ImGui::SliderFloat("water fresnelStrength", &fresnelStrengthUI, 0.1, 10, "%.3f");
-    waterShader.use();
-    waterShader.setFloat("fresnelStrength", fresnelStrengthUI);
-    ImGui::Checkbox("renderQuad debug water, renderReflection", &renderReflection);
-    ImGui::Checkbox("renderQuad debug water, renderRefraction", &renderRefraction);
-
+        ImGui::SliderFloat("water fresnelStrength", &fresnelStrengthUI, 0.1, 10, "%.3f");
+        waterShader.use();
+        waterShader.setFloat("fresnelStrength", fresnelStrengthUI);
+        ImGui::Checkbox("renderQuad debug water, renderReflection", &renderReflection);
+        ImGui::Checkbox("renderQuad debug water, renderRefraction", &renderRefraction);
+    }
 #pragma endregion water
     ImGui::TextWrapped("%s", std::string("curr stage ").append(
             std::to_string(graphicsOptions->rendererType)).c_str()); //cant use std::to_chars even with std::to_chars

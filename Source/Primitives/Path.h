@@ -1,6 +1,3 @@
-//
-// Created by RoiIam on 22. 6. 2023.
-//
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtc/type_ptr.hpp> //to use make_vec3

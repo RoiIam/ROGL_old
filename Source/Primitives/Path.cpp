@@ -1,6 +1,3 @@
-//
-// Created by RoiIam on 22. 6. 2023.
-//
 #include "Path.h"
 
 
@@ -53,7 +50,7 @@ void Path::bezierShape(int count) {
             //last = point;
             finalPoints.emplace_back(point);
 
-            std::cout << "added point: " << glm::to_string(point) << std::endl;
+            //std::cout << "added point: " << glm::to_string(point) << std::endl;
         }
     }
 }

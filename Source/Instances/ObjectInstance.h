@@ -29,8 +29,7 @@ class ObjectInstance {
 private:
     //
     Model *model;
-    Shader *shader = new Shader("..\\Assets\\Shaders\\Debug\\emptyPink.vert",
-                                "..\\Assets\\Shaders\\Debug\\emptyPink.frag");
+    Shader *shader;
     //Material * material;
 
 

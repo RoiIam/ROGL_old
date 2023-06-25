@@ -1,12 +1,12 @@
 #include "Cube.h"
 
 
-
 Cube::Cube() = default;
-Cube::~Cube(){
-        glDeleteTextures(1,&cubemapTexture);
-        glDeleteVertexArrays(1,&vao);
-    glDeleteVertexArrays(1,&vbo);
+
+Cube::~Cube() {
+    glDeleteTextures(1, &cubemapTexture);
+    glDeleteVertexArrays(1, &vao);
+    glDeleteVertexArrays(1, &vbo);
 
 
 }
