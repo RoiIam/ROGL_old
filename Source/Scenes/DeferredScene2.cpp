@@ -50,6 +50,8 @@ void DeferredScene2::SetupWater() {
 
 
     //water setup
+    waterWidth = windowSettings->CUR_WIDTH;
+    waterHeight = windowSettings->CUR_HEIGHT;
     //waterObjInstance->SetPos(glm::make_vec3("0.0"));//should work?
 
     //create reflection frame buffer
@@ -292,7 +294,7 @@ void DeferredScene2::RenderSceneInstance(Shader *shader, bool renderSelected = f
         SceneInstance::RenderSceneInstance(shader, renderSelected);
     } else {
 
-//NOTE its pointless to raypick, use menu instead
+        //NOTE its pointless to raypick, use menu instead
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);

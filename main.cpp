@@ -879,7 +879,7 @@ void RenderTest(glm::mat4 lightSpaceMatrix, bool renderSelected = false) {
 //if(scene->disableShadows)
     //return;
     //second pass, render scene as normal with shadow mapping (using depth map)
-    glViewport(0, 0, windowSettings.CUR_WIDTH, windowSettings.CUR_HEIGHT);
+    //glViewport(0, 0, windowSettings.CUR_WIDTH, windowSettings.CUR_HEIGHT); dont do it here it might be different
     // now try shading it
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -1157,6 +1157,7 @@ int main() {
                 //renderbackfaces to fix peter panning for opaque objects, page 294
                 glCullFace(GL_FRONT);
                 glm::mat4 LSM = RenderDepth();
+                glViewport(0, 0, windowSettings.CUR_WIDTH, windowSettings.CUR_HEIGHT);
                 glCullFace(GL_BACK);
 
                 RenderTest(LSM, true);
@@ -1181,6 +1182,7 @@ int main() {
                     deferredScene2->waterObjInstance->forceRenderOwnShader = false;
                     glCullFace(GL_FRONT);
                     glm::mat4 LSM = RenderDepth();
+                    glViewport(0, 0, windowSettings.CUR_WIDTH, windowSettings.CUR_HEIGHT);
                     glCullFace(GL_BACK);
 
                     //create plane, and clipping distance - modify meshShadow.vert
@@ -1198,8 +1200,11 @@ int main() {
                     //dont forget to update the view matrix
                     camera->updateCameraVectors();
                     uniforms.view = camera->GetViewMatrix();
-                    //reflection
 
+                    //set the glviewport to match waters fbo size
+                    glViewport(0, 0, deferredScene2->waterWidth, deferredScene2->waterHeight);
+
+                    //reflection
                     glBindFramebuffer(GL_FRAMEBUFFER,
                                       deferredScene2->reflectionFrameBuffer);// or deferredScene2->bindReflectionFrameBuffer();
                     RenderTest(LSM);
@@ -1248,6 +1253,8 @@ int main() {
                     deferredScene2->waterShader.setFloat("zNear", zNear);
                     deferredScene2->waterShader.setFloat("zFar", zFar);
 
+                    //set viewport back to normal
+                    glViewport(0, 0, windowSettings.CUR_WIDTH, windowSettings.CUR_HEIGHT);
                     RenderTest(LSM, true);
                     //render water quad
                     //deferredScene2->RenderWater();

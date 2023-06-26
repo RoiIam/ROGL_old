@@ -118,6 +118,8 @@ public:
 
 #pragma endregion water
 
+    unsigned int waterWidth;
+    unsigned int waterHeight;
     void LoadModel(std::string path);
 
     //main way to interact with the demo with buttons
