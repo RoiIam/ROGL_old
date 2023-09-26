@@ -61,6 +61,7 @@ set(LINK_LIBS ${GLFW3_LIBRARY} GLAD_S_LIB IMGUI_LIB)#tu bola chyba IMGUI_LIB ma 
 
 
 add_executable(ROGL main.cpp)
+target_compile_options(ROGL PUBLIC -ggdb)
 
 include_directories(Source)
 add_subdirectory("Source")

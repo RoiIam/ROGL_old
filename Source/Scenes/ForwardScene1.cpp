@@ -9,11 +9,17 @@
 
 ForwardScene1::ForwardScene1() = default;
 
-ForwardScene1::~ForwardScene1() = default;
+ForwardScene1::~ForwardScene1()
+{
+    DeleteSceneBuffers();
+};
 
 
 void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // override
 {
+    graphicsOptions->rendererType = GraphicsOptions::RendererType::forward;
+    graphicsOptions->enableWater = false;
+    graphicsOptions->enableShadows = false;
     SceneInstance::Setup(cam, graphicsOptions);
 
     sceneDescription = "This is a test scene for forward rendering with support for shadows."
@@ -87,6 +93,9 @@ void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // over
     dicoTex = loadTex("..//Assets//dict//dict_16_192_64_0p5_0p02", 16, 64);
     glActiveTexture(GL_TEXTURE8);
     glBindTexture(GL_TEXTURE_1D_ARRAY, dicoTex);
+
+    SetupShaderMaterial();
+
 }
 
 

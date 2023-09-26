@@ -47,7 +47,7 @@ public:
 
     Camera *camera;
     GraphicsOptions *graphicsOptions = NULL;
-
+    bool enableMainUI = true;
     std::string sceneDescription = "test Scene";
 
     std::vector<ObjectInstance *> selectableObjInstances; //objects including lights that can be selected
@@ -67,6 +67,7 @@ public:
     ObjectInstance *dirLight_ObjInstance = NULL;
     //vector<Light*> lights;
     Shader basicShader = Shader("..\\Assets\\Shaders\\Forward\\basic.vert", "..\\Assets\\Shaders\\Forward\\basic.frag");
+    Shader basicTexturedShader = Shader("..\\Assets\\Shaders\\Forward\\01_SimpleTexture\\1.model_loading.vs", "..\\Assets\\Shaders\\Forward\\01_SimpleTexture\\1.model_loading.fs");
 
     int selectedHierarchyObj = -1;
 
@@ -102,5 +103,4 @@ public:
 
     virtual void ResizeScene();
 
-    virtual void DeleteSceneBuffers();
 };

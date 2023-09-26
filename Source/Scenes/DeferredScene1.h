@@ -61,7 +61,7 @@ public:
 
     void ResizeScene() override;
 
-    void DeleteSceneBuffers() override;
+    void DeleteSceneBuffers();
 };
 
 #endif //ROGL_DEFERREDSCENE1_H

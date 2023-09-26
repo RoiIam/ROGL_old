@@ -5,6 +5,7 @@ DeferredScene1::DeferredScene1() = default;
 
 DeferredScene1::~DeferredScene1() {
     delete cube_ObjInstance; //TODO this is wrong?
+    DeleteSceneBuffers();
 }
 
 void DeferredScene1::ImGuiHierarchy() {
@@ -45,6 +46,8 @@ ImGui::Image((void *) gAlbedoSpec,ImVec2( w,t),  ImVec2(0, 1),ImVec2(1, 0), ImVe
 }
 
 void DeferredScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
+    graphicsOptions->rendererType = GraphicsOptions::RendererType::deferred;
+    glDisable(GL_BLEND);
 
     SceneInstance::Setup(cam, graphicsOptions);
     sceneDescription = "This is a test scene for deferred rendering with many point lights."

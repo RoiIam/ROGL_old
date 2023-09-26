@@ -124,6 +124,7 @@ public:
 
     //main way to interact with the demo with buttons
     void ImGuiHierarchy() override;
+    void DeleteSceneBuffers() ;
 };
 
 #endif //ROGL_DEFERREDSCENE2_H

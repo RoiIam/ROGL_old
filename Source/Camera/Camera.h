@@ -46,7 +46,10 @@ public:
     bool dMove = false;
 
     bool slowCamControl = false;
-    bool blockControls = false;
+    bool cameraControlsUnlocked = true;
+    bool setCinematicCamera = false;
+
+    int iPlayer = 0;
 
     // constructor with vectors
     //tu nema byt takato deklaracia?
@@ -66,6 +69,9 @@ public:
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void ProcessKeyboard(Camera_Movement direction, float deltaTime);
+
+    //lock or unlock camera movement
+    void toggleCameraControls();
 
     void toggleCursor();
 

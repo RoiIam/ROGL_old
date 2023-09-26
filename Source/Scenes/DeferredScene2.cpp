@@ -3,9 +3,13 @@
 
 DeferredScene2::DeferredScene2() = default;
 
-DeferredScene2::~DeferredScene2() = default;
+DeferredScene2::~DeferredScene2() {
+    DeleteSceneBuffers();
+};
 
 void DeferredScene2::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
+
+    graphicsOptions->rendererType = GraphicsOptions::RendererType::forward;
 
     SceneInstance::Setup(cam, graphicsOptions);
     //camera = cam;
@@ -512,4 +516,29 @@ void DeferredScene2::ImGuiHierarchy() {
     ImGui::End();
 }
 
+void DeferredScene2::DeleteSceneBuffers() {
 
+    enableSSAO=false;
+
+    glDeleteTextures(1, &reflectionTexture);
+    glDeleteTextures(1, &refractionTexture);
+    glDeleteTextures(1, &refractionDepthTexture);
+    glDeleteTextures(1, &gPosition);
+    glDeleteTextures(1, &gNormal);
+    glDeleteTextures(1, &gAlbedo);
+    glDeleteTextures(1, &ssaoColorBufferBlur);
+    glDeleteTextures(1, &ssaoColorBuffer);
+    glDeleteTextures(1, &noiseTexture);
+
+
+    glDeleteFramebuffers(1, &reflectionFrameBuffer);
+    glDeleteFramebuffers(1, &refractionFrameBuffer);
+
+
+    glDeleteFramebuffers(1, &gBuffer);
+    glDeleteFramebuffers(1, &ssaoFBO);
+    glDeleteFramebuffers(1, &ssaoBlurFBO);
+
+    glDeleteRenderbuffers(1, &reflectionDepthBuffer);
+    glDeleteRenderbuffers(1, &rboDepth);
+}

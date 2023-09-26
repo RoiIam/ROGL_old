@@ -84,5 +84,5 @@ public:
 
     void UIGlintParams();
 
-    void DeleteSceneBuffers() override;
+    void DeleteSceneBuffers();
 };

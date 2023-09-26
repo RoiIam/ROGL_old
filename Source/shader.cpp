@@ -1,5 +1,5 @@
 #include "shader.h"
-
+#include <cstring> // strerror() for gcc compipler
 
 //create empty shader to assign later
 Shader::Shader() = default;

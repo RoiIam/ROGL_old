@@ -15,7 +15,7 @@ SceneInstance::SceneInstance() {
 };
 
 //SceneInstance::~SceneInstance() = default;
-SceneInstance::~SceneInstance() {
+ SceneInstance::~SceneInstance() {
     lightObjInstances.clear();
     opaqueObjInstances.clear();
     selectableObjInstances.clear();
@@ -250,7 +250,4 @@ void SceneInstance::ResizeScene() {
 
 }
 
-void SceneInstance::DeleteSceneBuffers() //override
-{
 
-}

@@ -32,9 +32,13 @@
 //#define IMGUI_ENABLE_WIN32_DEFAULT_IME_FUNCTIONS
 #include <imgui_internal.h> //for more functions
 
+//SCENES
 #include "Scenes/ForwardScene1.h"
 #include "Scenes/DeferredScene1.h"
 #include "Scenes/DeferredScene2.h"
+#include "Scenes/GameScene.h"
+
+
 #include "Primitives/Path.h"
 
 //for glints_ch
@@ -100,7 +104,7 @@ glm::vec3 sunDir = {0.2f, 0.500f, -0.1};  // glm::vec3(1.0f);
 float lightOrthoSize = 20.0f;
 //Depth related stufff
 //-----------------------
-const unsigned int SHADOW_WIDTH = 8192 / 4, SHADOW_HEIGHT = 8192 / 4;
+const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192 ;
 unsigned int depthMapFBO;
 // create depth texture
 unsigned int depthMap;
@@ -261,6 +265,8 @@ void DrawImGui() {
                 ReloadScene(2);
             if (ImGui::MenuItem("Load scene 3", NULL))
                 ReloadScene(3);
+            if (ImGui::MenuItem("Load Game Scene", NULL))
+                ReloadScene(5);
             //ImGui::MenuItem("Main menu bar", ReloadScene(2));
             ImGui::EndMenu();
         }
@@ -380,9 +386,9 @@ void DrawImGui() {
             ImGuiObjProperties(sceneInstance->selectedInstance);
     }
 
-    if (ImGui::Checkbox("Set cinematic camera", &camera->blockControls)) {
+    if (ImGui::Checkbox("Set cinematic camera", &camera->setCinematicCamera)) {
         //std::cout << "item cinamtic cam changed..."<<std::endl;
-        if (camera->blockControls) {
+        if (camera->setCinematicCamera) {
             nextCamPosIndex = 0;
 
         } else {
@@ -390,7 +396,7 @@ void DrawImGui() {
         }
     }
 
-    if (camera->blockControls) {
+    if (!camera->setCinematicCamera) {
         float freeCamLookDirUI[] = {freeCamLookDir.x, freeCamLookDir.y, freeCamLookDir.z};
         ImGui::InputFloat("free cam speed", &cameraSpeed, 0.1f, 0.5f, "%.2f");
         ImGui::DragFloat3("Free cam look At", freeCamLookDirUI, 0.1f, -100, 100, "%.3f");
@@ -659,7 +665,7 @@ void ReloadScene(int num) {
         std::cout << "Reloading Scene\n";
         if (sceneInstance != nullptr) {
             sceneInstance->selectedInstance = nullptr;
-            sceneInstance->DeleteSceneBuffers();
+            //sceneInstance->DeleteSceneBuffers();
         }
         sceneInstance.reset();
         //testScene.reset();
@@ -684,6 +690,8 @@ void ReloadScene(int num) {
             case 4:
                 //scene = static_cast<const std::shared_ptrshared_ptr<SceneInstance> >(new TestScene4());
                 break;
+            case 5:
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new GameScene());
             default:
                 break;
 
@@ -761,6 +769,12 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
             PrintShader();
         if (key == GLFW_KEY_LEFT_CONTROL)
             camera->slowCamControl = !camera->slowCamControl;
+        //chicken-eagle game controls
+
+        if(key == GLFW_KEY_LEFT)
+            camera->iPlayer--;
+        if(key == GLFW_KEY_RIGHT)
+            camera->iPlayer++;
     }
 
     if (camera->showCursor)  // later implement input class so we dont have to
@@ -775,6 +789,8 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
     if (key == GLFW_KEY_D) camera->rMove = set;
     if (key == GLFW_KEY_E) camera->uMove = set;
     if (key == GLFW_KEY_Q) camera->dMove = set;
+
+
 
     /* if (key == GLFW_KEY_F) //for light
        camera->switchSpotlight();*/
@@ -1099,7 +1115,7 @@ int main() {
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 
-    ReloadScene(3);
+    ReloadScene(5);
     camera->toggleCursor(); //set to hidden by default
 
     //create free camera path
@@ -1115,7 +1131,7 @@ int main() {
         deltaTime = currentFrame - lastFrame;
 
 
-        if (camera->blockControls) {
+        if (camera->setCinematicCamera) {
             MoveCamera();
             //std::cout<< "movCam \n" ;
         }
@@ -1169,7 +1185,7 @@ int main() {
 
                 //check if we are in correct scene
 
-                deferredScene2 = dynamic_pointer_cast<DeferredScene2>(
+                deferredScene2 = std::dynamic_pointer_cast<DeferredScene2>(
                         sceneInstance);// if we want to chache the result, we need to clear this
                 //bool same = dynamic_cast<DeferredScene2*>(sceneInstance.get()) != nullptr;
 
@@ -1341,10 +1357,13 @@ int main() {
 
         lastFrame = currentFrame;
 
-        DrawImGui();
 
-        if (sceneInstance != nullptr)
+
+        if (sceneInstance != nullptr) {
+            if(sceneInstance->enableMainUI)
+            DrawImGui();
             sceneInstance->ImGuiHierarchy();
+        }
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
