@@ -46,6 +46,8 @@
 
 #include "zlib.h"
 #include "tinyexr.h"
+#include <math.h>
+#include <chrono>
 
 //compiler flags, idk what those do
 #pragma clang diagnostic push
@@ -985,7 +987,6 @@ void MoveCamera() {
 }
 
 int main() {
-
     /* check c++ version
     if (__cplusplus == 201703L) std::cout << "C++17\n";
     else if (__cplusplus == 201402L) std::cout << "C++14\n";
@@ -996,6 +997,7 @@ int main() {
 
     //GLFWwindow* window;
 
+    //::TestSine(); read log.cpp what this does
     if (!glfwInit())
         return -1;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -1038,7 +1040,6 @@ int main() {
     stbi_set_flip_vertically_on_load(true); //this is needed for models, but screws our edited skybox
 
     std::cout << "Hello, World!" << std::endl;
-    ::Help();
     stencilShader = Shader("..\\Assets\\Shaders\\Forward\\stencil.vert",
                            "..\\Assets\\Shaders\\Forward\\stencil.frag"); //maybe add as a ponter and then new too
 
@@ -1115,7 +1116,7 @@ int main() {
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 
-    ReloadScene(5);
+    ReloadScene(1);
     camera->toggleCursor(); //set to hidden by default
 
     //create free camera path
