@@ -37,6 +37,7 @@
 #include "Scenes/DeferredScene1.h"
 #include "Scenes/DeferredScene2.h"
 #include "Scenes/GameScene.h"
+#include "Scenes/CannonGame.h"
 
 
 #include "Primitives/Path.h"
@@ -88,7 +89,7 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 // timing
-float deltaTime = 0.0f;
+
 float lastFrame = 0.0f;
 float cameraSpeed = 250.0f;
 glm::vec3 freeCamLookDir = glm::vec3(0);
@@ -694,6 +695,8 @@ void ReloadScene(int num) {
                 break;
             case 5:
                 sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new GameScene());
+            case 6:
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new CannonGame());
             default:
                 break;
 
@@ -740,6 +743,7 @@ static void mouse_button_callback(GLFWwindow *window, int button, int action, in
     }
 }
 
+//TODO MOVE THIS TO NEW INPUT CLASS AND AWAY FROM CAMERA
 static void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_ESCAPE || key == GLFW_KEY_F9) {
@@ -773,10 +777,15 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
             camera->slowCamControl = !camera->slowCamControl;
         //chicken-eagle game controls
 
-        if(key == GLFW_KEY_LEFT)
+        if(key == GLFW_KEY_LEFT) {
             camera->iPlayer--;
-        if(key == GLFW_KEY_RIGHT)
+            //camera->leftArrow = true;
+        }
+        if(key == GLFW_KEY_RIGHT) {
             camera->iPlayer++;
+            //camera->rightArrow = true;
+
+        }
     }
 
     if (camera->showCursor)  // later implement input class so we dont have to
@@ -791,6 +800,12 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
     if (key == GLFW_KEY_D) camera->rMove = set;
     if (key == GLFW_KEY_E) camera->uMove = set;
     if (key == GLFW_KEY_Q) camera->dMove = set;
+
+    if (key == GLFW_KEY_RIGHT) camera->rightArrow = set;
+    if (key == GLFW_KEY_LEFT) camera->leftArrow = set;
+    if (key == GLFW_KEY_UP) camera->upArrow = set;
+    if (key == GLFW_KEY_DOWN) camera->downArrow = set;
+    if (key == GLFW_KEY_SPACE) camera->shootSpace = set;
 
 
 
@@ -974,7 +989,7 @@ void MoveCamera() {
         nextCamPosIndex = nextCamPosIndex % (freeCamPath.finalPoints.size() - 1);
         std::cout << "reset Cam, new index is " << nextCamPosIndex << "\n";
     }
-    freeCamT = cameraSpeed * deltaTime;
+    freeCamT = cameraSpeed * Managers::deltaTime;
     glm::vec3 nexCamPos =
             curCamPos + glm::normalize(freeCamPath.finalPoints[nextCamPosIndex] - curCamPos) * 0.01 * freeCamT;
 
@@ -1116,7 +1131,7 @@ int main() {
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 
-    ReloadScene(1);
+    ReloadScene(6);
     camera->toggleCursor(); //set to hidden by default
 
     //create free camera path
@@ -1129,7 +1144,8 @@ int main() {
 
         PerfAnalyzer::drawcallCount = 0; //reset for new frame
         float currentFrame = glfwGetTime(); // delta time used for camera now
-        deltaTime = currentFrame - lastFrame;
+        Managers::deltaTime = currentFrame - lastFrame;
+        //std::cout << Managers::deltaTime << std::endl;
 
 
         if (camera->setCinematicCamera) {
@@ -1368,7 +1384,7 @@ int main() {
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        camera->ProcessKeyboard(Camera_Movement::NONE, deltaTime);
+        camera->ProcessKeyboard(Camera_Movement::NONE, Managers::deltaTime);
         glfwSwapBuffers(windowSettings.window);
         std::cout.flush();
     }

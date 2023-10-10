@@ -49,7 +49,13 @@ public:
     bool cameraControlsUnlocked = true;
     bool setCinematicCamera = false;
 
-    int iPlayer = 0;
+    int iPlayer = 0; //pouzite v gamescene
+    bool leftArrow = false; //pouzite v CannonGame
+    bool rightArrow = false; //pouzite v CannonGame
+    bool upArrow = false; //pouzite v CannonGame
+    bool downArrow = false; //pouzite v CannonGame
+    bool shootSpace = false; //pouzite v CannonGame
+
 
     // constructor with vectors
     //tu nema byt takato deklaracia?

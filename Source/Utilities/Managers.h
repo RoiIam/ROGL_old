@@ -14,6 +14,8 @@ public:
         glm::vec3 scale = {1.0f, 1.0f, 1.0f};
     };
 
+    static float deltaTime;
+
 };
 
 //not static, interal linkage vid https://stackoverflow.com/questions/3698043/static-variables-in-c

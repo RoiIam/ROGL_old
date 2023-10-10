@@ -27,7 +27,8 @@ add_library(ROGL_Source OBJECT
         Instances/ObjectInstance.cpp Instances/SceneInstance.cpp Lights/Light.cpp Lights/DirectionalLight.cpp Lights/PointLight.cpp
         Camera/Camera.cpp Instances/ShaderInstance.cpp Primitives/Cube.cpp Primitives/DefaultCube.cpp Primitives/Grass.cpp Utilities/Controls.cpp
         Scenes/ForwardScene1.cpp Scenes/DeferredScene1.cpp Scenes/DeferredScene2.cpp
-        Primitives/Quad.cpp Utilities/GraphicsOptions.cpp Primitives/Water.cpp Primitives/Path.cpp Scenes/GameScene.cpp)
+        Primitives/Quad.cpp Utilities/GraphicsOptions.cpp Primitives/Water.cpp Primitives/Path.cpp
+        Scenes/GameScene.cpp Scenes/CannonGame.cpp)
 
 
 target_link_libraries(ROGL PUBLIC ROGL_Source)
