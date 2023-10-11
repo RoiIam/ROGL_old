@@ -38,6 +38,7 @@
 #include "Scenes/DeferredScene2.h"
 #include "Scenes/GameScene.h"
 #include "Scenes/CannonGame.h"
+#include "Scenes/PoolGame.h"
 
 
 #include "Primitives/Path.h"
@@ -188,6 +189,18 @@ void ImGuiObjProperties(ObjectInstance *obj) {
     ImGui::DragFloat3("Obj Scale", scale, 0.05f, -10000, 10000, "%.3f");
     //ImVec4
 
+    float velocity[] = {obj->velocity.x, obj->velocity.y, obj->velocity.z};
+    ImGui::DragFloat3("Obj velocity", velocity, 0.05f, -10000, 10000, "%.3f");
+    obj->velocity = glm::make_vec3(velocity);
+
+    float acceleration[] = {obj->acceleration.x, obj->acceleration.y, obj->acceleration.z};
+    ImGui::DragFloat3("Obj acceleration", acceleration, 0.05f, -10000, 10000, "%.3f");
+    obj->acceleration = glm::make_vec3(acceleration);
+
+    float mass = obj->mass;
+    ImGui::DragFloat("Obj mass", &mass, 0.05f, 0, 10000, "%.3f",0);
+    obj->mass = mass;
+
     //rotation
     //scale
     //cout << "Pos " << pos[0]<< " "<< pos[1] << " " <<pos[2]   << "Saved "<< glm::to_string(obj->position) << "\n";
@@ -268,8 +281,12 @@ void DrawImGui() {
                 ReloadScene(2);
             if (ImGui::MenuItem("Load scene 3", NULL))
                 ReloadScene(3);
-            if (ImGui::MenuItem("Load Game Scene", NULL))
+            if (ImGui::MenuItem("Load Eagle catch game", NULL))
                 ReloadScene(5);
+            if (ImGui::MenuItem("Load CannonGame scene", NULL))
+                ReloadScene(6);
+            if (ImGui::MenuItem("Load PoolGame, collisions", NULL))
+                ReloadScene(7);
             //ImGui::MenuItem("Main menu bar", ReloadScene(2));
             ImGui::EndMenu();
         }
@@ -657,6 +674,7 @@ void Drawline() {
     // glm::to_string(world_coordinates_ray) << std::endl;
 
     // TestMouse(); //different method
+    camera->world_coordinates_ray_click = world_coordinates_ray;
     TestMouse2(glm::normalize(world_coordinates_ray));
 }
 
@@ -695,8 +713,13 @@ void ReloadScene(int num) {
                 break;
             case 5:
                 sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new GameScene());
+                break;
             case 6:
                 sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new CannonGame());
+                break;
+            case 7:
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new PoolGame());
+                break;
             default:
                 break;
 
@@ -739,6 +762,11 @@ static void mouse_button_callback(GLFWwindow *window, int button, int action, in
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
         Drawline();  // uhh we neeed to keep drawing it...
         // Draw line of sight latest
+        std::shared_ptr<PoolGame> poolGame= std::dynamic_pointer_cast<PoolGame>(sceneInstance);
+        if(poolGame )
+        {
+            poolGame->CreateNewBall(camera->world_coordinates_ray_click);
+        }
         std::cout << "pressing RMB \n";
     }
 }
@@ -1131,7 +1159,7 @@ int main() {
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 
-    ReloadScene(6);
+    ReloadScene(7);
     camera->toggleCursor(); //set to hidden by default
 
     //create free camera path

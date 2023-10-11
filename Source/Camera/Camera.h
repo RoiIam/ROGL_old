@@ -55,7 +55,8 @@ public:
     bool upArrow = false; //pouzite v CannonGame
     bool downArrow = false; //pouzite v CannonGame
     bool shootSpace = false; //pouzite v CannonGame
-
+    //vector pointing from the camera to the world, normalized
+    glm::vec3 world_coordinates_ray_click;
 
     // constructor with vectors
     //tu nema byt takato deklaracia?

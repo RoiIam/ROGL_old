@@ -52,6 +52,10 @@ public:
     bool disableRender = false;
     // creates model instance
 
+    glm::vec3 velocity = glm::vec3(0);
+    glm::vec3 acceleration = glm::vec3(0);
+    float mass = 5.0f;
+
     explicit ObjectInstance(Model &tmp);
 
     ObjectInstance(Model &tmp, Shader &shdr, const std::string &name, Light *l);
