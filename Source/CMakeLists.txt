@@ -28,7 +28,7 @@ add_library(ROGL_Source OBJECT
         Camera/Camera.cpp Instances/ShaderInstance.cpp Primitives/Cube.cpp Primitives/DefaultCube.cpp Primitives/Grass.cpp Utilities/Controls.cpp
         Scenes/ForwardScene1.cpp Scenes/DeferredScene1.cpp Scenes/DeferredScene2.cpp
         Primitives/Quad.cpp Utilities/GraphicsOptions.cpp Primitives/Water.cpp Primitives/Path.cpp
-        Scenes/GameScene.cpp Scenes/CannonGame.cpp
+        Scenes/GameScene.cpp Scenes/CannonGame.cpp Scenes/PlanetGame.cpp
         Scenes/PoolGame.cpp)
 
 

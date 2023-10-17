@@ -64,6 +64,8 @@ void PoolGame::GameUI() {
 
     ImGui::Begin("Game stats");
     ImGui::Checkbox("Switch pool vs border teleporting", &containInScreenSpace);
+    auto stringSKE = std::to_string(systemKineticE);
+    ImGui::Text("total system kinetic energy: %s ", stringSKE.c_str());
     float accel[] = {a.x, a.y, a.z};
     ImGui::SliderFloat3("acccel", accel, 0.05f, 100, "%.3f");
     a = glm::make_vec3(accel);
@@ -156,6 +158,13 @@ void PoolGame::GameTimeStep() {
                       ball01_OI->GetPos().z
                       );
     */
+    systemKineticE = 0;
+    for (int i = 0; i < colliders_OIs.size(); ++i) {
+
+        systemKineticE += colliders_OIs[i]->velocity.x * colliders_OIs[i]->velocity.x +
+                 colliders_OIs[i]->velocity.y * colliders_OIs[i]->velocity.y;
+    }
+    //std::cout << "kinetic e " << SystemKineticE << std::endl;
 
 }
 

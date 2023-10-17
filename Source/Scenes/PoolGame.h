@@ -37,6 +37,8 @@ public:
     float drag = 2.5f; // aj 0.25f je cool
     bool enableDrag=true;
     bool containInScreenSpace=false;
+    float systemKineticE = 0;
+
     //bool containInScreenSpace=false;
 
     glm::vec3 v = glm::vec3(0,0,0);

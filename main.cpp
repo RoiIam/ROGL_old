@@ -38,6 +38,7 @@
 #include "Scenes/DeferredScene2.h"
 #include "Scenes/GameScene.h"
 #include "Scenes/CannonGame.h"
+#include "Scenes/PlanetGame.h"
 #include "Scenes/PoolGame.h"
 
 
@@ -287,6 +288,8 @@ void DrawImGui() {
                 ReloadScene(6);
             if (ImGui::MenuItem("Load PoolGame, collisions", NULL))
                 ReloadScene(7);
+            if (ImGui::MenuItem("Load StarTrek Game, planet gravity forces", NULL))
+                ReloadScene(8);
             //ImGui::MenuItem("Main menu bar", ReloadScene(2));
             ImGui::EndMenu();
         }
@@ -720,6 +723,12 @@ void ReloadScene(int num) {
             case 7:
                 sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new PoolGame());
                 break;
+            case 8:
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new PlanetGame());
+                break;
+            //case 9:
+                //sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new PlanetGame());
+            //    break;
             default:
                 break;
 
@@ -767,6 +776,14 @@ static void mouse_button_callback(GLFWwindow *window, int button, int action, in
         {
             poolGame->CreateNewBall(camera->world_coordinates_ray_click);
         }
+
+        std::shared_ptr<PlanetGame> planetGame= std::dynamic_pointer_cast<PlanetGame>(sceneInstance);
+        if(planetGame )
+        {
+            planetGame->CreateNewBall(camera->world_coordinates_ray_click);
+        }
+
+
         std::cout << "pressing RMB \n";
     }
 }
@@ -805,15 +822,6 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
             camera->slowCamControl = !camera->slowCamControl;
         //chicken-eagle game controls
 
-        if(key == GLFW_KEY_LEFT) {
-            camera->iPlayer--;
-            //camera->leftArrow = true;
-        }
-        if(key == GLFW_KEY_RIGHT) {
-            camera->iPlayer++;
-            //camera->rightArrow = true;
-
-        }
     }
 
     if (camera->showCursor)  // later implement input class so we dont have to
@@ -834,6 +842,11 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
     if (key == GLFW_KEY_UP) camera->upArrow = set;
     if (key == GLFW_KEY_DOWN) camera->downArrow = set;
     if (key == GLFW_KEY_SPACE) camera->shootSpace = set;
+
+    if (key == GLFW_KEY_W) camera->WKey = set;
+    if (key == GLFW_KEY_S) camera->SKey = set;
+    if (key == GLFW_KEY_A) camera->AKey = set;
+    if (key == GLFW_KEY_D) camera->DKey = set;
 
 
 

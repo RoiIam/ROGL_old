@@ -55,6 +55,10 @@ public:
     bool upArrow = false; //pouzite v CannonGame
     bool downArrow = false; //pouzite v CannonGame
     bool shootSpace = false; //pouzite v CannonGame
+    bool WKey = false; //pouzite v PlanetGame
+    bool SKey = false; //pouzite v PlanetGame
+    bool AKey = false; //pouzite v PlanetGame
+    bool DKey = false; //pouzite v PlanetGame
     //vector pointing from the camera to the world, normalized
     glm::vec3 world_coordinates_ray_click;
 
