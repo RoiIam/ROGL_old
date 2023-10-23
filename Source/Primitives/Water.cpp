@@ -56,8 +56,9 @@ Water::Water(Shader *shader, Camera * cam) {
                            "..\\Assets\\Shaders\\Forward\\Water\\water.frag");
 
 
-    dudvTexture= Model::TextureFromFile("waterDUDV.png", "..\\Assets\\Textures\\", false);
-    normalMapTexture= Model::TextureFromFile("matchingNormalMap.png", "..\\Assets\\Textures\\", false);
+    //still not sure if use / or \\ in strings
+    dudvTexture= Model::TextureFromFile("waterDUDV.png", "../Assets/Textures", false);
+    normalMapTexture= Model::TextureFromFile("matchingNormalMap.png", "../Assets/Textures/", false);
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);

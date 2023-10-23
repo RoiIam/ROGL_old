@@ -15,6 +15,7 @@ public:
     };
 
     static float deltaTime;
+    static int currentSceneIndex;
 
 };
 

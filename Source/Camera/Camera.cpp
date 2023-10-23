@@ -75,13 +75,13 @@ void Camera::toggleCameraControls() {
     //std::cout<< "locked/unlocked cam controls  " << showCursor << std::endl;
 }
 void Camera::toggleCursor() {
-    showCursor = !showCursor;
+    hideCursor = !hideCursor;
     //std::cout<< "zmena kurzora na " << showCursor << std::endl;
 }
 
 // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
 void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch) {
-    if (showCursor || !cameraControlsUnlocked)
+    if (hideCursor || !cameraControlsUnlocked)
         return;
 
     xoffset *= MouseSensitivity;
@@ -104,13 +104,19 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPi
 
 // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
 void Camera::ProcessMouseScroll(float yoffset) {
-    if (showCursor || !cameraControlsUnlocked)
+    if (hideCursor || !cameraControlsUnlocked)
         return;
     Zoom -= (float) yoffset;
     if (Zoom < 1.0f)
         Zoom = 1.0f;
     if (Zoom > 45.0f)
         Zoom = 45.0f;
+}
+
+void Camera::MouseMovementNormalized(float &x, float &y, float w, float h)
+{
+    x =xMousePos/w;
+    y=yMousePos/h;
 }
 
 // calculates the front vector from the Camera's (updated) Euler Angles

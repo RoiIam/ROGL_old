@@ -75,6 +75,7 @@ void GameScene::GameUI() {
     auto s2 = (std::string("lives: ")+ std::to_string(lives));
     ImGui::Text("%s", s2.c_str());
     ImGui::SliderInt("max lives ",&defaultLives, 2 ,10 );
+    ImGui::Checkbox("Alllow(T)/block(F) x border swap", &allowBorderCross);
 
 
     if(ImGui::Button("Reset/Restart Game"))
@@ -139,11 +140,27 @@ void GameScene::GameTimeStep() {
 
 void GameScene::Movement() {
 
+    //note
+    // we had this code to use as controls in keyboard_callback
+    // but we started using set key. but that also makes it repeat , to fix it
+    //just disable it every frame and change the camera->lMove to camera->leftArrow
+    /*
+        if(key == GLFW_KEY_LEFT)
+            camera->iPlayer--;
+        if(key == GLFW_KEY_RIGHT)
+            camera->iPlayer++;*/
+
+
     int iPlayer = camera->iPlayer;
-    if(camera->lMove)
+    if(camera->leftArrow)
         iPlayer--;
-    if(camera->rMove)
+    if(camera->rightArrow)
         iPlayer++;
+
+    //since its better to do it in the main loop to prevent other functions not being able to catch this,
+    //disable it in the main while loop for now...
+    //camera->leftArrow = false;
+    //camera->rightArrow = false;
     //iPlayer =  std::fmod(iPlayer,7); //not woring correctly if iPlayer negative
 
     if(allowBorderCross) {

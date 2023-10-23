@@ -249,5 +249,20 @@ void SceneInstance::renderQuad() {
 void SceneInstance::ResizeScene() {
 
 }
+void SceneInstance::ResizeWindow(float width,float height) {
+    // make sure the viewport matches the new window dimensions; note that width
+    // and height will be significantly larger than specified on retina displays.
+    if (height == 0 || width == 0)  // prevent errors from minimizing and moving windows
+        return;
+    //we assume opengl is running so its safe to call this
+    glViewport(0, 0, width, height);
+    windowSettings->CUR_WIDTH = width;
+    windowSettings->CUR_HEIGHT = height;
+    glfwSetWindowSize(windowSettings->window, width, height);
+    // std::cout << width << " " << height << "\n";
+
+    ResizeScene();
+
+}
 
 

@@ -36,10 +36,11 @@
 #include "Scenes/ForwardScene1.h"
 #include "Scenes/DeferredScene1.h"
 #include "Scenes/DeferredScene2.h"
-#include "Scenes/GameScene.h"
-#include "Scenes/CannonGame.h"
-#include "Scenes/PlanetGame.h"
-#include "Scenes/PoolGame.h"
+#include "Scenes/SalanciGames/GameScene.h"
+#include "Scenes/SalanciGames/CannonGame.h"
+#include "Scenes/SalanciGames/PlanetGame.h"
+#include "Scenes/SalanciGames/PoolGame.h"
+#include "Scenes/SalanciGames/CoinMapGame.h"
 
 
 #include "Primitives/Path.h"
@@ -103,6 +104,7 @@ Path freeCamPath = Path();
 glm::vec3 centroidPos;
 
 Camera *camera;
+bool selectWRMBEnabled = false;//controls if RMB can cast ray to select objects
 WindowSettings windowSettings = WindowSettings();
 float sunOffsetPos = 23.0f;
 glm::vec3 sunDir = {0.2f, 0.500f, -0.1};  // glm::vec3(1.0f);
@@ -275,6 +277,8 @@ void DrawImGui() {
 
         //create menu bar
         //IMGUI_DEMO_MARKER("Menu/Examples");
+
+        //TODO make scenes ENUM instead of number
         if (ImGui::BeginMenu("Scenes")) {
             if (ImGui::MenuItem("Load scene 1", NULL))
                 ReloadScene(1);
@@ -290,6 +294,8 @@ void DrawImGui() {
                 ReloadScene(7);
             if (ImGui::MenuItem("Load StarTrek Game, planet gravity forces", NULL))
                 ReloadScene(8);
+            if (ImGui::MenuItem("Load CoinMap Game, graph,polymap", NULL))
+                ReloadScene(9);
             //ImGui::MenuItem("Main menu bar", ReloadScene(2));
             ImGui::EndMenu();
         }
@@ -327,10 +333,13 @@ void DrawImGui() {
 
         ImGui::InputFloat2("Cam Rotation", eulerRot, "%.3f");
         ImGui::Value("timed value freeCamT ", freeCamT);
+        ImGui::Checkbox("Unlock(T)/lock(F) cam controls", &camera->cameraControlsUnlocked);
+
 
     }
 
     ImGui::Checkbox("Enable face culling", &enable_culling);
+    ImGui::Checkbox("Enable RMB object selection", &selectWRMBEnabled);
 
     if (ImGui::Checkbox("Switch shadows on (default off)", &graphicsOptions->enableShadows)) {
         if (deferredScene2) {
@@ -369,6 +378,7 @@ void DrawImGui() {
     // ImGui::SliderFloat4("Background Color",backgroundClearCol, 0 ,1 ,"%.3f");
 
     ImGui::Value("Drawcalls", PerfAnalyzer::drawcallCount);
+    ImGui::SliderFloat("orthoCam scale ",&camera->orthoScale, 0.05f,  200.0f);
 
     // now try gizmos
     if (sceneInstance->selectedInstance) {
@@ -683,8 +693,13 @@ void Drawline() {
 
 
 //load scene based on number
+//TODO make scenes ENUM instead of number
 void ReloadScene(int num) {
+
+
     //if(num != scene->num)
+    camera->cameraControlsUnlocked = true; //we can disable it in setup of the scene
+    camera->cameraPerspective = Camera_Perspective::PERSP; //reset this
     if (true) {
         std::cout << "Reloading Scene\n";
         if (sceneInstance != nullptr) {
@@ -702,7 +717,7 @@ void ReloadScene(int num) {
             case 1:
                 forwardScene1 = static_cast <const std::shared_ptr<ForwardScene1> >(new ForwardScene1());
                 sceneInstance = forwardScene1;
-                static_cast<const std::shared_ptr<SceneInstance> >(new ForwardScene1());
+               // static_cast<const std::shared_ptr<SceneInstance> >(new ForwardScene1());
 
                 break;
             case 2:
@@ -726,16 +741,16 @@ void ReloadScene(int num) {
             case 8:
                 sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new PlanetGame());
                 break;
-            //case 9:
-                //sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new PlanetGame());
-            //    break;
+            case 9:
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new CoinMapGame());
+                break;
             default:
                 break;
 
 
         }
 
-
+        Managers::currentSceneIndex = num; //now we dont have to cast every time
         //scene = static_cast<const std::shared_ptrshared_ptr<Scene> >(new TestScene2());
         sceneInstance->windowSettings = &windowSettings;//needs to go before setup otherwise buffers are initialized before setting
         sceneInstance->Setup(camera, graphicsOptions);
@@ -748,6 +763,7 @@ void ReloadScene(int num) {
 #pragma region GLFWcallbacks
 
 //glfw make big
+//TODO make it big on current monitor, not the default, first monitor
 void SwitchFullscreen() {
     fullscreen = !fullscreen;
     if (fullscreen) {
@@ -768,24 +784,42 @@ void SwitchFullscreen() {
 }
 
 static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
+
+    //this wont call because it hasnt changed its state
+    camera->RMBpress = false;
+    //we need to disable it after a while
+
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-        Drawline();  // uhh we neeed to keep drawing it...
+        camera->RMBpress = true;
+
+        if(selectWRMBEnabled)
+            Drawline();  // uhh we neeed to keep drawing it...
         // Draw line of sight latest
-        std::shared_ptr<PoolGame> poolGame= std::dynamic_pointer_cast<PoolGame>(sceneInstance);
-        if(poolGame )
+
+        //TODO make scenes ENUM instead of number
+        //std::shared_ptr<PoolGame> poolGame= std::dynamic_pointer_cast<PoolGame>(sceneInstance);
+        //if(poolGame)
+        if(Managers::currentSceneIndex ==7)
         {
-            poolGame->CreateNewBall(camera->world_coordinates_ray_click);
+            //poolGame->CreateNewBall(camera->world_coordinates_ray_click);
+            std::static_pointer_cast<PoolGame>(sceneInstance)->CreateNewBall(camera->world_coordinates_ray_click);
+        }
+        //std::shared_ptr<PlanetGame> planetGame= std::dynamic_pointer_cast<PlanetGame>(sceneInstance);
+        //if(planetGame )
+        if(Managers::currentSceneIndex ==8)
+        {
+            //planetGame->CreateNewBall(camera->world_coordinates_ray_click);
+            std::static_pointer_cast<PlanetGame>(sceneInstance)->CreateNewBall(camera->world_coordinates_ray_click);
+
         }
 
-        std::shared_ptr<PlanetGame> planetGame= std::dynamic_pointer_cast<PlanetGame>(sceneInstance);
-        if(planetGame )
-        {
-            planetGame->CreateNewBall(camera->world_coordinates_ray_click);
-        }
 
-
-        std::cout << "pressing RMB \n";
+        //std::cout << "pressing RMB \n";
     }
+    //now check for the hold action
+    bool set = (action != GLFW_RELEASE);
+    if (button == GLFW_MOUSE_BUTTON_LEFT) camera->LMBhold = set;
+    if (button == GLFW_MOUSE_BUTTON_RIGHT) camera->RMBhold = set;
 }
 
 //TODO MOVE THIS TO NEW INPUT CLASS AND AWAY FROM CAMERA
@@ -794,14 +828,14 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
         if (key == GLFW_KEY_ESCAPE || key == GLFW_KEY_F9) {
             if (key == GLFW_KEY_F9) {
                 show_demo_window = !show_demo_window;
-                if (camera->showCursor)
+                if (camera->hideCursor)
                     camera->toggleCursor();
             }
 
             camera->toggleCursor();  // ked som v esc a stuknem f9 bic sa nestane
             // ostatne funguje fajn,idk why
 
-            if (camera->showCursor) {  // we want to focus IMGUI
+            if (camera->hideCursor) {  // we want to focus IMGUI
                 ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
                 camera->rMove = camera->lMove = camera->fMove = camera->bMove = false;
                 ImGui::SetNextWindowFocus();  // set focus on first one? i guess
@@ -820,11 +854,13 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
             PrintShader();
         if (key == GLFW_KEY_LEFT_CONTROL)
             camera->slowCamControl = !camera->slowCamControl;
-        //chicken-eagle game controls
+        //those will be disabled after use
+        if (key == GLFW_KEY_RIGHT) camera->rightArrow = true;
+        if (key == GLFW_KEY_LEFT) camera->leftArrow = true;
 
     }
 
-    if (camera->showCursor)  // later implement input class so we dont have to
+    if (camera->hideCursor)  // later implement input class so we dont have to
         // check it like that
     {
         return;
@@ -837,8 +873,9 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
     if (key == GLFW_KEY_E) camera->uMove = set;
     if (key == GLFW_KEY_Q) camera->dMove = set;
 
-    if (key == GLFW_KEY_RIGHT) camera->rightArrow = set;
-    if (key == GLFW_KEY_LEFT) camera->leftArrow = set;
+
+    if (key == GLFW_KEY_RIGHT) camera->rightArrowHold = set;
+    if (key == GLFW_KEY_LEFT) camera->leftArrowHold = set;
     if (key == GLFW_KEY_UP) camera->upArrow = set;
     if (key == GLFW_KEY_DOWN) camera->downArrow = set;
     if (key == GLFW_KEY_SPACE) camera->shootSpace = set;
@@ -848,23 +885,29 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
     if (key == GLFW_KEY_A) camera->AKey = set;
     if (key == GLFW_KEY_D) camera->DKey = set;
 
-
-
     /* if (key == GLFW_KEY_F) //for light
        camera->switchSpotlight();*/
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    // make sure the viewport matches the new window dimensions; note that width
-    // and height will be significantly larger than specified on retina displays.
-    if (height == 0 || width == 0)  // prevent errors from minimizing and moving windows
-        return;
-    glViewport(0, 0, width, height);
-    // std::cout << width << " " << height << "\n";
-    windowSettings.CUR_WIDTH = width;
-    windowSettings.CUR_HEIGHT = height;
+    if(sceneInstance)
+    {
+        sceneInstance->ResizeWindow(width,height);
+    }
+    //if for some stupid reason we didnt load a scene...
+    else
+    {
+        // make sure the viewport matches the new window dimensions; note that width
+        // and height will be significantly larger than specified on retina displays.
+        if (height == 0 || width == 0)  // prevent errors from minimizing and moving windows
+            return;
+        //we assume opengl is running
+        glViewport(0, 0, width, height);
+        std::cout << "setting " << width << " " << height << "\n";
 
-    sceneInstance->ResizeScene();
+        windowSettings.CUR_WIDTH = width;
+        windowSettings.CUR_HEIGHT = height;
+    }
 }
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
@@ -883,6 +926,16 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
     mousePos[1] = ypos;
 
     camera->ProcessMouseMovement(xoffset, yoffset);
+    camera->xMousePos = xpos;
+    //camera->yMousePos = ypos;
+    camera->yMousePos = abs(ypos-windowSettings.CUR_HEIGHT);
+
+    /*if(Managers::currentSceneIndex == 9)
+    {
+         //TODO make this event so i can get this as event in my other class, we added xMousePos to camera...
+        std::static_pointer_cast<CoinMapGame>(sceneInstance)->ClickMouse((float)xpos,(float)ypos);
+
+    }*/
 }
 
 static void character_callback(GLFWwindow *window, unsigned int codepoint) {
@@ -1172,7 +1225,7 @@ int main() {
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 
-    ReloadScene(7);
+    ReloadScene(9);
     camera->toggleCursor(); //set to hidden by default
 
     //create free camera path
@@ -1188,6 +1241,11 @@ int main() {
         Managers::deltaTime = currentFrame - lastFrame;
         //std::cout << Managers::deltaTime << std::endl;
 
+        //TODO NOW DISABLE ALL POLLED PRESSED BUTTONS, this is not good implemetation
+        camera->RMBpress = false;
+        camera->LMBpress = false;
+        camera->leftArrow = false;
+        camera->rightArrow = false;
 
         if (camera->setCinematicCamera) {
             MoveCamera();
@@ -1195,9 +1253,26 @@ int main() {
         }
 
         uniforms.view = camera->GetViewMatrix(); //uniformy su ine tu ako v drawskybox //see translation unit, .cpp is one TU...
-        uniforms.projection = glm::perspective(glm::radians(camera->Zoom),
-                                               (float) windowSettings.CUR_WIDTH / (float) windowSettings.CUR_HEIGHT,
-                                               zNear, zFar);
+        if(camera->cameraPerspective == Camera_Perspective::PERSP) {
+            uniforms.projection = glm::perspective(glm::radians(camera->Zoom),
+                                                   (float) windowSettings.CUR_WIDTH / (float) windowSettings.CUR_HEIGHT,
+                                                   zNear, zFar);
+        }
+        //else we want ortho
+        else
+        {
+            float scale = camera->orthoScale;
+            float aspect =(float) windowSettings.CUR_WIDTH / (float) windowSettings.CUR_HEIGHT;
+            //uniforms.projection = glm::ortho(0.0f, (float) windowSettings.CUR_WIDTH,
+            //                                 (float)windowSettings.CUR_HEIGHT, 0.0f,
+                                             //-1.0f, 1.0f);
+           //                                  -1.0f, zFar*200.0f);
+           //it didnt work so i did it like this https://stackoverflow.com/a/61989111
+
+            uniforms.projection = glm::ortho(-aspect*scale, aspect * scale, -scale, scale,
+                                              zNear, zFar);
+
+        }
         glfwPollEvents();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -1213,7 +1288,7 @@ int main() {
         else
             glDisable(GL_CULL_FACE);
 
-        if (!camera->showCursor) {
+        if (!camera->hideCursor) {
             glfwSetInputMode(windowSettings.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             ImGui::SetWindowFocus(nullptr);
         } else {

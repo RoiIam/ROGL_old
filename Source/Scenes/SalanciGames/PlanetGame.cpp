@@ -264,9 +264,9 @@ void PlanetGame::Movement() {
 
 
     int iPlayer =0; //horizontal mov
-    if(camera->leftArrow)
+    if(camera->leftArrowHold)
         iPlayer =-1;
-    if(camera->rightArrow)
+    if(camera->rightArrowHold)
         iPlayer =1;
 
     glm::vec3 oldPos = playerChick_OI->GetPos();

@@ -170,7 +170,11 @@ void CannonGame::GameTimeStep() {
 void CannonGame::Movement() {
 
     //ziskajme uhol
-    float temp = -80.0f*camera->rightArrow + 80.0f*camera->leftArrow;
+    //same here  we dont use camera->rightArrow and *camera->leftArrow bcs its one press
+    // but use camera->rMove and camera->lMove
+    // note now its using A and D to rotate
+    //actually we added leftArrowHold and rightArrowHold
+    float temp = -80.0f*camera->rightArrowHold + 80.0f*camera->leftArrowHold;
     temp *= Managers::deltaTime;
     float curAngle = playerChick_OI->GetDeg("Z");
     //std::cout << "curAngle: " <<curAngle << std::endl;

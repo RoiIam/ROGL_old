@@ -9,7 +9,9 @@
 enum Camera_Movement {
     FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN, NONE
 };
-
+enum Camera_Perspective {
+    ORTHO, PERSP
+};
 
 // Default camera values
 const float YAW = -90.0f;
@@ -28,6 +30,8 @@ public:
     glm::vec3 Up;
     glm::vec3 Right;
     glm::vec3 WorldUp;
+    Camera_Perspective cameraPerspective = Camera_Perspective::PERSP;//default
+    float orthoScale = 10.0f;
     // euler Angles
     float Yaw;
     float Pitch;
@@ -37,7 +41,7 @@ public:
     float Zoom;
 
 
-    bool showCursor = true;
+    bool hideCursor = true;
     bool lMove = false;
     bool rMove = false;
     bool fMove = false;
@@ -50,8 +54,10 @@ public:
     bool setCinematicCamera = false;
 
     int iPlayer = 0; //pouzite v gamescene
-    bool leftArrow = false; //pouzite v CannonGame
-    bool rightArrow = false; //pouzite v CannonGame
+    bool leftArrow = false;
+    bool rightArrow = false;
+    bool leftArrowHold = false; //pouzite v CannonGame
+    bool rightArrowHold = false; //pouzite v CannonGame
     bool upArrow = false; //pouzite v CannonGame
     bool downArrow = false; //pouzite v CannonGame
     bool shootSpace = false; //pouzite v CannonGame
@@ -59,6 +65,12 @@ public:
     bool SKey = false; //pouzite v PlanetGame
     bool AKey = false; //pouzite v PlanetGame
     bool DKey = false; //pouzite v PlanetGame
+    bool LMBpress = false; //pouzite v CoinMapGame
+    bool RMBpress = false; //pouzite v CoinMapGamebool
+    bool LMBhold = false;
+    bool RMBhold = false;
+    float xMousePos; //pouzite v CoinMapGame
+    float yMousePos; //pouzite v CoinMapGame
     //vector pointing from the camera to the world, normalized
     glm::vec3 world_coordinates_ray_click;
 
@@ -90,6 +102,8 @@ public:
     void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
     //constrainPitch was GLboolean from glad.h, idk why
 
+    //returns 0-1 screen normalized x,y mouse coordinates, correctly scaled to screen/window size
+    void MouseMovementNormalized(float &x, float &y,float w, float h);
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(float yoffset);
 

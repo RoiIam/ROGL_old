@@ -6,11 +6,11 @@
 #define ROGL_CANNONGAME_H
 
 #include <glm/gtc/type_ptr.hpp> //to use make_vec3
-#include "../Instances/SceneInstance.h"
-#include "../Instances/ObjectInstance.h"
+#include "Instances/SceneInstance.h"
+#include "Instances/ObjectInstance.h"
 #include "Primitives/DefaultCube.h"
 #include "Primitives/Grass.h"
-#include "../Lights//Light.h"
+#include "Lights/Light.h"
 
 
 class CannonGame : public SceneInstance{

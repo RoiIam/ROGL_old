@@ -22,8 +22,36 @@ Grass::Grass() {
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
     glBindVertexArray(0);
+    //fix strings
+    //still not sure if use / or \\ in strings same with water
+    transparentTexture = Model::TextureFromFile("grass.png", "../Assets/Textures", false);
 
-    transparentTexture = Model::TextureFromFile("grass.png", "..\\Assets\\Textures\\", false);
+}
+
+Grass::Grass(std::string map) {
+
+    //TODO  copy of defualt constructor... for now
+    ourShader = Shader("..\\Assets\\Shaders\\Forward\\Transparent\\transparentGrass.vert",
+                       "..\\Assets\\Shaders\\Forward\\Transparent\\transparentGrass.frag");
+
+
+    this->boundMin = min;
+    this->boundMax = max;
+    // transparent VAO
+
+    glGenVertexArrays(1, &transparentVAO);
+    glGenBuffers(1, &transparentVBO);
+    glBindVertexArray(transparentVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
+    glBindVertexArray(0);
+
+    //still not sure if use / or \\ in strings same with water
+    transparentTexture = Model::TextureFromFile(map.c_str(), "../Assets/Textures", false);
 
 }
 

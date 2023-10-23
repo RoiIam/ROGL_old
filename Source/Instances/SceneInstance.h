@@ -103,4 +103,7 @@ public:
 
     virtual void ResizeScene();
 
+    //simmilarly like in glfw callback, resize the scene
+    void ResizeWindow(float width,float height);
+
 };

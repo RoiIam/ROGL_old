@@ -14,7 +14,7 @@ class Grass : public Model {
 
 public:
     Grass();
-
+    Grass(std::string textureName);
     ~Grass() override;
 
     Shader ourShader;
