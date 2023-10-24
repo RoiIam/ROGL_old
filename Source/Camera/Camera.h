@@ -58,8 +58,8 @@ public:
     bool rightArrow = false;
     bool leftArrowHold = false; //pouzite v CannonGame
     bool rightArrowHold = false; //pouzite v CannonGame
-    bool upArrow = false; //pouzite v CannonGame
-    bool downArrow = false; //pouzite v CannonGame
+    bool upArrowHold = false; //pouzite v CannonGame
+    bool downArrowHold = false; //pouzite v CannonGame
     bool shootSpace = false; //pouzite v CannonGame
     bool WKey = false; //pouzite v PlanetGame
     bool SKey = false; //pouzite v PlanetGame

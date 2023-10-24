@@ -288,7 +288,7 @@ void PlanetGame::Movement() {
     }
     //now add scale along y as strength of the shot
     glm::vec3 curSize = playerChick_OI->GetScale();
-    float newSize = -0.15f * camera->downArrow + 0.15f * camera->upArrow; //TODO deltatime
+    float newSize = -0.15f * camera->downArrowHold + 0.15f * camera->upArrowHold; //TODO deltatime
     newSize *= Managers::deltaTime;
 
     //std::cout << "curSize: " << glm::to_string(curSize) << std::endl;

@@ -436,10 +436,25 @@ void DrawImGui() {
         freeCamLookDir = glm::make_vec3(freeCamLookDirUI);
     }
 
-    ImGui::Value("CUR_WIDTH", windowSettings.CUR_WIDTH);
-    ImGui::Value("CUR_HEIGHT", windowSettings.CUR_HEIGHT);
-    ImGui::Value("width mon", glfwGetVideoMode(windowSettings.monitor)->width);
-    ImGui::Value("height mon", glfwGetVideoMode(windowSettings.monitor)->height);
+    auto s2 = std::string("CUR_WIDTH ")+ std::to_string(windowSettings.CUR_WIDTH)+
+            std::string(" CUR_HEIGHT ")+ std::to_string(windowSettings.CUR_HEIGHT);
+    ImGui::Text("%s", s2.c_str());
+
+    auto s3 = std::string("mon width ")+ std::to_string(glfwGetVideoMode(windowSettings.monitor)->width)+
+            std::string(" mon height  ")+ std::to_string(glfwGetVideoMode(windowSettings.monitor)->height);
+    ImGui::Text("%s", s3.c_str());
+    //my own mouse coords absolute
+    auto mousePos = std::string("mouse pos X ")+  std::to_string(camera->xMousePos) +
+            std::string(" Y ") + std::to_string(camera->yMousePos);
+    ImGui::Text("%s", mousePos.c_str());
+    //my own mouse coords ,scaled , relative, percent
+    float a =camera->xMousePos ,b=camera->yMousePos;
+    camera->MouseMovementNormalized(a,b,windowSettings.CUR_WIDTH,windowSettings.CUR_HEIGHT);
+
+    mousePos = std::string("mouse pos rel X ")+  std::to_string(a) +
+                    std::string(" Y ") + std::to_string(b);
+    ImGui::Text("%s", mousePos.c_str());
+
 
     ImGui::End();
 }
@@ -859,12 +874,13 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
         if (key == GLFW_KEY_LEFT) camera->leftArrow = true;
 
     }
-
+    /*
     if (camera->hideCursor)  // later implement input class so we dont have to
         // check it like that
     {
         return;
     }
+     */
     bool set = (action != GLFW_RELEASE);
     if (key == GLFW_KEY_W) camera->fMove = set;
     if (key == GLFW_KEY_S) camera->bMove = set;
@@ -876,8 +892,8 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
 
     if (key == GLFW_KEY_RIGHT) camera->rightArrowHold = set;
     if (key == GLFW_KEY_LEFT) camera->leftArrowHold = set;
-    if (key == GLFW_KEY_UP) camera->upArrow = set;
-    if (key == GLFW_KEY_DOWN) camera->downArrow = set;
+    if (key == GLFW_KEY_UP) camera->upArrowHold = set;
+    if (key == GLFW_KEY_DOWN) camera->downArrowHold = set;
     if (key == GLFW_KEY_SPACE) camera->shootSpace = set;
 
     if (key == GLFW_KEY_W) camera->WKey = set;
