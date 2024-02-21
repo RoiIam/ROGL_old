@@ -55,6 +55,8 @@ build CMakeFiles/GLAD_S_LIB.dir/C_/Libs/GLAD_c_46/src/glad.c.obj: C_COMPILER__GL
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\GLAD_S_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\GLAD_S_LIB.dir\C_\Libs\GLAD_c_46\src
+  TARGET_COMPILE_PDB = CMakeFiles\GLAD_S_LIB.dir\GLAD_S_LIB.pdb
+  TARGET_PDB = libGLAD_S_LIB.pdb
 
 
 # =============================================================================
@@ -69,8 +71,9 @@ build libGLAD_S_LIB.a: C_STATIC_LIBRARY_LINKER__GLAD_S_LIB_Debug CMakeFiles/GLAD
   OBJECT_DIR = CMakeFiles\GLAD_S_LIB.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
+  TARGET_COMPILE_PDB = CMakeFiles\GLAD_S_LIB.dir\GLAD_S_LIB.pdb
   TARGET_FILE = libGLAD_S_LIB.a
-  TARGET_PDB = GLAD_S_LIB.a.dbg
+  TARGET_PDB = libGLAD_S_LIB.pdb
 
 # =============================================================================
 # Object build statements for STATIC_LIBRARY target IMGUI_LIB
@@ -87,6 +90,8 @@ build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/imgui.cpp.obj: CXX_COMPILER__IM
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187
+  TARGET_COMPILE_PDB = CMakeFiles\IMGUI_LIB.dir\IMGUI_LIB.pdb
+  TARGET_PDB = libIMGUI_LIB.pdb
 
 build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/imgui_draw.cpp.obj: CXX_COMPILER__IMGUI_LIB_Debug C$:/Libs/imgui_187/imgui_draw.cpp || cmake_object_order_depends_target_IMGUI_LIB
   DEP_FILE = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\imgui_draw.cpp.obj.d
@@ -94,6 +99,8 @@ build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/imgui_draw.cpp.obj: CXX_COMPILE
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187
+  TARGET_COMPILE_PDB = CMakeFiles\IMGUI_LIB.dir\IMGUI_LIB.pdb
+  TARGET_PDB = libIMGUI_LIB.pdb
 
 build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/imgui_widgets.cpp.obj: CXX_COMPILER__IMGUI_LIB_Debug C$:/Libs/imgui_187/imgui_widgets.cpp || cmake_object_order_depends_target_IMGUI_LIB
   DEP_FILE = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\imgui_widgets.cpp.obj.d
@@ -101,6 +108,8 @@ build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/imgui_widgets.cpp.obj: CXX_COMP
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187
+  TARGET_COMPILE_PDB = CMakeFiles\IMGUI_LIB.dir\IMGUI_LIB.pdb
+  TARGET_PDB = libIMGUI_LIB.pdb
 
 build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/imgui_tables.cpp.obj: CXX_COMPILER__IMGUI_LIB_Debug C$:/Libs/imgui_187/imgui_tables.cpp || cmake_object_order_depends_target_IMGUI_LIB
   DEP_FILE = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\imgui_tables.cpp.obj.d
@@ -108,6 +117,8 @@ build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/imgui_tables.cpp.obj: CXX_COMPI
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187
+  TARGET_COMPILE_PDB = CMakeFiles\IMGUI_LIB.dir\IMGUI_LIB.pdb
+  TARGET_PDB = libIMGUI_LIB.pdb
 
 build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/backends/imgui_impl_glfw.cpp.obj: CXX_COMPILER__IMGUI_LIB_Debug C$:/Libs/imgui_187/backends/imgui_impl_glfw.cpp || cmake_object_order_depends_target_IMGUI_LIB
   DEP_FILE = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\backends\imgui_impl_glfw.cpp.obj.d
@@ -115,6 +126,8 @@ build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/backends/imgui_impl_glfw.cpp.ob
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\backends
+  TARGET_COMPILE_PDB = CMakeFiles\IMGUI_LIB.dir\IMGUI_LIB.pdb
+  TARGET_PDB = libIMGUI_LIB.pdb
 
 build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/backends/imgui_impl_opengl3.cpp.obj: CXX_COMPILER__IMGUI_LIB_Debug C$:/Libs/imgui_187/backends/imgui_impl_opengl3.cpp || cmake_object_order_depends_target_IMGUI_LIB
   DEP_FILE = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\backends\imgui_impl_opengl3.cpp.obj.d
@@ -122,6 +135,8 @@ build CMakeFiles/IMGUI_LIB.dir/C_/Libs/imgui_187/backends/imgui_impl_opengl3.cpp
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   OBJECT_FILE_DIR = CMakeFiles\IMGUI_LIB.dir\C_\Libs\imgui_187\backends
+  TARGET_COMPILE_PDB = CMakeFiles\IMGUI_LIB.dir\IMGUI_LIB.pdb
+  TARGET_PDB = libIMGUI_LIB.pdb
 
 
 # =============================================================================
@@ -136,8 +151,9 @@ build libIMGUI_LIB.a: CXX_STATIC_LIBRARY_LINKER__IMGUI_LIB_Debug CMakeFiles/IMGU
   OBJECT_DIR = CMakeFiles\IMGUI_LIB.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
+  TARGET_COMPILE_PDB = CMakeFiles\IMGUI_LIB.dir\IMGUI_LIB.pdb
   TARGET_FILE = libIMGUI_LIB.a
-  TARGET_PDB = IMGUI_LIB.a.dbg
+  TARGET_PDB = libIMGUI_LIB.pdb
 
 # =============================================================================
 # Object build statements for EXECUTABLE target ROGL
@@ -154,6 +170,8 @@ build CMakeFiles/ROGL.dir/main.cpp.obj: CXX_COMPILER__ROGL_Debug C$:/Users/robko
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -isystem "C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = CMakeFiles\ROGL.dir
   OBJECT_FILE_DIR = CMakeFiles\ROGL.dir
+  TARGET_COMPILE_PDB = CMakeFiles\ROGL.dir\
+  TARGET_PDB = ROGL.pdb
 
 
 # =============================================================================
@@ -163,7 +181,7 @@ build CMakeFiles/ROGL.dir/main.cpp.obj: CXX_COMPILER__ROGL_Debug C$:/Users/robko
 #############################################
 # Link the executable ROGL.exe
 
-build ROGL.exe: CXX_EXECUTABLE_LINKER__ROGL_Debug Source/CMakeFiles/ROGL_Source.dir/Log.cpp.obj Source/CMakeFiles/ROGL_Source.dir/__/includes/FileDialog/FileDialog.cpp.obj Source/CMakeFiles/ROGL_Source.dir/C_/Libs/imgui_187/imgui_demo.cpp.obj Source/CMakeFiles/ROGL_Source.dir/shader.cpp.obj Source/CMakeFiles/ROGL_Source.dir/mesh.cpp.obj Source/CMakeFiles/ROGL_Source.dir/model.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/Managers.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/PerfAnalyzer.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/ObjectInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/SceneInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/Light.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/DirectionalLight.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/PointLight.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Camera/Camera.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/ShaderInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Cube.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/DefaultCube.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Grass.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/Controls.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/ForwardScene1.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene1.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene2.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Quad.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/GraphicsOptions.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Water.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Path.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/GameScene.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CannonGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PlanetGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PoolGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CoinMapGame.cpp.obj CMakeFiles/ROGL.dir/main.cpp.obj | C$:/Program$ Files$ (x86)/Assimp/lib/libassimpd.a C$:/Libs/GLFW338/lib-mingw-w64/libglfw3.a libGLAD_S_LIB.a libIMGUI_LIB.a C$:/Program$ Files$ (x86)/Assimp/lib/libzlibstaticd.a || Source/ROGL_Source libGLAD_S_LIB.a libIMGUI_LIB.a
+build ROGL.exe: CXX_EXECUTABLE_LINKER__ROGL_Debug Source/CMakeFiles/ROGL_Source.dir/Log.cpp.obj Source/CMakeFiles/ROGL_Source.dir/__/includes/FileDialog/FileDialog.cpp.obj Source/CMakeFiles/ROGL_Source.dir/C_/Libs/imgui_187/imgui_demo.cpp.obj Source/CMakeFiles/ROGL_Source.dir/shader.cpp.obj Source/CMakeFiles/ROGL_Source.dir/mesh.cpp.obj Source/CMakeFiles/ROGL_Source.dir/model.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/Managers.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/PerfAnalyzer.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/ObjectInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/SceneInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/Light.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/DirectionalLight.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/PointLight.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Camera/Camera.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/ShaderInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Cube.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/DefaultCube.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Grass.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/Controls.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/ForwardScene1.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene1.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene2.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Quad.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/GraphicsOptions.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Water.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Path.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/GameScene.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CannonGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PlanetGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PoolGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CoinMapGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/Pathfinding.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/2D/Plane.cpp.obj CMakeFiles/ROGL.dir/main.cpp.obj | C$:/Program$ Files$ (x86)/Assimp/lib/libassimpd.a C$:/Libs/GLFW338/lib-mingw-w64/libglfw3.a libGLAD_S_LIB.a libIMGUI_LIB.a C$:/Program$ Files$ (x86)/Assimp/lib/libzlibstaticd.a || Source/ROGL_Source libGLAD_S_LIB.a libIMGUI_LIB.a
   FLAGS = -g
   LINK_FLAGS = -static-libgcc -static-libstdc++ -Wl,-Bdynamic -lwinpthread
   LINK_LIBRARIES = "C:/Program Files (x86)/Assimp/lib/libassimpd.a"  C:/Libs/GLFW338/lib-mingw-w64/libglfw3.a  libGLAD_S_LIB.a  libIMGUI_LIB.a  "C:/Program Files (x86)/Assimp/lib/libzlibstaticd.a"  -static-libgcc  -static-libstdc++  -Wl,-Bstatic  -lstdc++  -lwinpthread  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
@@ -171,9 +189,10 @@ build ROGL.exe: CXX_EXECUTABLE_LINKER__ROGL_Debug Source/CMakeFiles/ROGL_Source.
   OBJECT_DIR = CMakeFiles\ROGL.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
+  TARGET_COMPILE_PDB = CMakeFiles\ROGL.dir\
   TARGET_FILE = ROGL.exe
   TARGET_IMPLIB = libROGL.dll.a
-  TARGET_PDB = ROGL.exe.dbg
+  TARGET_PDB = ROGL.pdb
 
 
 #############################################
@@ -219,6 +238,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Log.cpp.obj: CXX_COMPILER__ROGL_Source_D
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/__/includes/FileDialog/FileDialog.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/includes/FileDialog/FileDialog.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\__\includes\FileDialog\FileDialog.cpp.obj.d
@@ -226,6 +247,8 @@ build Source/CMakeFiles/ROGL_Source.dir/__/includes/FileDialog/FileDialog.cpp.ob
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\__\includes\FileDialog
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/C_/Libs/imgui_187/imgui_demo.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Libs/imgui_187/imgui_demo.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\C_\Libs\imgui_187\imgui_demo.cpp.obj.d
@@ -233,6 +256,8 @@ build Source/CMakeFiles/ROGL_Source.dir/C_/Libs/imgui_187/imgui_demo.cpp.obj: CX
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\C_\Libs\imgui_187
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/shader.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/shader.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\shader.cpp.obj.d
@@ -240,6 +265,8 @@ build Source/CMakeFiles/ROGL_Source.dir/shader.cpp.obj: CXX_COMPILER__ROGL_Sourc
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/mesh.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/mesh.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\mesh.cpp.obj.d
@@ -247,6 +274,8 @@ build Source/CMakeFiles/ROGL_Source.dir/mesh.cpp.obj: CXX_COMPILER__ROGL_Source_
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/model.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/model.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\model.cpp.obj.d
@@ -254,6 +283,8 @@ build Source/CMakeFiles/ROGL_Source.dir/model.cpp.obj: CXX_COMPILER__ROGL_Source
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Utilities/Managers.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Utilities/Managers.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Utilities\Managers.cpp.obj.d
@@ -261,6 +292,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Utilities/Managers.cpp.obj: CXX_COMPILER
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Utilities
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Utilities/PerfAnalyzer.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Utilities/PerfAnalyzer.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Utilities\PerfAnalyzer.cpp.obj.d
@@ -268,6 +301,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Utilities/PerfAnalyzer.cpp.obj: CXX_COMP
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Utilities
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Instances/ObjectInstance.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Instances/ObjectInstance.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Instances\ObjectInstance.cpp.obj.d
@@ -275,6 +310,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Instances/ObjectInstance.cpp.obj: CXX_CO
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Instances
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Instances/SceneInstance.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Instances/SceneInstance.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Instances\SceneInstance.cpp.obj.d
@@ -282,6 +319,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Instances/SceneInstance.cpp.obj: CXX_COM
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Instances
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Lights/Light.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Lights/Light.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Lights\Light.cpp.obj.d
@@ -289,6 +328,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Lights/Light.cpp.obj: CXX_COMPILER__ROGL
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Lights
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Lights/DirectionalLight.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Lights/DirectionalLight.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Lights\DirectionalLight.cpp.obj.d
@@ -296,6 +337,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Lights/DirectionalLight.cpp.obj: CXX_COM
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Lights
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Lights/PointLight.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Lights/PointLight.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Lights\PointLight.cpp.obj.d
@@ -303,6 +346,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Lights/PointLight.cpp.obj: CXX_COMPILER_
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Lights
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Camera/Camera.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Camera/Camera.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Camera\Camera.cpp.obj.d
@@ -310,6 +355,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Camera/Camera.cpp.obj: CXX_COMPILER__ROG
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Camera
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Instances/ShaderInstance.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Instances/ShaderInstance.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Instances\ShaderInstance.cpp.obj.d
@@ -317,6 +364,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Instances/ShaderInstance.cpp.obj: CXX_CO
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Instances
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Primitives/Cube.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Primitives/Cube.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Primitives\Cube.cpp.obj.d
@@ -324,6 +373,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Primitives/Cube.cpp.obj: CXX_COMPILER__R
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Primitives
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Primitives/DefaultCube.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Primitives/DefaultCube.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Primitives\DefaultCube.cpp.obj.d
@@ -331,6 +382,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Primitives/DefaultCube.cpp.obj: CXX_COMP
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Primitives
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Primitives/Grass.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Primitives/Grass.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Primitives\Grass.cpp.obj.d
@@ -338,6 +391,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Primitives/Grass.cpp.obj: CXX_COMPILER__
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Primitives
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Utilities/Controls.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Utilities/Controls.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Utilities\Controls.cpp.obj.d
@@ -345,6 +400,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Utilities/Controls.cpp.obj: CXX_COMPILER
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Utilities
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Scenes/ForwardScene1.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Scenes/ForwardScene1.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Scenes\ForwardScene1.cpp.obj.d
@@ -352,6 +409,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Scenes/ForwardScene1.cpp.obj: CXX_COMPIL
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Scenes
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene1.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Scenes/DeferredScene1.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Scenes\DeferredScene1.cpp.obj.d
@@ -359,6 +418,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene1.cpp.obj: CXX_COMPI
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Scenes
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene2.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Scenes/DeferredScene2.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Scenes\DeferredScene2.cpp.obj.d
@@ -366,6 +427,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene2.cpp.obj: CXX_COMPI
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Scenes
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Primitives/Quad.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Primitives/Quad.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Primitives\Quad.cpp.obj.d
@@ -373,6 +436,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Primitives/Quad.cpp.obj: CXX_COMPILER__R
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Primitives
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Utilities/GraphicsOptions.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Utilities/GraphicsOptions.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Utilities\GraphicsOptions.cpp.obj.d
@@ -380,6 +445,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Utilities/GraphicsOptions.cpp.obj: CXX_C
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Utilities
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Primitives/Water.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Primitives/Water.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Primitives\Water.cpp.obj.d
@@ -387,6 +454,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Primitives/Water.cpp.obj: CXX_COMPILER__
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Primitives
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Primitives/Path.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Primitives/Path.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Primitives\Path.cpp.obj.d
@@ -394,6 +463,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Primitives/Path.cpp.obj: CXX_COMPILER__R
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Primitives
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/GameScene.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Scenes/SalanciGames/GameScene.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames\GameScene.cpp.obj.d
@@ -401,6 +472,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/GameScene.cpp.obj: C
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CannonGame.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Scenes/SalanciGames/CannonGame.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames\CannonGame.cpp.obj.d
@@ -408,6 +481,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CannonGame.cpp.obj: 
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PlanetGame.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Scenes/SalanciGames/PlanetGame.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames\PlanetGame.cpp.obj.d
@@ -415,6 +490,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PlanetGame.cpp.obj: 
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PoolGame.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Scenes/SalanciGames/PoolGame.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames\PoolGame.cpp.obj.d
@@ -422,6 +499,8 @@ build Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PoolGame.cpp.obj: CX
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 build Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CoinMapGame.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Scenes/SalanciGames/CoinMapGame.cpp || cmake_object_order_depends_target_ROGL_Source
   DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames\CoinMapGame.cpp.obj.d
@@ -429,13 +508,33 @@ build Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CoinMapGame.cpp.obj:
   INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
   OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
   OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
+
+build Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/Pathfinding.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Scenes/SalanciGames/Pathfinding.cpp || cmake_object_order_depends_target_ROGL_Source
+  DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames\Pathfinding.cpp.obj.d
+  FLAGS = -g -std=gnu++17
+  INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
+  OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
+  OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Scenes\SalanciGames
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
+
+build Source/CMakeFiles/ROGL_Source.dir/Primitives/2D/Plane.cpp.obj: CXX_COMPILER__ROGL_Source_Debug C$:/Users/robko/Documents/ROGL/Source/Primitives/2D/Plane.cpp || cmake_object_order_depends_target_ROGL_Source
+  DEP_FILE = Source\CMakeFiles\ROGL_Source.dir\Primitives\2D\Plane.cpp.obj.d
+  FLAGS = -g -std=gnu++17
+  INCLUDES = -IC:/Libs/GLAD_c_46/include -IC:/Libs/GLFW338/include -IC:/Libs/GLM -IC:/Libs/imgui_187 -IC:/Users/robko/Documents/ROGL/includes -IC:/Users/robko/Documents/ROGL/Source -IC:/Users/robko/Documents/ROGL/Source/../includes/FileDialog -I"C:/Program Files (x86)/Assimp/include"
+  OBJECT_DIR = Source\CMakeFiles\ROGL_Source.dir
+  OBJECT_FILE_DIR = Source\CMakeFiles\ROGL_Source.dir\Primitives\2D
+  TARGET_COMPILE_PDB = Source\CMakeFiles\ROGL_Source.dir\
+  TARGET_PDB = ""
 
 
 
 #############################################
 # Object library ROGL_Source
 
-build Source/ROGL_Source: phony Source/CMakeFiles/ROGL_Source.dir/Log.cpp.obj Source/CMakeFiles/ROGL_Source.dir/__/includes/FileDialog/FileDialog.cpp.obj Source/CMakeFiles/ROGL_Source.dir/C_/Libs/imgui_187/imgui_demo.cpp.obj Source/CMakeFiles/ROGL_Source.dir/shader.cpp.obj Source/CMakeFiles/ROGL_Source.dir/mesh.cpp.obj Source/CMakeFiles/ROGL_Source.dir/model.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/Managers.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/PerfAnalyzer.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/ObjectInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/SceneInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/Light.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/DirectionalLight.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/PointLight.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Camera/Camera.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/ShaderInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Cube.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/DefaultCube.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Grass.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/Controls.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/ForwardScene1.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene1.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene2.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Quad.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/GraphicsOptions.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Water.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Path.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/GameScene.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CannonGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PlanetGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PoolGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CoinMapGame.cpp.obj
+build Source/ROGL_Source: phony Source/CMakeFiles/ROGL_Source.dir/Log.cpp.obj Source/CMakeFiles/ROGL_Source.dir/__/includes/FileDialog/FileDialog.cpp.obj Source/CMakeFiles/ROGL_Source.dir/C_/Libs/imgui_187/imgui_demo.cpp.obj Source/CMakeFiles/ROGL_Source.dir/shader.cpp.obj Source/CMakeFiles/ROGL_Source.dir/mesh.cpp.obj Source/CMakeFiles/ROGL_Source.dir/model.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/Managers.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/PerfAnalyzer.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/ObjectInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/SceneInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/Light.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/DirectionalLight.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Lights/PointLight.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Camera/Camera.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Instances/ShaderInstance.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Cube.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/DefaultCube.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Grass.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/Controls.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/ForwardScene1.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene1.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/DeferredScene2.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Quad.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Utilities/GraphicsOptions.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Water.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/Path.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/GameScene.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CannonGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PlanetGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/PoolGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/CoinMapGame.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Scenes/SalanciGames/Pathfinding.cpp.obj Source/CMakeFiles/ROGL_Source.dir/Primitives/2D/Plane.cpp.obj
 
 
 #############################################
@@ -496,14 +595,14 @@ build Source/all: phony Source/ROGL_Source
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../Source/CMakeLists.txt C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpConfig.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpConfigVersion.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpTargets-debug.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpTargets.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCommonLanguageInclude.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeLanguageInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeRCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-windres.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.23.2/CMakeCCompiler.cmake CMakeFiles/3.23.2/CMakeCXXCompiler.cmake CMakeFiles/3.23.2/CMakeRCCompiler.cmake CMakeFiles/3.23.2/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../Source/CMakeLists.txt C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpConfig.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpConfigVersion.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpTargets-debug.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpTargets.cmake C$:/msys64/mingw64/lib/cmake/assimp-5.0/assimp-config-version.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCCompiler.cmake.in C$:/msys64/mingw64/share/cmake/Modules/CMakeCCompilerABI.c C$:/msys64/mingw64/share/cmake/Modules/CMakeCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXCompiler.cmake.in C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXCompilerABI.cpp C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCommonLanguageInclude.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCompilerIdDetection.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCompileFeatures.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCompilerABI.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCompilerId.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineRCCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeFindBinUtils.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeLanguageInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeParseImplicitIncludeInfo.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeParseImplicitLinkInfo.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeParseLibraryArchitecture.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeRCCompiler.cmake.in C$:/msys64/mingw64/share/cmake/Modules/CMakeRCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystem.cmake.in C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeTestCCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeTestCXXCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeTestCompilerCommon.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeTestRCCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/ADSP-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/ARMCC-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/ARMClang-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/AppleClang-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Borland-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Bruce-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Clang-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Clang-DetermineCompilerInternal.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Compaq-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Cray-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Embarcadero-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Fujitsu-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GHS-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-FindBinUtils.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/HP-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/HP-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IAR-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Intel-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/LCC-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/MSVC-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/NVHPC-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/NVIDIA-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/PGI-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/PathScale-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/SCO-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/SDCC-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/SunPro-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/TI-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Watcom-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/XL-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/XL-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/XLClang-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/zOS-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Internal/FeatureTesting.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-Determine-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-windres.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.23.2/CMakeCCompiler.cmake CMakeFiles/3.23.2/CMakeCXXCompiler.cmake CMakeFiles/3.23.2/CMakeRCCompiler.cmake CMakeFiles/3.23.2/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build ../CMakeLists.txt ../Source/CMakeLists.txt C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpConfig.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpConfigVersion.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpTargets-debug.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpTargets.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCommonLanguageInclude.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeLanguageInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeRCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-windres.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.23.2/CMakeCCompiler.cmake CMakeFiles/3.23.2/CMakeCXXCompiler.cmake CMakeFiles/3.23.2/CMakeRCCompiler.cmake CMakeFiles/3.23.2/CMakeSystem.cmake: phony
+build ../CMakeLists.txt ../Source/CMakeLists.txt C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpConfig.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpConfigVersion.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpTargets-debug.cmake C$:/Program$ Files$ (x86)/Assimp/lib/cmake/assimp-5.2/assimpTargets.cmake C$:/msys64/mingw64/lib/cmake/assimp-5.0/assimp-config-version.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCCompiler.cmake.in C$:/msys64/mingw64/share/cmake/Modules/CMakeCCompilerABI.c C$:/msys64/mingw64/share/cmake/Modules/CMakeCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXCompiler.cmake.in C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXCompilerABI.cpp C$:/msys64/mingw64/share/cmake/Modules/CMakeCXXInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCommonLanguageInclude.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeCompilerIdDetection.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCompileFeatures.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCompilerABI.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineCompilerId.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineRCCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeDetermineSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeFindBinUtils.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeGenericSystem.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeInitializeConfigs.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeLanguageInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeParseImplicitIncludeInfo.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeParseImplicitLinkInfo.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeParseLibraryArchitecture.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeRCCompiler.cmake.in C$:/msys64/mingw64/share/cmake/Modules/CMakeRCInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystem.cmake.in C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInformation.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeTestCCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeTestCXXCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeTestCompilerCommon.cmake C$:/msys64/mingw64/share/cmake/Modules/CMakeTestRCCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/ADSP-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/ARMCC-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/ARMClang-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/AppleClang-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Borland-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Bruce-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Clang-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Clang-DetermineCompilerInternal.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Compaq-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Cray-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Embarcadero-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Fujitsu-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GHS-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU-FindBinUtils.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/HP-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/HP-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IAR-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Intel-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/LCC-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/MSVC-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/NVHPC-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/NVIDIA-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/PGI-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/PathScale-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/SCO-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/SDCC-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/SunPro-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/TI-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/Watcom-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/XL-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/XL-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/XLClang-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/zOS-C-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake C$:/msys64/mingw64/share/cmake/Modules/Internal/FeatureTesting.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-Determine-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-C.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU-CXX.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-GNU.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows-windres.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/Windows.cmake C$:/msys64/mingw64/share/cmake/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/3.23.2/CMakeCCompiler.cmake CMakeFiles/3.23.2/CMakeCXXCompiler.cmake CMakeFiles/3.23.2/CMakeRCCompiler.cmake CMakeFiles/3.23.2/CMakeSystem.cmake: phony
 
 
 #############################################

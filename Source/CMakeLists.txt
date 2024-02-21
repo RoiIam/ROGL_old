@@ -29,7 +29,9 @@ add_library(ROGL_Source OBJECT
         Scenes/ForwardScene1.cpp Scenes/DeferredScene1.cpp Scenes/DeferredScene2.cpp
         Primitives/Quad.cpp Utilities/GraphicsOptions.cpp Primitives/Water.cpp Primitives/Path.cpp
         Scenes/SalanciGames/GameScene.cpp Scenes/SalanciGames/CannonGame.cpp Scenes/SalanciGames/PlanetGame.cpp
-        Scenes/SalanciGames/PoolGame.cpp Scenes/SalanciGames/CoinMapGame.cpp)
+        Scenes/SalanciGames/PoolGame.cpp Scenes/SalanciGames/CoinMapGame.cpp
+        Scenes/SalanciGames/Pathfinding.cpp Primitives/2D/Plane.cpp
+        )
 
 
 target_link_libraries(ROGL PUBLIC ROGL_Source)

@@ -1,21 +1,21 @@
 //
-// Created by RoiIam on 17. 10. 2023.
+// Created by RoiIam on 7. 11. 2023.
 //
 
-#include "CoinMapGame.h"
+#include "Pathfinding.h"
 
 
-CoinMapGame::CoinMapGame() {
+Pathfinding::Pathfinding() {
     //enableMainUI = false; //comment for easier debug
 }
 
-void CoinMapGame::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
+void Pathfinding::Setup(Camera *cam, GraphicsOptions *graphicsOptions) {
     SceneInstance::Setup(cam, graphicsOptions);
     InitializeGame();
 }
 
 
-glm::vec3 CoinMapGame::TranslateToWorld(glm::vec3 ndcVec) {
+glm::vec3 Pathfinding::TranslateToWorld(glm::vec3 ndcVec) {
     //TODO fix the z value
     glm::vec3 result;
     //teraz to mame tak, ze obrazovka je taka velka ako obrazok,
@@ -39,69 +39,15 @@ glm::vec3 CoinMapGame::TranslateToWorld(glm::vec3 ndcVec) {
     return result;
 }
 
-void CoinMapGame::InitMap() {
-    //teraz nam idu suradnice l -15 - p+15 prex a pre y bottom -10 top +10
-    //15 je to preto lebo top a bottom su scale+- a left right su  aspect*scale
-    // cize L/R su width/height * 10, kedze W,H mam 1200/800 tak aspect je 1.5
-    //1,5*10 je 15
-    //vhodne by bolo dat si to do 0-1
-    // 0,0 bude vlavo dole?
-    // pre y by to bolo -scale je 0 a +scale je 1 cize -10 bude 0 a +10 bude 1
-    //teda len dame offset (+-x+10)/20 skuska pre -5, malo by byt 0.25
+void Pathfinding::InitMap() {
+}
 
-    //initialize map
-    /*
-     *
-    mouse pos50, 511  norm 0.052521, 0.760417
-    mouse pos175, 619 norm 0.183824, 0.921131
-    mouse pos151, 529 norm 0.158613, 0.787202
-
-    mouse pos245, 106 norm 0.257353, 0.157738
-    mouse pos761, 552 norm 0.79937, 0.821429
-    mouse pos677, 382 norm 0.711134, 0.568452
-
-    mouse pos892, 401 norm 0.936975, 0.596726
-    mouse pos856, 216 norm 0.89916, 0.321429
-    mouse pos627, 100 norm 0.658613, 0.14881
-
-    mouse pos396, 86 norm  0.415966, 0.127976
-
-     */
-    float z = 0;
-    vertex.push_back(glm::vec3(0.052521, 0.760417, z)); // i 0
-    vertex.push_back(glm::vec3(0.183824, 0.921131, z)); // i 1
-    vertex.push_back(glm::vec3(0.158613, 0.787202, z));// i 2
-
-    vertex.push_back(glm::vec3(0.257353, 0.157738, z));// i 3
-    vertex.push_back(glm::vec3(0.79937, 0.821429, z));// i 4
-    vertex.push_back(glm::vec3(0.711134, 0.568452, z));// i 5
-
-    vertex.push_back(glm::vec3(0.936975, 0.596726, z));// i 6
-    vertex.push_back(glm::vec3(0.89916, 0.321429, z));// i 7
-    vertex.push_back(glm::vec3(0.658613, 0.14881, z));// i 8
-
-    vertex.push_back(glm::vec3(0.415966, 0.127976, z));// i 9
-
-    //see mapIDs.png, non directional
-    edges.push_back(std::pair<int, int>(0, 2));
-    edges.push_back(std::pair<int, int>(2, 1));
-    edges.push_back(std::pair<int, int>(2, 3));
-    edges.push_back(std::pair<int, int>(2, 5));
-
-    edges.push_back(std::pair<int, int>(5, 4));
-    edges.push_back(std::pair<int, int>(5, 6));
-    edges.push_back(std::pair<int, int>(5, 8));
-
-    edges.push_back(std::pair<int, int>(8, 7));
-    edges.push_back(std::pair<int, int>(8, 9));
-
+void Pathfinding::CreatePolyMap() {
 
 }
 
-void CoinMapGame::InitializeGame() {
+void Pathfinding::InitializeGame() {
 
-    InitMap();
-    CreatePolyMap();
     //image size is 595 *420 ratio 1,416
     //we want it like *1.6 so 952 x 672
     ResizeWindow(952, 672); //hardcoded for now
@@ -115,6 +61,16 @@ void CoinMapGame::InitializeGame() {
                              "..\\Assets\\Shaders\\Forward\\Transparent\\transparentGrass.frag");
 
     mapPlane_OI = new ObjectInstance(
+            *mapPlane,
+            *grassShader, "playBoard", nullptr);
+
+
+    //create map grid
+    cell = new Plane("cell.png");
+    cell->cellType = 1;
+    cellShader = new Shader("..\\Assets\\Shaders\\2D\\cell.vert",
+                             "..\\Assets\\Shaders\\2D\\cell.frag");
+    cell_OI = new ObjectInstance(
             *mapPlane,
             *grassShader, "playBoard", nullptr);
 
@@ -143,6 +99,7 @@ void CoinMapGame::InitializeGame() {
     selectableObjInstances.push_back(chick_OI);
     selectableObjInstances.push_back(eagle_OI);
     selectableObjInstances.push_back(mapPlane_OI);
+    selectableObjInstances.push_back(cell_OI);
 
 
     //set chicken..etc to position
@@ -171,7 +128,7 @@ void CoinMapGame::InitializeGame() {
     }*/
 }
 
-void CoinMapGame::GameUI() {
+void Pathfinding::GameUI() {
 
     ImGui::Begin("Game stats");
     auto s = std::string("hits: ") + std::to_string(score);
@@ -203,76 +160,12 @@ void CoinMapGame::GameUI() {
 
 }
 
-bool CoinMapGame::TestPoly(glm::vec3 testV = glm::vec3(0., 0., 0.0)) {
-    //test ci lezi v polygone A B C
-    // bod x,y lezi v polygone polys[i][j-0,size()] ak
-    //(AY – BY)*(x – AX) + (BX – AX) * (y – AY) ≥ 0 &&
-    //(BY – CY) * (x – BX) + (CX – BX) * (y – BY) >=0 &&
-    //(CY – AY) * (x – CX) + (AX – CX) * (y – CY) ≥ 0
-    //pre tri a takto pre vseobecne
-    // (vrch[i].y -vrch[i+1].y) * (x-vrch[i].x) + (vrch[i+1].x-vrch[i].x) *(y-vrch[i].y) >= 0 &&
-    //zvysuje sa i a teda aj i+1 a checkuje dalsi vrchol polygonu
-    //(vrch[i].y -vrch[i+1].y) * (x-vrch[i].x) + (vrch[i+1].x-vrch[i].x) *(y-vrch[i].y)
-    //teda
-    //(verts(polys[i][0],1) – verts(polys[i][1],1))*(x – verts(polys[i][0],0))
-    // + (verts(polys[i][1],0) – verts(polys[i][0],0)) * (y – verts(polys[i][0],1)) ≥ 0 &&
-    //to bol len prvy riadok
-    //druhy bude
-    //(BY – CY) * (x – BX) + (CX – BX) * (y – BY) &&
-
-    float x, y;
-    x = camera->xMousePos;
-    y = camera->yMousePos;
-
-    if (glm::length(testV) <= 0.2f) {
-        camera->MouseMovementNormalized(x, y, windowSettings->CUR_WIDTH, windowSettings->CUR_HEIGHT);
-    } else {
-        x = testV.x;
-        y = testV.y;
-    }
-
-    bool isInside = true;
-    for (int v = 0; v < polys.size(); ++v) {
-        //std::cout<< "check v at " << v << std::endl;
-        isInside = true;
-        for (int i = 0; i < polys[i].size() - 1; ++i) { //do it for the second last
-            //(vrch[i].y -vrch[i+1].y) * (x-vrch[i].x) +
-            // (vrch[i+1].x-vrch[i].x) *(y-vrch[i].y)
-            if (
-                    (verts[polys[v][i]][1] - verts[polys[v][i + 1]][1]) * (x - verts[polys[v][i]][0]) +
-                    (verts[polys[v][i + 1]][0] - verts[polys[v][i]][0]) * (y - verts[polys[v][i]][1])
-                    > 0.0) //ak mensie ako nula tak neplati, staci ze pre jeden bod to plati
-            {
-                //std::cout<< "inside FALSE at " << v << std::endl;
-                isInside = false;
-                break;
-            }
-        }
-        //now check the last one
-        int k = polys[v].size() - 1;
-        //std::cout<< "k " << k << std::endl;   //check
-        //ifs still true
-        if (isInside &&
-            (verts[polys[v][k]][1] - verts[polys[v][0]][1]) * (x - verts[polys[v][k]][0]) +
-            (verts[polys[v][0]][0] - verts[polys[v][k]][0]) * (y - verts[polys[v][k]][1])
-            > 0.0) //ak mensie ako nula tak neplati, staci ze pre jeden bod to plati
-        {
-            //std::cout<< "inside FALSE at " << v << " special"<< std::endl;
-            isInside = false;
-        }
-        if (isInside) {
-            polyId = v;
-            //std::cout << "inside TRUE at " << v << std::endl;
-            //and inmmediatelly return true
-            return true;
-        }
-
-    }
+bool Pathfinding::TestPoly(glm::vec3 testV = glm::vec3(0., 0., 0.0)) {
     return false;
 
 }
 
-void CoinMapGame::ClickMouse(float x, float y) {
+void Pathfinding::ClickMouse(float x, float y) {
     if (usePolyMap) {
         TestPoly();
         if (testMouse) {
@@ -356,7 +249,7 @@ void CoinMapGame::ClickMouse(float x, float y) {
 
 }
 
-void CoinMapGame::GameTimeStep() {
+void Pathfinding::GameTimeStep() {
     //TODO rewrite it so we can make a vactor that we can scale from 0-1
     if (camera->RMBpress)
         ClickMouse(camera->xMousePos, camera->yMousePos);
@@ -386,16 +279,7 @@ void CoinMapGame::GameTimeStep() {
     }
 }
 
-void CoinMapGame::CreatePolyMap() {
-    // begin creation of the poly map
-    // we need to create convex polygons
-    // so we create Vertices
-    // define a poly by ginving it a list of Vertices
-    // now allow WSAD movement of the player
-    // but only if the next pos we want to move to is inside some polygon
-}
-
-void CoinMapGame::Movement() {
+void Pathfinding::Movement() {
     if (usePolyMap) {
         int iPlayer = 0; //horizontal mov
         if (camera->leftArrowHold)
@@ -447,11 +331,11 @@ void CoinMapGame::Movement() {
     }
 }
 
-void CoinMapGame::EndGame() {
+void Pathfinding::EndGame() {
 
 }
 
-void CoinMapGame::ReloadGame() {
+void Pathfinding::ReloadGame() {
 
     //only set shooting as false and reset the velocity
     shoot = false;
@@ -459,7 +343,7 @@ void CoinMapGame::ReloadGame() {
 
 }
 
-void CoinMapGame::ResetGame() {
+void Pathfinding::ResetGame() {
 
     gameOver = false;
     score = 0;
@@ -467,11 +351,11 @@ void CoinMapGame::ResetGame() {
     ReloadGame();
 }
 
-void CoinMapGame::DestroyGame() {
+void Pathfinding::DestroyGame() {
 
 }
 
-void CoinMapGame::RenderSceneInstance(Shader *s, bool renderSelected) {
+void Pathfinding::RenderSceneInstance(Shader *s, bool renderSelected) {
     if (!gameOver) {
         Movement();
         GameTimeStep();
@@ -483,6 +367,6 @@ void CoinMapGame::RenderSceneInstance(Shader *s, bool renderSelected) {
 
 }
 
-CoinMapGame::~CoinMapGame() {
+Pathfinding::~Pathfinding() {
 
 }

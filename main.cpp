@@ -41,6 +41,7 @@
 #include "Scenes/SalanciGames/PlanetGame.h"
 #include "Scenes/SalanciGames/PoolGame.h"
 #include "Scenes/SalanciGames/CoinMapGame.h"
+#include "Scenes/SalanciGames/Pathfinding.h"
 
 
 #include "Primitives/Path.h"
@@ -295,6 +296,8 @@ void DrawImGui() {
             if (ImGui::MenuItem("Load StarTrek Game, planet gravity forces", NULL))
                 ReloadScene(8);
             if (ImGui::MenuItem("Load CoinMap Game, graph,polymap", NULL))
+                ReloadScene(9);
+            if (ImGui::MenuItem("Load pathfinding", NULL))
                 ReloadScene(9);
             //ImGui::MenuItem("Main menu bar", ReloadScene(2));
             ImGui::EndMenu();
@@ -758,6 +761,9 @@ void ReloadScene(int num) {
                 break;
             case 9:
                 sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new CoinMapGame());
+                break;
+            case 10:
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new Pathfinding());
                 break;
             default:
                 break;
@@ -1241,7 +1247,7 @@ int main() {
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 
-    ReloadScene(9);
+    ReloadScene(10);
     camera->toggleCursor(); //set to hidden by default
 
     //create free camera path
