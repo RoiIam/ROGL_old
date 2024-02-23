@@ -8,14 +8,20 @@
 
 ObjectInstance::ObjectInstance(Model &tmp) {
     model = &tmp;
-    shader = new Shader("..\\Assets\\Shaders\\Debug\\emptyPink.vert",
-                 "..\\Assets\\Shaders\\Debug\\emptyPink.frag");}
-// creates model instance, pass empty name to assign generated one, pass null light for renderable objects only// yeah bad design for now
+    Shader* shader = new Shader("..\\Assets\\Shaders\\Debug\\emptyPink.vert",
+                 "..\\Assets\\Shaders\\Debug\\emptyPink.frag");
+    availableShaders.emplace_back(shader);
 
+}
+// creates model instance, pass empty name to assign generated one, pass null light for renderable objects only// yeah bad design for now
 ObjectInstance::ObjectInstance(Model &tmp, Shader &shdr, const std::string &name, Light *l) {
     //TODO decouple lights from objects...
     model = &tmp;
-    shader = &shdr;
+    Shader * shader = &shdr;
+    availableShaders.emplace_back(shader);
+    //TODO this is kinda unsafe
+    curSelectedShader = availableShaders[0];
+
     if (name.empty())
         Name = "NewObj";
     else
@@ -36,9 +42,11 @@ ObjectInstance::~ObjectInstance() {
 void ObjectInstance::Render() {
     if (!enableVisualRender)
         return;
-    shader->use();
-    UpdateTransformMat(shader);
-    model->Draw(*shader, false);
+    //Shader * s= availableShaders[curSelectedShader];
+    Shader * s= curSelectedShader;
+    s->use();
+    UpdateTransformMat(s);
+    model->Draw(*s, false);
 }
 
 void ObjectInstance::Render(Shader *s, bool simple) {
@@ -116,10 +124,11 @@ void ObjectInstance::UpdateTransformMat(Shader *sh)  // update model matrix with
 }
 
 Model *ObjectInstance::GetModel() { return model; }//preco je toto pointer?
-Shader *ObjectInstance::GetShader() { return shader; }//preco je toto pointer?
+Shader *ObjectInstance::GetShader() { return curSelectedShader; }//preco je toto pointer?
 void ObjectInstance::SetShader(Shader &s) {
     //if(s != nullptr)
-    shader = &s;
+    //availableShaders[curSelectedShader] = &s;
+    curSelectedShader = &s;
 }
 
 void ObjectInstance::SetTransformMat() {

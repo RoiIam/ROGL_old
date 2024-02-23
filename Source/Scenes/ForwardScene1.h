@@ -46,6 +46,7 @@ private:
     Shader *pinkDebug;
     Shader *grassShader;
     Shader *glintChShader;
+    Shader *glintZKShader;
 
     //Glints
     GLuint dicoTex;
@@ -56,6 +57,17 @@ private:
     float alpha_x = 0.5;
     float alpha_y = 0.5;
     float lightInten = 8.0;
+
+    //glints ZK
+    float zk_roughness[2] ={0.6f,0.6f} ; //0.6 * 0.024;
+    float zk_microRoughness[2]={zk_roughness[0]*glm::e<float>(),zk_roughness[1]*glm::e<float>()} ;
+
+    float zk_searchConeAngle = 0.01f;
+    float zk_dynamicRange = 100.0f;
+    float zk_variation = 50000.0f;
+    float zk_density = 5.e8;
+
+
     // Add lights
 public:
 

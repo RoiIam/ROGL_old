@@ -17,6 +17,11 @@ class Shader {
 private:
     void checkCompileErrors(GLuint shader, std::string type); //TODO add shader location/name so debug is easier
 
+
+    std::string vertexPath;
+    std::string fragmentPath;
+    std::string geometryPath;
+
 public:
     Shader();
 
@@ -28,6 +33,8 @@ public:
 
 
     void use();
+
+    void Recompile();
 
     void setBool(const std::string &name, bool value) const;
 

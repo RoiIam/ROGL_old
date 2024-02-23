@@ -39,6 +39,8 @@ void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // over
 
     glintChShader = new Shader("..\\Assets\\Shaders\\Experimental\\glint_ch.vert",
                                "..\\Assets\\Shaders\\Experimental\\glint_ch.frag");
+    glintZKShader = new Shader("..\\Assets\\Shaders\\Experimental\\glint_ZK.vert",
+                                   "..\\Assets\\Shaders\\Experimental\\glint_ZK.frag");
 
 //models load, setup
     ourModel = new Model("../Assets/Models/OwnCube/Cube.obj");
@@ -61,12 +63,18 @@ void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // over
     grassplane = Grass();
     cube = DefaultCube(nullptr, xModel->boundMin, xModel->boundMax);
 
-    selectableObjInstances.push_back(cube_ObjInstance);
+    //selectableObjInstances.push_back(cube_ObjInstance);
     selectableObjInstances.push_back(shrekModel_ObjInstance);
-    shrekModel_ObjInstance->SetPos(glm::vec3(1.2f, 0.9f, 0.35f));;
+    selectableObjInstances.push_back(sphereModel_ObjInstance);
+    shrekModel_ObjInstance->SetPos(glm::vec3(1.2f, 0.9f, 0.35f));
     shrekModel_ObjInstance->SetScale(glm::vec3(0.1));
 
-    selectableObjInstances.push_back(xModel_ObjInstance);
+    //add aditionalShaders to an object
+    shrekModel_ObjInstance->availableShaders.emplace_back(glintZKShader);
+    sphereModel_ObjInstance->availableShaders.emplace_back(glintZKShader);
+
+
+    //selectableObjInstances.push_back(xModel_ObjInstance);
 
     cube_ObjInstance->SetPos(glm::vec3(5.0f, 0.0f, 0.0f));
 
@@ -83,7 +91,7 @@ void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // over
 
         tmp->SetPos(vegetation[i]);
         grassInstances.push_back(tmp);
-        selectableObjInstances.push_back(tmp);
+        //selectableObjInstances.push_back(tmp);
     }
 //now add lights
     selectableObjInstances.push_back(dirLight_ObjInstance);
@@ -231,6 +239,37 @@ void ForwardScene1::SetupShaderMaterial() {
     //dirLight_ObjInstance->SetPos(lightPos);
     //dirLight_ObjInstance->SetScale(glm::vec3(0.3f));
 
+
+    //glints2
+    //glints part
+    glintZKShader->use();
+    lightPos = dirLight_ObjInstance->GetPos();
+
+    glintZKShader->setVec4("Light.Position", glm::vec4(lightPos, 1.0));
+    //glintChShader->setVec4("Light.Position", glm::vec4(dirLight_ObjInstance->GetPos(), 1.0));
+    glintZKShader->setVec3("Light.L", glm::vec3(lightInten));
+
+    glintZKShader->setVec2("Material.roughness", glm::make_vec2(zk_roughness));
+    glintZKShader->setVec2("Material.microRoughness", glm::make_vec2(zk_microRoughness));
+    glintZKShader->setFloat("Material.searchConeAngle", zk_searchConeAngle);
+    glintZKShader->setFloat("Material.variation", zk_variation);
+    glintZKShader->setFloat("Material.dynamicRange", zk_dynamicRange);
+    glintZKShader->setFloat("Material.density", zk_density);
+    /*
+    glintZKShader->setVec2("Material.roughness", glm::vec2(0.6f,0.6f));
+    glintZKShader->setVec2("Material.microRoughness", glm::vec2(0.6f*0.024f,0.6*0.024f));
+    glintZKShader->setFloat("Material.searchConeAngle", 0.01f);
+    glintZKShader->setFloat("Material.variation", 100);
+    glintZKShader->setFloat("Material.dynamicRange", 50000);
+    glintZKShader->setFloat("Material.density", 5.e8);
+    */
+
+
+
+    glintZKShader->setVec3("CameraPosition", camera->Position);
+
+
+
 }
 
 void ForwardScene1::RenderLights() {
@@ -244,21 +283,76 @@ void ForwardScene1::ImGuiHierarchy() {
 }
 
 void ForwardScene1::UIGlintParams() {
-    ImGui::Begin("Glint Parameters");
 
-    ImGui::SliderFloat("Roughness X", &alpha_x, 0.01f, 1.0f);
-    ImGui::SliderFloat("Roughness Y", &alpha_y, 0.01f, 1.0f);
-    ImGui::SliderFloat("Log microfacet density", &logMicrofacetDensity, 15.f, 40.f);
-    ImGui::SliderFloat("Microfacet relative area", &microfacetRelativeArea, 0.01f, 1.f);
-    glm::vec3 lightPos = dirLight_ObjInstance->GetPos();
-    float v[] = {lightPos.x, lightPos.y, lightPos.z};
-    //ImGui::DragFloat3("Light Pos", v, 0.15f, -15.0f, 15.f);
-    //we shouldnt change it
-    ImGui::DragFloat("Light Inten", &lightInten, 0.25f, 0.0, 100);
-    //ImGui::ListBox("Tvar trblietky: ");
+    std::string ch= "cherm";
+    std::string zk= "zirrKapl";
+    std::string de= "Deliot";
+
+    ImGui::Begin((std::string("Glint Parameters")+ ch).c_str());
+
+    if(selectedInstance != nullptr) {
+
+        if(ImGui::Button("recompile Shader")) {
+            selectedInstance->curSelectedShader->Recompile();
+        }
+        std::string methodName = "selected Method: ";
+
+        //glm::vec3 lightPos = dirLight_ObjInstance->GetPos();
+        //float v[] = {lightPos.x, lightPos.y, lightPos.z};
+        ImGui::DragFloat("Light Inten", &lightInten, 0.25f, 0.0, 100);
+
+
+            if(selectedInstance->curSelectedShader == glintChShader) {
+                ImGui::Text("%s", (methodName+ ch).c_str());
+
+                ImGui::SliderFloat("Roughness X", &alpha_x, 0.01f, 1.0f);
+                ImGui::SliderFloat("Roughness Y", &alpha_y, 0.01f, 1.0f);
+                ImGui::SliderFloat("Log microfacet density", &logMicrofacetDensity, 15.f, 40.f);
+                ImGui::SliderFloat("Microfacet relative area", &microfacetRelativeArea, 0.01f, 1.f);
+
+            }
+            else if(selectedInstance->curSelectedShader == glintZKShader) {
+                ImGui::Text("%s",(methodName+ zk).c_str());
+
+                ImGui::SliderFloat2("Roughness", zk_roughness, 0.001f, 1.0f);
+                ImGui::SliderFloat2("Micro Roughness", zk_microRoughness, 0.001f, 0.1f);
+                ImGui::SliderFloat("Search Cone Angle", &zk_searchConeAngle, 0.001f, 0.1f);
+                ImGui::SliderFloat("Variation", &zk_variation, 20000.0f, 100000.0f);
+                ImGui::SliderFloat("DynamicRange", &zk_dynamicRange, 10.0f, 1000.0f);
+                ImGui::SliderFloat("Density", &zk_density, 1.e8, 7.e8);
+
+            }
+            /*
+            else if(selectedInstance->curSelectedShader == glintDeShader)
+            {
+                ImGui::Text("%s",(methodName+ de).c_str());
+
+            }*/
+            else {
+                ImGui::Text("No glint shader to show properties");
+
+            }
+
+
+        /*
+        if(shrekModel_ObjInstance->curShaderIndex==0) {
+            //chermain
+        }
+        else if(shrekModel_ObjInstance->curShaderIndex ==1) {
+            //zirr
+        }
+        else if(shrekModel_ObjInstance->curShaderIndex ==2) {
+            //deliot
+        }
+        */
+
+    }
+    else {
+        ImGui::Text("%s","Please select shrek character, it only works there for now");
+    }
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
-                ImGui::GetIO().Framerate);
+                            ImGui::GetIO().Framerate);
     ImGui::End();
 }
 

@@ -29,10 +29,8 @@ class ObjectInstance {
 private:
     //
     Model *model;
-    Shader *shader;
+    //Shader *shader;
     //Material * material;
-
-
 
     glm::mat4 modelMatrix = glm::mat4(1.0f);
     glm::vec3 position = glm::vec3(0.0f);
@@ -45,6 +43,9 @@ public:
     // model data
     // Model**  model2;
     std::string Name = "defaultName";
+    std::vector<Shader*> availableShaders;
+    Shader * curSelectedShader= 0;
+
     //OGLR::Managers::Transform transform{};
     Light *light = nullptr;
     bool enableVisualRender = true;

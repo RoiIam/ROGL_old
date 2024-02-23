@@ -69,7 +69,7 @@ void PrintShader();
 
 #include "Utilities/GraphicsOptions.h"
 
-GraphicsOptions *graphicsOptions;
+GraphicsOptions* graphicsOptions;
 
 
 #pragma endregion
@@ -104,15 +104,15 @@ Path freeCamPath = Path();
 
 glm::vec3 centroidPos;
 
-Camera *camera;
-bool selectWRMBEnabled = false;//controls if RMB can cast ray to select objects
+Camera* camera;
+bool selectWRMBEnabled = false; //controls if RMB can cast ray to select objects
 WindowSettings windowSettings = WindowSettings();
 float sunOffsetPos = 23.0f;
-glm::vec3 sunDir = {0.2f, 0.500f, -0.1};  // glm::vec3(1.0f);
+glm::vec3 sunDir = {0.2f, 0.500f, -0.1}; // glm::vec3(1.0f);
 float lightOrthoSize = 20.0f;
 //Depth related stufff
 //-----------------------
-const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192 ;
+const unsigned int SHADOW_WIDTH = 8192, SHADOW_HEIGHT = 8192;
 unsigned int depthMapFBO;
 // create depth texture
 unsigned int depthMap;
@@ -124,36 +124,40 @@ bool enableDebugLightRay = false;
 
 //scene stuff - needs to be declared earlier
 std::string sceneDescription = "Put short description of scene here";
-std::shared_ptr<ForwardScene1> forwardScene1;//this used to be TestScene
+std::shared_ptr<ForwardScene1> forwardScene1; //this used to be TestScene
 std::shared_ptr<DeferredScene2> deferredScene2 = NULL;
 std::shared_ptr<SceneInstance> sceneInstance;
 
 #pragma endregion
 
 
-Model *centroidModel;
+Model* centroidModel;
 
 #pragma region IMGUI_stuff
 //this should be in separate class...
 
-bool show_demo_window = false;  // use F9
+bool show_demo_window = false; // use F9
 
 
-glm::vec3 dirlightCol = {0.6f, 0.2f, 0.3f};  // glm::vec3(1.0f);
+glm::vec3 dirlightCol = {0.6f, 0.2f, 0.3f}; // glm::vec3(1.0f);
 float dirlightColChange[3];
 
 
-typedef void (*ImGuiDemoMarkerCallback2)(const char *file, int line, const char *section, void *user_data);
+typedef void (*ImGuiDemoMarkerCallback2)(const char* file, int line, const char* section, void* user_data);
 
 extern ImGuiDemoMarkerCallback2 GImGuiDemoMarkerCallback2;
-extern void *GImGuiDemoMarkerCallbackUserData2;
+extern void* GImGuiDemoMarkerCallbackUserData2;
 ImGuiDemoMarkerCallback2 GImGuiDemoMarkerCallback2 = NULL;
-void *GImGuiDemoMarkerCallbackUserData2 = NULL;
+void* GImGuiDemoMarkerCallbackUserData2 = NULL;
 #define IMGUI_DEMO_MARKER(section)  do { if (GImGuiDemoMarkerCallback2 != NULL) GImGuiDemoMarkerCallback2(__FILE__, __LINE__, section, GImGuiDemoMarkerCallbackUserData2); } while (0)
-GLfloat lineSeg[] = {0, 0, 0,  // first vertex
-                     0, 1.0f, 0};//last point
-GLfloat centroidLineSeg[] = {0, 0, 0,  // first vertex
-                             0, 1.0f, 0};
+GLfloat lineSeg[] = {
+    0, 0, 0, // first vertex
+    0, 1.0f, 0
+}; //last point
+GLfloat centroidLineSeg[] = {
+    0, 0, 0, // first vertex
+    0, 1.0f, 0
+};
 
 //TODO why si this here?
 float mousePos[2] = {0, 0};
@@ -167,8 +171,9 @@ bool enable_culling = true;
 float pos[3];
 float rot[3];
 
-void ImGuiObjProperties(ObjectInstance *obj) {
-    ImGuiIO &io = ImGui::GetIO();
+
+void ImGuiObjProperties(ObjectInstance* obj) {
+    ImGuiIO&io = ImGui::GetIO();
 
     ImGui::Text("Edit Selected Object:");
     //ImGui::GetIO().WantCaptureKeyboard = true;
@@ -202,7 +207,7 @@ void ImGuiObjProperties(ObjectInstance *obj) {
     obj->acceleration = glm::make_vec3(acceleration);
 
     float mass = obj->mass;
-    ImGui::DragFloat("Obj mass", &mass, 0.05f, 0, 10000, "%.3f",0);
+    ImGui::DragFloat("Obj mass", &mass, 0.05f, 0, 10000, "%.3f", 0);
     obj->mass = mass;
 
     //rotation
@@ -220,9 +225,53 @@ void ImGuiObjProperties(ObjectInstance *obj) {
 
     //obj.position =  glm::vec3(10,10,10); not working either
     //obj->position =  glm::vec3(pos[0],pos[1],pos[2]);
+    /*
+        const char *texts[obj->availableShaders.size()];
+        for(int i=0;i <= obj->availableShaders.size();i++) {
+            char integer_string[32];
+            sprintf(integer_string, "%d", i);
+
+
+            char other_string[64] = "shader0"; // make sure you allocate enough space to append the other string
+
+            strcat(other_string, integer_string);
+            texts[i] = other_string;
+        }
+
+        ImGui::ListBox("test",&obj->curShaderIndex,texts,obj->availableShaders.size());
+        */
+    int n = 0;
+
+    for (n = 0; n < obj->availableShaders.size(); n++) {
+        // bacause of ids being created from the hash of the string, it will only select first occurences, need to assign own ids added ##
+        //use std::to_string()
+        std::string name;
+        name.append("Shader");
+        //when i deleted ## (was Shader##) then it sudddenly works
+        //when passing a label you can optionally specify extra unique ID information within the same string using "##". This helps solving the simpler collision case
+        name.append(std::to_string(n));
+        //std::cout << name.c_str() << std::endl;
+        if (ImGui::Selectable(name.c_str(),
+                              obj->curSelectedShader == obj->availableShaders[n])) {
+            //if already selected, do nothing
+            if (obj->curSelectedShader == obj->availableShaders[n]) {
+            }
+            else {
+                obj->curSelectedShader = obj->availableShaders[n];
+            }
+            /*if (ImGui::Selectable(name.c_str(),
+                                  obj->curShaderIndex == n)) {
+                //if already selected, do nothing
+                if (obj->curShaderIndex == n) {
+                }
+                else {
+                    obj->curShaderIndex = n;
+                }*/
+        }
+    }
 }
 
-void ImGuiLightProperties(ObjectInstance *objL) {
+void ImGuiLightProperties(ObjectInstance* objL) {
     /*
     glm::vec3 direction;
     // position this is copied...
@@ -250,23 +299,19 @@ void ImGuiLightProperties(ObjectInstance *objL) {
         dynamic_cast<DirectionalLight *>(objL->light)->direction = glm::vec3(dir[0], dir[1], dir[2]);
 
         static ImVec4 color = ImVec4(dirlightCol.x, dirlightCol.y, dirlightCol.z, 1);
-        ImGui::ColorEdit3("Light Color", (float *) &color);
-        if (ImGui::IsItemActive())  // continous edit or IsItemDeactivatedAfterEdit-// only after i lift mouse
+        ImGui::ColorEdit3("Light Color", (float *)&color);
+        if (ImGui::IsItemActive()) // continous edit or IsItemDeactivatedAfterEdit-// only after i lift mouse
         {
             dynamic_cast<Light *>(objL->light)->color = glm::vec3(color.x, color.y, color.z);
         }
-
-
-    } catch (std::bad_cast &bc) {
+    }
+    catch (std::bad_cast&bc) {
         std::cerr << bc.what() << std::endl;
     }
-
-
 }
 
 void DrawImGui() {
-
-    ImGuiIO &io = ImGui::GetIO();
+    ImGuiIO&io = ImGui::GetIO();
     // feed inputs to dear imgui, start new frame, now moved to scene...
     static bool test2 = false;
     ImGui::Begin("Tool window", &test2, ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar);
@@ -275,7 +320,6 @@ void DrawImGui() {
 
     // Menu Bar
     if (ImGui::BeginMenuBar()) {
-
         //create menu bar
         //IMGUI_DEMO_MARKER("Menu/Examples");
 
@@ -337,8 +381,6 @@ void DrawImGui() {
         ImGui::InputFloat2("Cam Rotation", eulerRot, "%.3f");
         ImGui::Value("timed value freeCamT ", freeCamT);
         ImGui::Checkbox("Unlock(T)/lock(F) cam controls", &camera->cameraControlsUnlocked);
-
-
     }
 
     ImGui::Checkbox("Enable face culling", &enable_culling);
@@ -358,13 +400,13 @@ void DrawImGui() {
             if (!graphicsOptions->enableWater) {
                 deferredScene2->waterObjInstance->disableRender = true;
                 deferredScene2->waterObjInstance->forceRenderOwnShader = false;
-            } else if (graphicsOptions->enableWater) {
+            }
+            else if (graphicsOptions->enableWater) {
                 deferredScene2->enableSSAO = false;
                 deferredScene2->graphicsOptions->rendererType = GraphicsOptions::RendererType::forward;
             }
         }
     }
-
 
 
     if (graphicsOptions->enableShadows)
@@ -375,13 +417,13 @@ void DrawImGui() {
     // for debug DepthDebug on ImGUi ignore red tint, we wpuld eeed to alter textureformat
     // see https://github.com/inkyblackness/imgui-go/issues/42 to
     if (enableDebugDepthQuad) {
-        ImGui::Image((void *) depthMap, ImVec2(200, 200), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1, 1, 1, 1));
+        ImGui::Image((void *)depthMap, ImVec2(200, 200), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1, 1, 1, 1));
     }
 
     // ImGui::SliderFloat4("Background Color",backgroundClearCol, 0 ,1 ,"%.3f");
 
     ImGui::Value("Drawcalls", PerfAnalyzer::drawcallCount);
-    ImGui::SliderFloat("orthoCam scale ",&camera->orthoScale, 0.05f,  200.0f);
+    ImGui::SliderFloat("orthoCam scale ", &camera->orthoScale, 0.05f, 200.0f);
 
     // now try gizmos
     if (sceneInstance->selectedInstance) {
@@ -426,9 +468,8 @@ void DrawImGui() {
         //std::cout << "item cinamtic cam changed..."<<std::endl;
         if (camera->setCinematicCamera) {
             nextCamPosIndex = 0;
-
-        } else {
-
+        }
+        else {
         }
     }
 
@@ -439,23 +480,23 @@ void DrawImGui() {
         freeCamLookDir = glm::make_vec3(freeCamLookDirUI);
     }
 
-    auto s2 = std::string("CUR_WIDTH ")+ std::to_string(windowSettings.CUR_WIDTH)+
-            std::string(" CUR_HEIGHT ")+ std::to_string(windowSettings.CUR_HEIGHT);
+    auto s2 = std::string("CUR_WIDTH ") + std::to_string(windowSettings.CUR_WIDTH) +
+              std::string(" CUR_HEIGHT ") + std::to_string(windowSettings.CUR_HEIGHT);
     ImGui::Text("%s", s2.c_str());
 
-    auto s3 = std::string("mon width ")+ std::to_string(glfwGetVideoMode(windowSettings.monitor)->width)+
-            std::string(" mon height  ")+ std::to_string(glfwGetVideoMode(windowSettings.monitor)->height);
+    auto s3 = std::string("mon width ") + std::to_string(glfwGetVideoMode(windowSettings.monitor)->width) +
+              std::string(" mon height  ") + std::to_string(glfwGetVideoMode(windowSettings.monitor)->height);
     ImGui::Text("%s", s3.c_str());
     //my own mouse coords absolute
-    auto mousePos = std::string("mouse pos X ")+  std::to_string(camera->xMousePos) +
-            std::string(" Y ") + std::to_string(camera->yMousePos);
+    auto mousePos = std::string("mouse pos X ") + std::to_string(camera->xMousePos) +
+                    std::string(" Y ") + std::to_string(camera->yMousePos);
     ImGui::Text("%s", mousePos.c_str());
     //my own mouse coords ,scaled , relative, percent
-    float a =camera->xMousePos ,b=camera->yMousePos;
-    camera->MouseMovementNormalized(a,b,windowSettings.CUR_WIDTH,windowSettings.CUR_HEIGHT);
+    float a = camera->xMousePos, b = camera->yMousePos;
+    camera->MouseMovementNormalized(a, b, windowSettings.CUR_WIDTH, windowSettings.CUR_HEIGHT);
 
-    mousePos = std::string("mouse pos rel X ")+  std::to_string(a) +
-                    std::string(" Y ") + std::to_string(b);
+    mousePos = std::string("mouse pos rel X ") + std::to_string(a) +
+               std::string(" Y ") + std::to_string(b);
     ImGui::Text("%s", mousePos.c_str());
 
 
@@ -468,17 +509,17 @@ void DrawImGui() {
 #pragma region SceneStuff
 
 //test planes for OBB colisions
-bool TestRayOBBIntersection(glm::vec3 ray_origin,     // Ray origin, in world space
-                            glm::vec3 ray_direction,  // Ray direction (NOT target position!), in world
-        // space. Must be normalize()'d.
-                            glm::vec3 aabb_min,       // Minimum X,Y,Z coords of the mesh when not
-        // transformed at all.
-                            glm::vec3 aabb_max,  // Maximum X,Y,Z coords. Often aabb_min*-1 if your mesh
-        // is centered, but it's not always the case.
-                            glm::mat4 ModelMatrix,  // Transformation applied to the mesh (which will
-        // thus be also applied to its bounding box)
-                            float &intersection_distance  // Output : distance between ray_origin and
-        // the intersection with the OBB
+bool TestRayOBBIntersection(glm::vec3 ray_origin, // Ray origin, in world space
+                            glm::vec3 ray_direction, // Ray direction (NOT target position!), in world
+                            // space. Must be normalize()'d.
+                            glm::vec3 aabb_min, // Minimum X,Y,Z coords of the mesh when not
+                            // transformed at all.
+                            glm::vec3 aabb_max, // Maximum X,Y,Z coords. Often aabb_min*-1 if your mesh
+                            // is centered, but it's not always the case.
+                            glm::mat4 ModelMatrix, // Transformation applied to the mesh (which will
+                            // thus be also applied to its bounding box)
+                            float&intersection_distance // Output : distance between ray_origin and
+                            // the intersection with the OBB
 ) {
     // Intersection method from Real-Time Rendering and Essential Mathematics for Games
 
@@ -495,10 +536,11 @@ bool TestRayOBBIntersection(glm::vec3 ray_origin,     // Ray origin, in world sp
         float e = glm::dot(xaxis, delta);
         float f = glm::dot(ray_direction, xaxis);
 
-        if (fabs(f) > 0.001f) {  // Standard case
+        if (fabs(f) > 0.001f) {
+            // Standard case
 
-            float t1 = (e + aabb_min.x) / f;  // Intersection with the "left" plane
-            float t2 = (e + aabb_max.x) / f;  // Intersection with the "right" plane
+            float t1 = (e + aabb_min.x) / f; // Intersection with the "left" plane
+            float t2 = (e + aabb_max.x) / f; // Intersection with the "right" plane
             // t1 and t2 now contain distances betwen ray origin and ray-plane
             // intersections
 
@@ -507,7 +549,7 @@ bool TestRayOBBIntersection(glm::vec3 ray_origin,     // Ray origin, in world sp
             if (t1 > t2) {
                 float w = t1;
                 t1 = t2;
-                t2 = w;  // swap t1 and t2
+                t2 = w; // swap t1 and t2
             }
 
             // tMax is the nearest "far" intersection (amongst the X,Y and Z planes
@@ -521,8 +563,9 @@ bool TestRayOBBIntersection(glm::vec3 ray_origin,     // Ray origin, in world sp
             // If "far" is closer than "near", then there is NO intersection.
             // See the images in the tutorials for the visual explanation.
             if (tMax < tMin) return false;
-
-        } else {  // Rare case : the ray is almost parallel to the planes, so they
+        }
+        else {
+            // Rare case : the ray is almost parallel to the planes, so they
             // don't have any "intersection"
             if (-e + aabb_min.x > 0.0f || -e + aabb_max.x < 0.0f) return false;
         }
@@ -548,8 +591,8 @@ bool TestRayOBBIntersection(glm::vec3 ray_origin,     // Ray origin, in world sp
             if (t2 < tMax) tMax = t2;
             if (t1 > tMin) tMin = t1;
             if (tMin > tMax) return false;
-
-        } else {
+        }
+        else {
             if (-e + aabb_min.y > 0.0f || -e + aabb_max.y < 0.0f) return false;
         }
     }
@@ -574,8 +617,8 @@ bool TestRayOBBIntersection(glm::vec3 ray_origin,     // Ray origin, in world sp
             if (t2 < tMax) tMax = t2;
             if (t1 > tMin) tMin = t1;
             if (tMin > tMax) return false;
-
-        } else {
+        }
+        else {
             if (-e + aabb_min.z > 0.0f || -e + aabb_max.z < 0.0f) return false;
         }
     }
@@ -590,11 +633,12 @@ void TestMouse2(glm::vec3 dir) {
     float tempDist = 100000;
     sceneInstance->selectedInstance = nullptr;
     for (int i = 0; i < sceneInstance->selectableObjInstances.size(); i++) {
-        float intersection_distance;  // Output of TestRayOBBIntersection()
+        float intersection_distance; // Output of TestRayOBBIntersection()
         glm::vec3 aabb_min(-1.0f, -1.0f, -1.0f);
         glm::vec3 aabb_max(1.0f, 1.0f, 1.0f);
         //cout << scene->selectableObjInstances[i]->Name + "\n";
-        aabb_min = sceneInstance->selectableObjInstances[i]->GetModel()->boundMin; // if there is no model, returns null which makes error
+        aabb_min = sceneInstance->selectableObjInstances[i]->GetModel()->boundMin;
+        // if there is no model, returns null which makes error
         aabb_max = sceneInstance->selectableObjInstances[i]->GetModel()->boundMax;
         // The ModelMatrix transforms :
         // - the mesh to its desired position and orientation
@@ -617,19 +661,18 @@ void TestMouse2(glm::vec3 dir) {
         // glm::to_string(models[i]->rotation)<<"sc "
         //  <<glm::to_string(models[i]->scale) <<  std::endl;
         if (sceneInstance->selectableObjInstances[i]->Name == "shrek") {
-
         }
 
         if (TestRayOBBIntersection(camera->Position, dir, aabb_min, aabb_max, model, intersection_distance)) {
             std::cout << "picked object " << sceneInstance->selectableObjInstances[i]->GetModel()->directory
-                      << sceneInstance->selectableObjInstances[i]->Name << " id " << intersection_distance << "\n"
-                      //<< " mat" << std::endl
-                      //<< "min "
-                      //<< glm::to_string(scene->objectInstances[i]->GetModel()->boundMin)
-                      //<< glm::to_string(scene->objectInstances[i]->GetModel()->boundMax)
-                      //<< std::endl
-                      //<< glm::to_string(scene->objectInstances[i]->GetPos()) << " "
-                      << std::endl;
+                    << sceneInstance->selectableObjInstances[i]->Name << " id " << intersection_distance << "\n"
+                    //<< " mat" << std::endl
+                    //<< "min "
+                    //<< glm::to_string(scene->objectInstances[i]->GetModel()->boundMin)
+                    //<< glm::to_string(scene->objectInstances[i]->GetModel()->boundMax)
+                    //<< std::endl
+                    //<< glm::to_string(scene->objectInstances[i]->GetPos()) << " "
+                    << std::endl;
             // break; // instead get the closest one
             if (intersection_distance < tempDist) {
                 // Now we need to enable outline rendering and then add position change
@@ -649,7 +692,8 @@ void TestMouse2(glm::vec3 dir) {
         //scene->objectInstances.push_back(scene->selectedInstance);
 
         sceneInstance->selectedInstance = nullptr;
-    } else {
+    }
+    else {
         //if(scene->selectedInstance != nullptr && scene->selectedInstance != scene->selectedObjInstance)// push back previously picked object
         //scene->objectInstances.push_back(scene->selectedInstance);
 
@@ -713,8 +757,6 @@ void Drawline() {
 //load scene based on number
 //TODO make scenes ENUM instead of number
 void ReloadScene(int num) {
-
-
     //if(num != scene->num)
     camera->cameraControlsUnlocked = true; //we can disable it in setup of the scene
     camera->cameraPerspective = Camera_Perspective::PERSP; //reset this
@@ -730,50 +772,50 @@ void ReloadScene(int num) {
         //delete scene;
 
         //scene = nullptr;
-        forwardScene1 = nullptr;// if we dont do this, it will detect this as not null then it will not render anythong bcs dirlight at sceneinstance is null
+        forwardScene1 = nullptr;
+        // if we dont do this, it will detect this as not null then it will not render anythong bcs dirlight at sceneinstance is null
         switch (num) {
             case 1:
-                forwardScene1 = static_cast <const std::shared_ptr<ForwardScene1> >(new ForwardScene1());
+                forwardScene1 = static_cast<const std::shared_ptr<ForwardScene1>>(new ForwardScene1());
                 sceneInstance = forwardScene1;
-               // static_cast<const std::shared_ptr<SceneInstance> >(new ForwardScene1());
+            // static_cast<const std::shared_ptr<SceneInstance> >(new ForwardScene1());
 
                 break;
             case 2:
-                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new DeferredScene1());
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance>>(new DeferredScene1());
                 break;
             case 3:
-                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new DeferredScene2());
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance>>(new DeferredScene2());
                 break;
             case 4:
                 //scene = static_cast<const std::shared_ptrshared_ptr<SceneInstance> >(new TestScene4());
                 break;
             case 5:
-                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new GameScene());
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance>>(new GameScene());
                 break;
             case 6:
-                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new CannonGame());
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance>>(new CannonGame());
                 break;
             case 7:
-                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new PoolGame());
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance>>(new PoolGame());
                 break;
             case 8:
-                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new PlanetGame());
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance>>(new PlanetGame());
                 break;
             case 9:
-                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new CoinMapGame());
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance>>(new CoinMapGame());
                 break;
             case 10:
-                sceneInstance = static_cast<const std::shared_ptr<SceneInstance> >(new Pathfinding());
+                sceneInstance = static_cast<const std::shared_ptr<SceneInstance>>(new Pathfinding());
                 break;
             default:
                 break;
-
-
         }
 
         Managers::currentSceneIndex = num; //now we dont have to cast every time
         //scene = static_cast<const std::shared_ptrshared_ptr<Scene> >(new TestScene2());
-        sceneInstance->windowSettings = &windowSettings;//needs to go before setup otherwise buffers are initialized before setting
+        sceneInstance->windowSettings = &windowSettings;
+        //needs to go before setup otherwise buffers are initialized before setting
         sceneInstance->Setup(camera, graphicsOptions);
         sceneDescription = sceneInstance->sceneDescription;
     }
@@ -797,15 +839,15 @@ void SwitchFullscreen() {
 
         glfwSetWindowMonitor(windowSettings.window, windowSettings.monitor, GLFW_DONT_CARE, GLFW_DONT_CARE,
                              windowSettings.CUR_WIDTH, windowSettings.CUR_HEIGHT, GLFW_DONT_CARE);
-    } else {
+    }
+    else {
         windowSettings.CUR_HEIGHT = SCR_WIDTH;
         windowSettings.CUR_HEIGHT = SCR_HEIGHT;
         glfwSetWindowMonitor(windowSettings.window, nullptr, 50, 50, SCR_WIDTH, SCR_HEIGHT, GLFW_DONT_CARE);
     }
 }
 
-static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
-
+static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
     //this wont call because it hasnt changed its state
     camera->RMBpress = false;
     //we need to disable it after a while
@@ -813,25 +855,22 @@ static void mouse_button_callback(GLFWwindow *window, int button, int action, in
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
         camera->RMBpress = true;
 
-        if(selectWRMBEnabled)
-            Drawline();  // uhh we neeed to keep drawing it...
+        if (selectWRMBEnabled)
+            Drawline(); // uhh we neeed to keep drawing it...
         // Draw line of sight latest
 
         //TODO make scenes ENUM instead of number
         //std::shared_ptr<PoolGame> poolGame= std::dynamic_pointer_cast<PoolGame>(sceneInstance);
         //if(poolGame)
-        if(Managers::currentSceneIndex ==7)
-        {
+        if (Managers::currentSceneIndex == 7) {
             //poolGame->CreateNewBall(camera->world_coordinates_ray_click);
             std::static_pointer_cast<PoolGame>(sceneInstance)->CreateNewBall(camera->world_coordinates_ray_click);
         }
         //std::shared_ptr<PlanetGame> planetGame= std::dynamic_pointer_cast<PlanetGame>(sceneInstance);
         //if(planetGame )
-        if(Managers::currentSceneIndex ==8)
-        {
+        if (Managers::currentSceneIndex == 8) {
             //planetGame->CreateNewBall(camera->world_coordinates_ray_click);
             std::static_pointer_cast<PlanetGame>(sceneInstance)->CreateNewBall(camera->world_coordinates_ray_click);
-
         }
 
 
@@ -844,7 +883,7 @@ static void mouse_button_callback(GLFWwindow *window, int button, int action, in
 }
 
 //TODO MOVE THIS TO NEW INPUT CLASS AND AWAY FROM CAMERA
-static void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_ESCAPE || key == GLFW_KEY_F9) {
             if (key == GLFW_KEY_F9) {
@@ -853,19 +892,20 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
                     camera->toggleCursor();
             }
 
-            camera->toggleCursor();  // ked som v esc a stuknem f9 bic sa nestane
+            camera->toggleCursor(); // ked som v esc a stuknem f9 bic sa nestane
             // ostatne funguje fajn,idk why
 
-            if (camera->hideCursor) {  // we want to focus IMGUI
+            if (camera->hideCursor) {
+                // we want to focus IMGUI
                 ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
                 camera->rMove = camera->lMove = camera->fMove = camera->bMove = false;
-                ImGui::SetNextWindowFocus();  // set focus on first one? i guess
-
-            } else  // we want to enable game
+                ImGui::SetNextWindowFocus(); // set focus on first one? i guess
+            }
+            else // we want to enable game
             {
                 show_demo_window = false;
                 ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
-                ImGui::SetWindowFocus(NULL);  // defocus
+                ImGui::SetWindowFocus(NULL); // defocus
                 // ImGui::GetIO().WantCaptureMouse = false; // this should be used to
                 // discard input in main app, ie in camera process input
             }
@@ -873,12 +913,13 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
         if (key == GLFW_KEY_F12) SwitchFullscreen();
         if (key == GLFW_KEY_F2) // print shader info
             PrintShader();
+        //if (key == GLFW_KEY_F3) // pause rendering loop
+        // pauseRendering = !pauseRendering;
         if (key == GLFW_KEY_LEFT_CONTROL)
             camera->slowCamControl = !camera->slowCamControl;
         //those will be disabled after use
         if (key == GLFW_KEY_RIGHT) camera->rightArrow = true;
         if (key == GLFW_KEY_LEFT) camera->leftArrow = true;
-
     }
     /*
     if (camera->hideCursor)  // later implement input class so we dont have to
@@ -911,17 +952,15 @@ static void keyboard_callback(GLFWwindow *window, int key, int scancode, int act
        camera->switchSpotlight();*/
 }
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    if(sceneInstance)
-    {
-        sceneInstance->ResizeWindow(width,height);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    if (sceneInstance) {
+        sceneInstance->ResizeWindow(width, height);
     }
     //if for some stupid reason we didnt load a scene...
-    else
-    {
+    else {
         // make sure the viewport matches the new window dimensions; note that width
         // and height will be significantly larger than specified on retina displays.
-        if (height == 0 || width == 0)  // prevent errors from minimizing and moving windows
+        if (height == 0 || width == 0) // prevent errors from minimizing and moving windows
             return;
         //we assume opengl is running
         glViewport(0, 0, width, height);
@@ -932,7 +971,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     }
 }
 
-void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     if (firstMouse) {
         lastX = xpos;
         lastY = ypos;
@@ -940,7 +979,7 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
     }
 
     float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos;  // reversed since y-coordinates go from bottom to top
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
 
     lastX = xpos;
     lastY = ypos;
@@ -950,7 +989,7 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
     camera->ProcessMouseMovement(xoffset, yoffset);
     camera->xMousePos = xpos;
     //camera->yMousePos = ypos;
-    camera->yMousePos = abs(ypos-windowSettings.CUR_HEIGHT);
+    camera->yMousePos = abs(ypos - windowSettings.CUR_HEIGHT);
 
     /*if(Managers::currentSceneIndex == 9)
     {
@@ -960,17 +999,16 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
     }*/
 }
 
-static void character_callback(GLFWwindow *window, unsigned int codepoint) {
+static void character_callback(GLFWwindow* window, unsigned int codepoint) {
     if (ImGui::GetIO().WantCaptureKeyboard)
         ImGui::GetIO().AddInputCharacter(codepoint);
-
 }
 
-void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     camera->ProcessMouseScroll(yoffset);
 }
 
-void window_size_callback(GLFWwindow *window, int width, int height) {
+void window_size_callback(GLFWwindow* window, int width, int height) {
     // do nothing, unused
 }
 
@@ -984,18 +1022,18 @@ glm::mat4 RenderDepth() {
     glm::mat4 modelMat = glm::mat4(1.0f);
     float near_plane = 1.0f, far_plane = sunOffsetPos;
 
-//glm::vec3 lightPos =  dynamic_cast<DirectionalLight *>(scene->dirLight)->direction;
+    //glm::vec3 lightPos =  dynamic_cast<DirectionalLight *>(scene->dirLight)->direction;
     glm::vec3 lightPos = sceneInstance->dirLight_ObjInstance->GetPos();
 
     glm::vec3 g = glm::normalize(sunDir) * 10;
-//assign debug line points
+    //assign debug line points
     centroidLineSeg[3] = g.x;
     centroidLineSeg[4] = g.y;
     centroidLineSeg[5] = g.z;
 
-//when we want to cover bigger area we need to either move the light projection based on cam pos,
-// increase ortho size to cover bigger area(but dont make it too big otherwise we need bigger shadowmap resolution to compensate for smaller texel)
-// i.e bigger ortho means more screen pixels draw from one pixel of depthmap creating aliasing issues
+    //when we want to cover bigger area we need to either move the light projection based on cam pos,
+    // increase ortho size to cover bigger area(but dont make it too big otherwise we need bigger shadowmap resolution to compensate for smaller texel)
+    // i.e bigger ortho means more screen pixels draw from one pixel of depthmap creating aliasing issues
     float res = lightOrthoSize;
     glm::mat4 lightProjection = glm::ortho(-res, res, -res, res, near_plane, zFar);
 
@@ -1017,7 +1055,7 @@ glm::mat4 RenderDepth() {
     //if (forwardScene1 != nullptr)
     //    forwardScene1->SetupShaderMaterial();
 
-//now render all receiving objects into the shadowmap
+    //now render all receiving objects into the shadowmap
     sceneInstance->RenderObjectsS(&simpleDepthShader);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     return lightSpaceMatrix;
@@ -1025,7 +1063,7 @@ glm::mat4 RenderDepth() {
 
 
 void RenderTest(glm::mat4 lightSpaceMatrix, bool renderSelected = false) {
-//if(scene->disableShadows)
+    //if(scene->disableShadows)
     //return;
     //second pass, render scene as normal with shadow mapping (using depth map)
     //glViewport(0, 0, windowSettings.CUR_WIDTH, windowSettings.CUR_HEIGHT); dont do it here it might be different
@@ -1051,7 +1089,6 @@ void RenderTest(glm::mat4 lightSpaceMatrix, bool renderSelected = false) {
 
     sceneInstance->RenderSceneInstance(&simpleShadowShader, renderSelected);
     glActiveTexture(GL_TEXTURE0);
-
 }
 
 
@@ -1082,9 +1119,7 @@ void PrintShader() {
         //glGetProgramParameterdvNV
         std::string name(nameData.begin(), nameData.end() - 1);
         std::cout << "string " << name;
-
     }
-
 }
 
 
@@ -1098,7 +1133,7 @@ void MoveCamera() {
 
     //might cause issues if it goes too fast and overshoots
     //if destination is close enough, pick next point
-    if (glm::length(destinationDir) <= 0.1f)//.length() is wrong
+    if (glm::length(destinationDir) <= 0.1f) //.length() is wrong
     {
         nextCamPosIndex += 1;
         //loop the next point if out of range
@@ -1163,7 +1198,7 @@ int main() {
 
 
     //glad needs to be after make context current window
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
@@ -1173,7 +1208,6 @@ int main() {
     std::cout << "Hello, World!" << std::endl;
     stencilShader = Shader("..\\Assets\\Shaders\\Forward\\stencil.vert",
                            "..\\Assets\\Shaders\\Forward\\stencil.frag"); //maybe add as a ponter and then new too
-
 
 
     //sc->windowSettings = &windowSettings; //toto nebude upne dobre treba to?
@@ -1191,13 +1225,14 @@ int main() {
     ImGui::CreateContext();
     // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(windowSettings.window,
-                                 true);  // remove callbacks with false, to manually control them, but let it be true to allow for input (of chars prolly)
+                                 true);
+    // remove callbacks with false, to manually control them, but let it be true to allow for input (of chars prolly)
     ImGui_ImplOpenGL3_Init(NULL);
-    ImGuiIO &io = ImGui::GetIO();
+    ImGuiIO&io = ImGui::GetIO();
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    ImGui::SetWindowFocus(nullptr);  // start unfocussed
+    ImGui::SetWindowFocus(nullptr); // start unfocussed
 
     // build and compile shaders
     // -------------------------
@@ -1247,7 +1282,7 @@ int main() {
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 
-    ReloadScene(10);
+    ReloadScene(1);
     camera->toggleCursor(); //set to hidden by default
 
     //create free camera path
@@ -1257,11 +1292,11 @@ int main() {
     // ----------- render loop ---------------
     // ------------************---------------
     while (!glfwWindowShouldClose(windowSettings.window)) {
-
         PerfAnalyzer::drawcallCount = 0; //reset for new frame
         float currentFrame = glfwGetTime(); // delta time used for camera now
         Managers::deltaTime = currentFrame - lastFrame;
         //std::cout << Managers::deltaTime << std::endl;
+
 
         //TODO NOW DISABLE ALL POLLED PRESSED BUTTONS, this is not good implemetation
         camera->RMBpress = false;
@@ -1274,26 +1309,26 @@ int main() {
             //std::cout<< "movCam \n" ;
         }
 
-        uniforms.view = camera->GetViewMatrix(); //uniformy su ine tu ako v drawskybox //see translation unit, .cpp is one TU...
-        if(camera->cameraPerspective == Camera_Perspective::PERSP) {
+        uniforms.view = camera->GetViewMatrix();
+        //uniformy su ine tu ako v drawskybox //see translation unit, .cpp is one TU...
+        if (camera->cameraPerspective == Camera_Perspective::PERSP) {
             uniforms.projection = glm::perspective(glm::radians(camera->Zoom),
-                                                   (float) windowSettings.CUR_WIDTH / (float) windowSettings.CUR_HEIGHT,
+                                                   (float)windowSettings.CUR_WIDTH / (float)windowSettings.
+                                                   CUR_HEIGHT,
                                                    zNear, zFar);
         }
         //else we want ortho
-        else
-        {
+        else {
             float scale = camera->orthoScale;
-            float aspect =(float) windowSettings.CUR_WIDTH / (float) windowSettings.CUR_HEIGHT;
+            float aspect = (float)windowSettings.CUR_WIDTH / (float)windowSettings.CUR_HEIGHT;
             //uniforms.projection = glm::ortho(0.0f, (float) windowSettings.CUR_WIDTH,
             //                                 (float)windowSettings.CUR_HEIGHT, 0.0f,
-                                             //-1.0f, 1.0f);
-           //                                  -1.0f, zFar*200.0f);
-           //it didnt work so i did it like this https://stackoverflow.com/a/61989111
+            //-1.0f, 1.0f);
+            //                                  -1.0f, zFar*200.0f);
+            //it didnt work so i did it like this https://stackoverflow.com/a/61989111
 
-            uniforms.projection = glm::ortho(-aspect*scale, aspect * scale, -scale, scale,
-                                              zNear, zFar);
-
+            uniforms.projection = glm::ortho(-aspect * scale, aspect * scale, -scale, scale,
+                                             zNear, zFar);
         }
         glfwPollEvents();
         ImGui_ImplOpenGL3_NewFrame();
@@ -1313,7 +1348,8 @@ int main() {
         if (!camera->hideCursor) {
             glfwSetInputMode(windowSettings.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             ImGui::SetWindowFocus(nullptr);
-        } else {
+        }
+        else {
             glfwSetInputMode(windowSettings.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         }
 
@@ -1332,23 +1368,20 @@ int main() {
                 glCullFace(GL_BACK);
 
                 RenderTest(LSM, true);
-
             }
-                //TODO make this better / not in main...
+            //TODO make this better / not in main...
             else if (graphicsOptions->enableWater) {
                 //TODO this is baaad code...
 
                 //check if we are in correct scene
 
                 deferredScene2 = std::dynamic_pointer_cast<DeferredScene2>(
-                        sceneInstance);// if we want to chache the result, we need to clear this
+                    sceneInstance); // if we want to chache the result, we need to clear this
                 //bool same = dynamic_cast<DeferredScene2*>(sceneInstance.get()) != nullptr;
 
                 //if(deferredScene2 || same)
                 //if(same) {
                 if (deferredScene2) {
-
-
                     deferredScene2->waterObjInstance->disableRender = true;
                     deferredScene2->waterObjInstance->forceRenderOwnShader = false;
                     glCullFace(GL_FRONT);
@@ -1377,7 +1410,8 @@ int main() {
 
                     //reflection
                     glBindFramebuffer(GL_FRAMEBUFFER,
-                                      deferredScene2->reflectionFrameBuffer);// or deferredScene2->bindReflectionFrameBuffer();
+                                      deferredScene2->reflectionFrameBuffer);
+                    // or deferredScene2->bindReflectionFrameBuffer();
                     RenderTest(LSM);
                     //return the cam
                     camera->Position.y += camHeight;
@@ -1393,7 +1427,8 @@ int main() {
                     simpleShadowShader.use();
                     simpleShadowShader.setVec4("plane", glm::vec4(0, -1, 0, height));
                     glBindFramebuffer(GL_FRAMEBUFFER,
-                                      deferredScene2->refractionFrameBuffer);// or deferredScene2->bindReflectionFrameBuffer();
+                                      deferredScene2->refractionFrameBuffer);
+                    // or deferredScene2->bindReflectionFrameBuffer();
 
                     //also position the camera for the refraction
 
@@ -1431,12 +1466,14 @@ int main() {
                     //deferredScene2->RenderWater();
 
                     //sceneInstance->RenderSceneInstance(nullptr);
-                } else {
+                }
+                else {
                     if (forwardScene1 != nullptr)
                         forwardScene1->SetupShaderMaterial();
                     sceneInstance->RenderSceneInstance(nullptr, true);
                 }
-            } else {
+            }
+            else {
                 if (forwardScene1 != nullptr)
                     forwardScene1->SetupShaderMaterial();
                 sceneInstance->RenderSceneInstance(nullptr, true);
@@ -1460,7 +1497,7 @@ int main() {
                 glBindBuffer(GL_ARRAY_BUFFER, lineVBO);
                 glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6, &centroidLineSeg, GL_STATIC_DRAW);
                 glEnableVertexAttribArray(0);
-                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *) 0);
+                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *)0);
                 glLineWidth(6.3f);
                 glDrawArrays(GL_LINE_STRIP, 0, 3);
                 PerfAnalyzer::drawcallCount++;
@@ -1507,21 +1544,20 @@ int main() {
                 PerfAnalyzer::drawcallCount++;  // after every draw call
                 // glDrawElements(GL_LINE_STRIP,2, GL_FLOAT, nullptr);
             */
-
         }
 
         lastFrame = currentFrame;
 
 
-
         if (sceneInstance != nullptr) {
-            if(sceneInstance->enableMainUI)
-            DrawImGui();
+            if (sceneInstance->enableMainUI)
+                DrawImGui();
             sceneInstance->ImGuiHierarchy();
         }
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         camera->ProcessKeyboard(Camera_Movement::NONE, Managers::deltaTime);
         glfwSwapBuffers(windowSettings.window);
         std::cout.flush();
