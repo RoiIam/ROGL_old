@@ -47,6 +47,7 @@ private:
     Shader *grassShader;
     Shader *glintChShader;
     Shader *glintZKShader;
+    Shader *glintDeShader;
 
     //Glints
     GLuint dicoTex;
@@ -66,6 +67,8 @@ private:
     float zk_dynamicRange = 100.0f;
     float zk_variation = 50000.0f;
     float zk_density = 5.e8;
+    //glints de
+    GLuint glintTexture;
 
 
     // Add lights

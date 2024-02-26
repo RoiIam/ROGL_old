@@ -14,6 +14,27 @@ ForwardScene1::~ForwardScene1()
     DeleteSceneBuffers();
 };
 
+std::vector<float> LoadTextureData(const std::string& filePath, int width, int height)
+{
+    std::ifstream file(filePath, std::ios::binary);
+    if (!file.is_open())
+    {
+        std::cerr << "Failed to open file: " << filePath << std::endl;
+        return std::vector<float>();
+    }
+
+    std::vector<float> data(width * height * 4); // 4 floats per pixel
+    file.read(reinterpret_cast<char*>(data.data()), data.size() * sizeof(float));
+    /*long long int tes =0;
+    int contr = 0;
+    while(tes<width*height*4) {
+        std::cout << data[tes] <<" "<< data[tes+1] <<" " <<data[tes+2] <<" "<< data[tes+3]
+        <<" "<< contr++ <<"\n";
+        tes+=4;
+    }*/
+    return data;
+}
+
 
 void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // override
 {
@@ -41,6 +62,8 @@ void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // over
                                "..\\Assets\\Shaders\\Experimental\\glint_ch.frag");
     glintZKShader = new Shader("..\\Assets\\Shaders\\Experimental\\glint_ZK.vert",
                                    "..\\Assets\\Shaders\\Experimental\\glint_ZK.frag");
+    glintDeShader = new Shader("..\\Assets\\Shaders\\Experimental\\glint_De.vert",
+                                   "..\\Assets\\Shaders\\Experimental\\glint_De.frag");
 
 //models load, setup
     ourModel = new Model("../Assets/Models/OwnCube/Cube.obj");
@@ -73,6 +96,10 @@ void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // over
     shrekModel_ObjInstance->availableShaders.emplace_back(glintZKShader);
     sphereModel_ObjInstance->availableShaders.emplace_back(glintZKShader);
 
+    //add aditionalShaders to an object Deliot
+    shrekModel_ObjInstance->availableShaders.emplace_back(glintDeShader);
+    sphereModel_ObjInstance->availableShaders.emplace_back(glintDeShader);
+
 
     //selectableObjInstances.push_back(xModel_ObjInstance);
 
@@ -101,6 +128,101 @@ void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // over
     dicoTex = loadTex("..//Assets//dict//dict_16_192_64_0p5_0p02", 16, 64);
     glActiveTexture(GL_TEXTURE8);
     glBindTexture(GL_TEXTURE_1D_ARRAY, dicoTex);
+
+    //glints3 De part
+    glintDeShader->use();
+    // almost same as model.cpp implementation
+    //glintTexture;
+    std::string filename;// = std::string(path);
+    //printf((directory + '\\' + filename).c_str());
+    filename = "../Assets/Textures/g1.png";
+    //printf(filename.c_str());
+
+    //unsigned int textureID;
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, glintTexture);
+    glGenTextures(1, &glintTexture);
+    /*
+    std::ifstream input(filename, std::ios::binary | std::ios::ate);
+    std::streamsize size = input.tellg();
+    input.seekg(0, std::ios::beg);
+    char* buffer = new char[size];
+    if (input.read(buffer, size)) {
+        std::cout << "File read successfully." << std::endl;
+    }
+    */
+    /*
+    struct ColorFloat {
+        float r, g, b, a;
+    };
+    std::ifstream input(filename, std::ios::binary);
+
+    if (!input) {
+        std::cerr << "Error opening file! "<< filename << std::endl;
+
+    }
+
+    // Determine the size of the file
+    input.seekg(0, std::ios::end);
+    std::streampos fileSize = input.tellg();
+    input.seekg(0, std::ios::beg);
+
+    // Calculate the number of ColorFloat elements
+    size_t numPixels = fileSize / sizeof(ColorFloat);
+
+    // Allocate memory to store the texture data
+    ColorFloat* textureData = new ColorFloat[numPixels];
+
+    // Read the data into the memory
+    input.read(reinterpret_cast<char*>(textureData), fileSize);
+
+    // Don't forget to close the file
+    input.close();
+   */
+
+    // Load texture data
+    std::vector<float> textureData = LoadTextureData("../Assets/Textures/g1.bin", 512  , 512);
+
+    if (textureData.empty())
+        std::cout << "File failed to load at path: ../Assets/Textures/g1.bin" << std::endl;
+
+
+
+    int width, height, nrComponents;
+    unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    if (data) {
+        GLenum format;
+
+        std::cout << "no comp: " << nrComponents << " for " << filename <<std::endl;
+        std::cout << "dimen " << width <<" "<< height <<std::endl;
+        format = GL_RGBA32F; //TODO is this correct
+
+        //glBindTexture(GL_TEXTURE_2D, textureID);
+
+        //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0,
+            GL_RGBA,  GL_FLOAT, textureData.data()); //TODO buffer or data or textureData
+        //glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+    } else {
+        std::cout << "Texture failed to load at path: " << filename << std::endl;
+        stbi_image_free(data);
+    }
+
+    //return textureID;
+    //glintTexture = textureID;
+    std::cout << "glint de tex id  " << glintTexture;
+
+
+    //delete[] buffer; //TODO
+
 
     SetupShaderMaterial();
 
@@ -255,21 +377,17 @@ void ForwardScene1::SetupShaderMaterial() {
     glintZKShader->setFloat("Material.variation", zk_variation);
     glintZKShader->setFloat("Material.dynamicRange", zk_dynamicRange);
     glintZKShader->setFloat("Material.density", zk_density);
-    /*
-    glintZKShader->setVec2("Material.roughness", glm::vec2(0.6f,0.6f));
-    glintZKShader->setVec2("Material.microRoughness", glm::vec2(0.6f*0.024f,0.6*0.024f));
-    glintZKShader->setFloat("Material.searchConeAngle", 0.01f);
-    glintZKShader->setFloat("Material.variation", 100);
-    glintZKShader->setFloat("Material.dynamicRange", 50000);
-    glintZKShader->setFloat("Material.density", 5.e8);
-    */
-
-
-
     glintZKShader->setVec3("CameraPosition", camera->Position);
 
+    //glints de part
+    glintDeShader->use();
+    glintDeShader->setInt("_Glint2023NoiseMap", 1);
 
+    glintDeShader->setVec4("Light.Position", glm::vec4(lightPos, 1.0));
+    glintDeShader->setVec3("Light.L", glm::vec3(lightInten));
+    glintDeShader->setVec3("CameraPosition", camera->Position);
 
+    //glintDeShader-setFloat()
 }
 
 void ForwardScene1::RenderLights() {
@@ -322,33 +440,22 @@ void ForwardScene1::UIGlintParams() {
                 ImGui::SliderFloat("Density", &zk_density, 1.e8, 7.e8);
 
             }
-            /*
+
             else if(selectedInstance->curSelectedShader == glintDeShader)
             {
                 ImGui::Text("%s",(methodName+ de).c_str());
+                ImGui::Text("params not yet implemented");
 
-            }*/
+            }
             else {
                 ImGui::Text("No glint shader to show properties");
 
             }
 
 
-        /*
-        if(shrekModel_ObjInstance->curShaderIndex==0) {
-            //chermain
-        }
-        else if(shrekModel_ObjInstance->curShaderIndex ==1) {
-            //zirr
-        }
-        else if(shrekModel_ObjInstance->curShaderIndex ==2) {
-            //deliot
-        }
-        */
-
     }
     else {
-        ImGui::Text("%s","Please select shrek character, it only works there for now");
+        ImGui::Text("%s","Please select an object that has glinty shaders attached in the hierarchy first, it shows parameters only then");
     }
 
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,

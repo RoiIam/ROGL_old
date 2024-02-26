@@ -1283,7 +1283,7 @@ int main() {
 
 
     ReloadScene(1);
-    camera->toggleCursor(); //set to hidden by default
+    //camera->toggleCursor(); nope //set to hidden by default
 
     //create free camera path
     freeCamPath.bezierShape(1);
