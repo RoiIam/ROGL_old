@@ -1,4 +1,6 @@
 #include "Log.h"
+#include <chrono>
+#include<cmath>
 //Added here Salanci pc games subject 2.nd exercise
 // 28.9.23 - 3.rd assigment implement fast sine and compare it to built in
 

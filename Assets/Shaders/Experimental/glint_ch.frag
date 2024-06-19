@@ -499,7 +499,7 @@ void main()
 
     //there can be a switch from a uniform
     //orig,white glints
-    //radiance = 0.5 * radiance_diffuse + 0.5 *radiance_specular;
+    radiance = 0.5 * radiance_diffuse + 0.5 *radiance_specular;
     //or glints are red
     //radiance = 0.5 * radiance_diffuse + 0.5 * vec3(radiance_specular.x,0,0);
     //or random colored glints

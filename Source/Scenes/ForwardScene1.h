@@ -1,4 +1,5 @@
 #include <glm/gtc/type_ptr.hpp> //to use make_vec3
+#include <dds_loader.h>
 #include "../Instances/SceneInstance.h"
 #include "../Instances/ObjectInstance.h"
 #include "Primitives/DefaultCube.h"
@@ -48,6 +49,7 @@ private:
     Shader *glintChShader;
     Shader *glintZKShader;
     Shader *glintDeShader;
+    Shader *glintHWShader;
 
     //Glints
     GLuint dicoTex;
@@ -60,15 +62,33 @@ private:
     float lightInten = 8.0;
 
     //glints ZK
-    float zk_roughness[2] ={0.6f,0.6f} ; //0.6 * 0.024;
-    float zk_microRoughness[2]={zk_roughness[0]*glm::e<float>(),zk_roughness[1]*glm::e<float>()} ;
+    float zk_roughness[2] ={0.397f,0.397f} ; //0.6 * 0.024;
+    float zk_microRoughness[2]={0.018F,0.018F} ;
 
-    float zk_searchConeAngle = 0.01f;
-    float zk_dynamicRange = 100.0f;
-    float zk_variation = 50000.0f;
+    float zk_searchConeAngle = 0.002f;
+    float zk_dynamicRange = 1000.0f;
+    float zk_variation = 78000.0f;
     float zk_density = 5.e8;
     //glints de
     GLuint glintTexture;
+    float de_maxNDF = 0.021f;
+    float de_targetNDF = 0.014f;
+
+    // glints HW
+    float glitterStrength = 1.0f;
+    float wh_color[3]={0.665f,0.596f,0.158f};
+
+    bool    with_anisotropy =  true;
+    float i_sparkle_size = 0.012f;
+    float i_sparkle_density = 1.37f;
+    float i_noise_density = 0.5f;
+    float i_noise_amount = 0.43f;
+    float i_view_amount = 5.85f;
+    float i_time_factor = 1.0f;
+    float time_0_X = 1.0f;
+
+
+
 
 
     // Add lights

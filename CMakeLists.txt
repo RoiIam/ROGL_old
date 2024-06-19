@@ -4,9 +4,10 @@ project(ROGL)
 
 set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_FLAGS -fuse-ld=lld) #loong times for standard gxx projectdidnt work
+set(CMAKE_CXX_FLAGS -g)
 set(CMAKE_FIND_DEBUG_MODE TRUE) #to write searched paths in console
 #seems like using find_package helps us include it as static
-find_package(ASSIMP 5.2 PATHS "C:/Program Files (x86)/Assimp/")
+find_package(ASSIMP 5.2 PATHS "C:/Libs/AssimpCopyProj/") # difference
 
 #GLAD
 set(GLAD_INCLUDE_DIR C:/Libs/GLAD_c_46/include/)
@@ -24,6 +25,13 @@ link_directories(${GLFW3_LIB})
 #GLM
 set(GLM_INCLUDE_DIR "C:/Libs/GLM")
 include_directories(${GLM_INCLUDE_DIR})
+
+#GLI wasnt working. gave me  candidate constructor not viable: no known conversion from 'glm::vec<2, int>' to 'size_type' (aka 'unsigned long long') for 6th argument
+#set(GLI_INCLUDE_DIR C:/Libs/gli/)
+#include_directories(${GLI_INCLUDE_DIR})
+
+set(DDSL_INCLUDE_DIR C:/Libs/dds_loader/)
+include_directories(${DDSL_INCLUDE_DIR})
 
 #IMGUI
 set(IMGUI_LIB_NAME C:/Libs/imgui_187/) #1.87

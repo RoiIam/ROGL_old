@@ -63,7 +63,9 @@ void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // over
     glintZKShader = new Shader("..\\Assets\\Shaders\\Experimental\\glint_ZK.vert",
                                    "..\\Assets\\Shaders\\Experimental\\glint_ZK.frag");
     glintDeShader = new Shader("..\\Assets\\Shaders\\Experimental\\glint_De.vert",
-                                   "..\\Assets\\Shaders\\Experimental\\glint_De.frag");
+    "..\\Assets\\Shaders\\Experimental\\glint_De.frag");
+    glintHWShader = new Shader("..\\Assets\\Shaders\\Experimental\\glint_WH.vert",
+    "..\\Assets\\Shaders\\Experimental\\glint_WH.frag");
 
 //models load, setup
     ourModel = new Model("../Assets/Models/OwnCube/Cube.obj");
@@ -99,7 +101,10 @@ void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // over
     //add aditionalShaders to an object Deliot
     shrekModel_ObjInstance->availableShaders.emplace_back(glintDeShader);
     sphereModel_ObjInstance->availableShaders.emplace_back(glintDeShader);
-
+    //add aditionalShaders to an object Wang Howles
+    shrekModel_ObjInstance->availableShaders.emplace_back(glintHWShader);
+    sphereModel_ObjInstance->availableShaders.emplace_back(glintHWShader);
+    shrekModel_ObjInstance->curSelectedShader =glintHWShader; // make it default
 
     //selectableObjInstances.push_back(xModel_ObjInstance);
 
@@ -220,9 +225,35 @@ void ForwardScene1::Setup(Camera *cam, GraphicsOptions *graphicsOptions) // over
     //glintTexture = textureID;
     std::cout << "glint de tex id  " << glintTexture;
 
-
     //delete[] buffer; //TODO
 
+
+    // now load dds texure for WangHowles
+    char* filePath = "../Assets/Textures/NoiseVolume.dds";
+
+    DDS_TEXTURE* sample_texture = new DDS_TEXTURE();
+
+    bool do_flip = false;
+    load_dds_from_file(filePath, &sample_texture, do_flip);
+    /*
+    glActiveTexture(GL_TEXTURE6);
+    GLuint NoiseTextureID;
+    glGenTextures(1, &NoiseTextureID);
+    glBindTexture(GL_TEXTURE_3D, NoiseTextureID);
+
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Specify the image data
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_R8, width, height,
+        128, 0, GL_RED, GL_UNSIGNED_BYTE, sample_texture->pixels);
+
+    glBindTexture(GL_TEXTURE_3D, 0); // Unbind the texture
+    */
+    delete (sample_texture);
 
     SetupShaderMaterial();
 
@@ -382,12 +413,39 @@ void ForwardScene1::SetupShaderMaterial() {
     //glints de part
     glintDeShader->use();
     glintDeShader->setInt("_Glint2023NoiseMap", 1);
-
     glintDeShader->setVec4("Light.Position", glm::vec4(lightPos, 1.0));
     glintDeShader->setVec3("Light.L", glm::vec3(lightInten));
     glintDeShader->setVec3("CameraPosition", camera->Position);
 
+    glintDeShader->setFloat("targetNDF", de_maxNDF);
+    glintDeShader->setFloat("maxNDF", de_targetNDF);
+
+
     //glintDeShader-setFloat()
+
+    //glint WH Wang Howles
+    glintHWShader->use();
+    //glintChShader->setInt("Noise", 6); TODO not implemented
+    glintHWShader->setFloat("glitterStrength", glitterStrength);
+
+    if(selectedInstance != nullptr)
+        glintHWShader->setVec4("lightDir", glm::vec4(lightPos-selectedInstance->GetPos(), 1.0));
+    glintHWShader->setVec4("color", glm::vec4(glm::make_vec3(wh_color), 1.0f));
+
+    glintHWShader->setVec3("CameraPosition", camera->Position);
+    glintHWShader->setBool("with_anisotropy", with_anisotropy);
+    glintHWShader->setFloat("i_sparkle_size", i_sparkle_size);
+    glintHWShader->setFloat("i_sparkle_density", i_sparkle_density);
+    glintHWShader->setFloat("i_noise_density", i_noise_density);
+
+    glintHWShader->setFloat("i_noise_amount", i_noise_amount);
+    glintHWShader->setFloat("i_view_amount", i_view_amount);
+    glintHWShader->setFloat("i_time_factor", i_time_factor);
+    glintHWShader->setFloat("time_0_X", time_0_X);
+    glintHWShader->setInt("Noise", 6);
+
+
+
 }
 
 void ForwardScene1::RenderLights() {
@@ -444,7 +502,26 @@ void ForwardScene1::UIGlintParams() {
             else if(selectedInstance->curSelectedShader == glintDeShader)
             {
                 ImGui::Text("%s",(methodName+ de).c_str());
-                ImGui::Text("params not yet implemented");
+                ImGui::SliderFloat("maxNDF", &de_maxNDF, 0.00001f, 0.1f);
+                ImGui::SliderFloat("targetNDF", &de_targetNDF, 0.00001f, 0.1f);
+
+
+            }
+            else if(selectedInstance->curSelectedShader == glintHWShader)
+            {
+                ImGui::Text("%s",(methodName+ de).c_str());
+                ImGui::SliderFloat("glitterStrength", &glitterStrength, 0.001f, 0.25f);
+                ImGui::SliderFloat3("base col", wh_color, 0.1f, 1.0f);
+
+                ImGui::Checkbox("with_anisotropy", &with_anisotropy);
+                ImGui::SliderFloat("i_sparkle_size", &i_sparkle_size, 0.001f, 1.0f);
+                ImGui::SliderFloat("i_sparkle_density", &i_sparkle_density, 0.001f, 10.0f);
+                ImGui::SliderFloat("i_noise_density", &i_noise_density, 0.001f, 14.0f);
+                ImGui::SliderFloat("i_noise_amount", &i_noise_amount, 0.001f, 1.0f);
+                ImGui::SliderFloat("i_view_amount", &i_view_amount, 0.001f, 10.0f);
+                ImGui::SliderFloat("i_time_factor", &i_time_factor, 0.001f, 1.0f);
+                ImGui::SliderFloat("time_0_X", &time_0_X, 0.001f, 1.0f);
+
 
             }
             else {

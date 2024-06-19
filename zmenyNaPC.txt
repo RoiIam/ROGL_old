@@ -1,0 +1,11 @@
+musel som prekopirovat rogl
+prekopirovat symlinky
+spravit C libs lebo nemam packagemanagera
+nainst clang https://packages.msys2.org/groups/mingw-w64-clang-x86_64-toolchain
+prekopirovat z Program files x86 assimp dal som to rovno do libs
+bolo treba zmenit oba cmakelists set(ASSIMP_INCLUDE_DIR "C:/Libs/AssimpCopyProj/include/") # neeeded change here too
+https://repo.msys2.org/mingw/mingw64/ https://stackoverflow.com/questions/33969803/how-to-obtain-older-versions-of-packages-using-msys2
+cez pacman -U C:/Libs/mingw-w64-x86_64-glfw-3.3.7-1-any.pkg.tar.zst
+
+
+set(ASSIMP_INCLUDE_DIR "C:/Libs/AssimpCopyProj/include/") # neeeded change here too

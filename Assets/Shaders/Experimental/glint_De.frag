@@ -1,4 +1,4 @@
-#version 410
+#version 420
 in vec2 TexCoord;
 in vec3 VertexPos;
 in vec3 VertexNorm;
@@ -12,6 +12,8 @@ uniform struct LightInfo
 
 uniform vec3 CameraPosition;
 uniform sampler2D texture_diffuse1;// base texture
+uniform float targetNDF;
+uniform float maxNDF;
 
 layout(location = 0) out vec4 FragColor;
 
@@ -243,29 +245,45 @@ vec4 GetBarycentricWeightsTetrahedron(vec3 p, vec3 v1, vec3 v2, vec3 v3, vec3 v4
     return uvwk;
 }
 //TODO
+
 void UnpackFloat(float input1, out float a, out float b)
 {
-    uint uintInput = uint(input1);
-    vec2 g  = unpackDouble2x32(uintInput >> 16);
+    uint uintInput = floatBitsToUint(input1);
+    //vec2 g  = unpackHalf2x16(uintInput);
     //a = f16tof32(uintInput >> 16);
     //b = f16tof32(uintInput);
-    a = g.x;
-    b= g.y;
+    //a = g.x;
+    //b= g.y;
+    a = unpackHalf2x16(uintInput).x;
+    b = unpackHalf2x16(uintInput).y;
+    //a=0;
+    //b=0;
 }
+
+
+
 
 void UnpackFloatParallel4(vec4 input1, out vec4 a, out vec4 b)
 {
-    uvec4 uintInput = uvec4(input1);
-    //a = f16tof32(uintInput >> 16);
-    //b = f16tof32(uintInput);
-    uvec2 g0  = unpackDouble2x32(uintInput.x >> 16);
-    uvec2 g1  = unpackDouble2x32(uintInput.y >> 16);
-    uvec2 g2  = unpackDouble2x32(uintInput.z >> 16);
-    uvec2 g3  = unpackDouble2x32(uintInput.w >> 16);
-    //b = f16tof32(uintInput);
-    a = vec4(g0.x, g1.x, g2.x, g3.x);
-    b= vec4(g0.y, g1.y, g2.y, g3.y);
+uvec4 uintInput = floatBitsToUint(input1);
+a = vec4(unpackHalf2x16(uintInput.x >> 16).y,
+unpackHalf2x16(uintInput.y >> 16).y,
+unpackHalf2x16(uintInput.z >> 16).y,
+unpackHalf2x16(uintInput.w >> 16).y);
+
+b = vec4(unpackHalf2x16(uintInput.x).x,
+unpackHalf2x16(uintInput.y).x,
+unpackHalf2x16(uintInput.z).x,
+unpackHalf2x16(uintInput.w).x);
 }
+
+/*
+void UnpackFloatParallel4(vec4 input1, out vec4 a, out vec4 b)
+{
+    uvec4 uintInput = floatBitsToUint(input1);
+    a = unpackHalf2x16(uintInput.xy);
+    b = unpackHalf2x16(uintInput.zw);
+}*/
 
 
 //=======================================================================================
@@ -286,7 +304,7 @@ void CustomRand4Texture(vec2 slope, vec2 slopeRandOffset, out vec4 outUniform, o
     //testRead = texture(_Glint2023NoiseMap, slopeCoord);
     //testRead = texture(_Glint2023NoiseMap, slopeCoord);
     //testRead = vec4(0.2);
-    packedRead = vec4(0.9);
+   // packedRead = vec4(0.9);
     UnpackFloatParallel4(packedRead, outUniform, outGaussian);
 }
 
@@ -318,7 +336,7 @@ float SampleGlintGridSimplex(vec2 uv, uint gridSeed, vec2 slope, float footprint
 {
     // Get surface space glint simplex grid cell
     const mat2 gridToSkewedGrid = mat2(1.0, -0.57735027, 0.0, 1.15470054);
-    vec2 skewedCoord = gridToSkewedGrid * uv;//WAS mul , change order M*v
+    vec2 skewedCoord = uv* gridToSkewedGrid;//WAS mul , change order M*v
     ivec2 baseId = ivec2(floor(skewedCoord));
     vec3 temp = vec3(fract(skewedCoord), 0.0);
     temp.z = 1.0 - temp.x - temp.y;
@@ -471,7 +489,7 @@ float SampleGlints2023NDF(vec3 localHalfVector, float targetNDF, float maxNDF, v
     float ellipseRatio = length(ellipseMajor) / length(ellipseMinor);
 
     // SHARED GLINT NDF VALUES
-    float halfScreenSpaceScaler = _ScreenSpaceScale * 0.5;
+    float halfScreenSpaceScaler = _ScreenSpaceScale * 0.5f;
     float footprintArea = length(ellipseMajor) * halfScreenSpaceScaler * length(ellipseMinor) * halfScreenSpaceScaler * 4.0;
     vec2 slope = localHalfVector.xy;// Orthogrtaphic slope projected grid
     float rescaledTargetNDF = targetNDF / maxNDF;
@@ -483,8 +501,11 @@ float SampleGlints2023NDF(vec3 localHalfVector, float targetNDF, float maxNDF, v
     float divLod0 = pow(2.0, lod0);
     float divLod1 = pow(2.0, lod1);
     float lodLerp = fract(lod);
+    //float footprintAreaLOD0 = pow(exp2(lod0), 2.0);
+    //float footprintAreaLOD1 = pow(exp2(lod1), 2.0);
     float footprintAreaLOD0 = pow(exp2(lod0), 2.0);
     float footprintAreaLOD1 = pow(exp2(lod1), 2.0);
+
 
     // MANUAL ANISOTROPY RATIO COMPENSATION
     float ratio0 = max(pow(2.0, int(log2(ellipseRatio))), 1.0);
@@ -578,8 +599,8 @@ void main()
     vec2 duvdx, vec2 duvdy)
    */
     vec3 localHalfVector = normalize((VertexPos-Light.Position.xyz) + (VertexPos-CameraPosition));
-    float targetNDF =0.001;//0.154f;
-    float maxNDF=0.001;//0.154f;
+    //float targetNDF =0.0014f;//0.154f;
+    //float maxNDF=0.002f;//0.154f;
     vec2 uv= TexCoord;
     vec2 duvdx = dst0;
     vec2 duvdy = dst1;
@@ -594,11 +615,11 @@ void main()
     wi = normalize(wi);
     vec3 wh = normalize(wo + wi);
     // V-cavity masking shadowing
-    float G1wowh = min(1., 2. * wh.z * wo.z / dot(wo, wh));
-    float G1wiwh = min(1., 2. * wh.z * wi.z / dot(wi, wh));
+    float G1wowh = min(1.0, 2.0 * wh.z * wo.z / dot(wo, wh));
+    float G1wiwh = min(1.0, 2.0 * wh.z * wi.z / dot(wi, wh));
     float G = G1wowh * G1wiwh;
 
-    vec3 F = vec3(1., 1., 1.);
+    vec3 F = vec3(0.1);
     //F = vec3(FresnelSchlick(dot(VertexNorm,localHalfVector),0.2));
 
     vec3 FragColor1 = (F * G * D_P) / (4. * wo.z);
@@ -612,7 +633,7 @@ void main()
     distanceSquared *= distanceSquared;
     vec3 Li = Light.L / distanceSquared;
 
-    FragColor1 += (texColor.xyz * 0.318309 * wi.z)*Li;
+    //FragColor1 += (texColor.xyz * 0.318309 * wi.z)*Li;
 
     FragColor = vec4(FragColor1.xyz, 1.0);
 
